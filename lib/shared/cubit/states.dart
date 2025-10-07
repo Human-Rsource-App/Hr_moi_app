@@ -1,3 +1,3 @@
 abstract class HrMoiStates {}
 
-class InitialState extends HrMoiAppStates {}
+class InitialState extends HrMoiStates {}
