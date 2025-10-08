@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
+import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
 import 'package:hr_moi/shared/style/styles.dart';
 
 void main() {
@@ -16,7 +16,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'HR MOI APP',
       theme: lightTheme,
-      home: HrNumber(),
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: PinCodeVerificationScreen(),
+      ),
     );
   }
 }
