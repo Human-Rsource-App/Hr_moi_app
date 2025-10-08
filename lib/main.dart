@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
 import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
 import 'package:hr_moi/shared/style/styles.dart';
 

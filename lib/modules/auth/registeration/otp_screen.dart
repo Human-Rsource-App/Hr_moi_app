@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -118,7 +119,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                     animationType: AnimationType.fade,
                     validator: (v) {
                       if (v!.length < 3) {
-                        return "I'm from validator";
+                        return "تحقق من الرقم المرسل";
                       } else {
                         return null;
                       }
@@ -132,7 +133,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                     ),
                     cursorColor: Colors.black,
                     animationDuration: const Duration(milliseconds: 300),
-                    enableActiveFill: true,
+                    enableActiveFill: false,
                     errorAnimationController: errorController,
                     controller: textEditingController,
                     keyboardType: TextInputType.number,
@@ -167,7 +168,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Text(
-                  hasError ? "*Please fill up all the cells properly" : "",
+                  hasError ? "يرجى ملء جميع الخلايا بشكل صحيح" : "",
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 12,
@@ -180,15 +181,15 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Didn't receive the code? ",
+                    "لم تستلم الرمز؟ ",
                     style: TextStyle(color: Colors.black54, fontSize: 15),
                   ),
                   TextButton(
-                    onPressed: () => snackBar("OTP resend!!"),
-                    child: const Text(
-                      "RESEND",
+                    onPressed: () => snackBar("تم اعادة الارسال"),
+                    child: Text(
+                      "اعادة ارسال!",
                       style: TextStyle(
-                        color: Color(0xFF91D3B3),
+                        color: mainColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -197,65 +198,35 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                 ],
               ),
               const SizedBox(height: 14),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 16.0,
-                  horizontal: 30,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.green.shade300,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.green.shade200,
-                      offset: const Offset(1, -2),
-                      blurRadius: 5,
-                    ),
-                    BoxShadow(
-                      color: Colors.green.shade200,
-                      offset: const Offset(-1, 2),
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: ButtonTheme(
-                  height: 50,
-                  child: TextButton(
-                    onPressed: () {
-                      formKey.currentState!.validate();
-                      // conditions for validating
-                      if (currentText.length != 6 || currentText != "123456") {
-                        errorController!.add(
-                          ErrorAnimationType.shake,
-                        ); // Triggering error shake animation
-                        setState(() => hasError = true);
-                      } else {
-                        setState(() {
-                          hasError = false;
-                          snackBar("OTP Verified!!");
-                        });
-                      }
-                    },
-                    child: Center(
-                      child: Text(
-                        "VERIFY".toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: defaultButton(
+                  context: context,
+                  onPressed: () {
+                    formKey.currentState!.validate();
+                    // conditions for validating
+                    if (currentText.length != 6 || currentText != "123456") {
+                      errorController!.add(
+                        ErrorAnimationType.shake,
+                      ); // Triggering error shake animation
+                      setState(() => hasError = true);
+                    } else {
+                      setState(() {
+                        hasError = false;
+                        snackBar("تم التحقق !!");
+                      });
+                    }
+                  },
+                  lable: 'تحقق',
                 ),
               ),
               const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Flexible(
                     child: TextButton(
-                      child: const Text("Clear"),
+                      child: const Text("مسح "),
                       onPressed: () {
                         textEditingController.clear();
                       },
@@ -263,7 +234,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                   ),
                   Flexible(
                     child: TextButton(
-                      child: const Text("Set Text"),
+                      child: const Text("لصق"),
                       onPressed: () {
                         setState(() {
                           textEditingController.text = "123456";
