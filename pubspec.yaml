@@ -41,6 +41,12 @@ dependencies:
   heexacolor: ^0.0.2
   dio: ^5.9.0
   pin_code_fields: ^8.0.1
+  nfc_manager: ^4.1.1
+  nfc_manager_ndef: ^1.1.0
+  nfc_manager_felica: ^1.0.0
+ 
+  
+
 
 dev_dependencies:
   flutter_test:
