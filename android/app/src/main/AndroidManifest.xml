@@ -48,5 +48,10 @@
     <!-- this is concerning with nfc tools to give permission to nfc package-->
     <uses-permission android:name="android.permission.NFC" />
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.NFC_TRANSACTION_EVENT"/>
+
+
 
 </manifest>

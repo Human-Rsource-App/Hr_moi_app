@@ -29,7 +29,7 @@ class _NfcReaderScreenState extends State<NfcReaderScreen> {
         // You cannot use this to read the Iraqi ID card.
         // It will fail because the card requires authentication.
         // A real-world application would require a specific, licensed SDK.
-        String apduCommand = "00A404000411AA22BB"; // Example Select command
+        String apduCommand = "9104255M3209103"; // Example Select command
 
         try {
           String apduResponse = await FlutterNfcKit.transceive(apduCommand);
