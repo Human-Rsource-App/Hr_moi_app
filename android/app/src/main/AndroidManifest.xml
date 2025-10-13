@@ -3,6 +3,9 @@
         android:label="hr_moi"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- give permission to nfc-->
+        <meta-data android:name="flutterEmbedding" android:value="2" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -42,4 +45,8 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    <!-- this is concerning with nfc tools to give permission to nfc package-->
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
+
 </manifest>
