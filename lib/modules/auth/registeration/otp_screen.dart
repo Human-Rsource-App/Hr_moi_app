@@ -35,7 +35,6 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
   @override
   void dispose() {
     errorController!.close();
-
     super.dispose();
   }
 
@@ -58,19 +57,9 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: ListView(
+            physics: BouncingScrollPhysics(),
             children: <Widget>[
               const SizedBox(height: 30),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 6,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.asset(
-                    'assets/icons/comments.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
@@ -106,17 +95,9 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                     vertical: 8.0,
                     horizontal: 30,
                   ),
-                  child: PinCodeTextField(
+                  child: pinCodeTextField(
                     appContext: context,
-                    pastedTextStyle: TextStyle(
-                      color: Colors.green.shade600,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    length: 6,
-                    obscureText: true,
-                    obscuringCharacter: '*',
-                    blinkWhenObscuring: true,
-                    animationType: AnimationType.fade,
+
                     validator: (v) {
                       if (v!.length < 3) {
                         return "تحقق من الرقم المرسل";
@@ -124,32 +105,11 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                         return null;
                       }
                     },
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
-                      fieldHeight: 50,
-                      fieldWidth: 40,
-                      activeFillColor: Colors.white,
-                    ),
-                    cursorColor: Colors.black,
-                    animationDuration: const Duration(milliseconds: 300),
-                    enableActiveFill: false,
                     errorAnimationController: errorController,
                     controller: textEditingController,
-                    keyboardType: TextInputType.number,
-                    boxShadows: const [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        color: Colors.black12,
-                        blurRadius: 10,
-                      ),
-                    ],
                     onCompleted: (v) {
-                      debugPrint("Completed");
+                      debugPrint("اكتمل");
                     },
-                    // onTap: () {
-                    //   print("Pressed");
-                    // },
                     onChanged: (value) {
                       debugPrint(value);
                       setState(() {
@@ -157,9 +117,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                       });
                     },
                     beforeTextPaste: (text) {
-                      debugPrint("Allowing to paste $text");
-                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                      debugPrint("السماح للصق$text");
                       return true;
                     },
                   ),
@@ -170,7 +128,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                 child: Text(
                   hasError ? "يرجى ملء جميع الخلايا بشكل صحيح" : "",
                   style: const TextStyle(
-                    color: Colors.black,
+                    color: Colors.red,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),
@@ -221,29 +179,6 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Flexible(
-                    child: TextButton(
-                      child: const Text("مسح "),
-                      onPressed: () {
-                        textEditingController.clear();
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    child: TextButton(
-                      child: const Text("لصق"),
-                      onPressed: () {
-                        setState(() {
-                          textEditingController.text = "123456";
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
