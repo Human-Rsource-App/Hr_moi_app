@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
+// import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
+import 'package:hr_moi/modules/auth/registeration/emp_identity.dart';
+
 import 'package:hr_moi/shared/style/styles.dart';
 
 void main() async {
@@ -22,7 +24,9 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       home: Directionality(
         textDirection: TextDirection.rtl,
-        child: PinCodeVerificationScreen(), //CameraScreen(camera: camera),
+        // child: PinCodeVerificationScreen(), //CameraScreen(camera: camera),
+        child: EmpIdentity(), //EmpIdentity,
+
       ),
     );
   }
