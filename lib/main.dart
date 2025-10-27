@@ -1,12 +1,12 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
+import 'package:hr_moi/modules/auth/registeration/face_verification_screen.dart';
 import 'package:hr_moi/shared/style/styles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
-  runApp(MyApp(camera: cameras.first));
+  runApp(MyApp(camera: cameras.last));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       home: Directionality(
         textDirection: TextDirection.rtl,
-        child: PinCodeVerificationScreen(), //CameraScreen(camera: camera),
+        child: FaceDetectionScreen(
+          camera: camera,
+        ), //PinCodeVerificationScreen(), //CameraScreen(camera: camera),
       ),
     );
   }
