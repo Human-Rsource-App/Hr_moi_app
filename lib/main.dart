@@ -1,10 +1,12 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hr_moi/modules/auth/registeration/face_verification_screen.dart';
+import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/style/styles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  CacheHelper.init();
   final cameras = await availableCameras();
   runApp(MyApp(camera: cameras.last));
 }

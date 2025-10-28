@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:hr_moi/shared/components/constants.dart';
 
 class DioHelper {
   static Dio? dio;
 
   static void init() {
-    dio = Dio(BaseOptions(baseUrl: '', receiveDataWhenStatusError: true));
+    dio = Dio(BaseOptions(baseUrl: baseUrl, receiveDataWhenStatusError: true));
   }
 
   static Future<Response> getData({

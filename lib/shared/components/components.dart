@@ -106,3 +106,22 @@ Widget pinCodeTextField({
   onChanged: onChanged,
   beforeTextPaste: beforeTextPaste,
 );
+
+//default card
+Widget defaultCard({required BuildContext context, required Widget child}) =>
+    Card(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: child,
+    );
+
+// default CircleAvatar
+Widget defaultCircleAvatar({
+  required double radius,
+  Color? backgroundColor,
+  Widget? child,
+}) => CircleAvatar(
+  radius: radius,
+  backgroundColor: backgroundColor ?? mainColor,
+  child: child,
+);
