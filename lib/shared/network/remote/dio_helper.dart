@@ -5,14 +5,20 @@ class DioHelper {
   static Dio? dio;
 
   static void init() {
-    dio = Dio(BaseOptions(baseUrl: baseUrl, receiveDataWhenStatusError: true));
+    dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        receiveDataWhenStatusError: true,
+        connectTimeout: Duration(seconds: 3),
+      ),
+    );
   }
 
   static Future<Response> getData({
     required String path,
-    required Map<String, dynamic> query,
+    Map<String, dynamic>? query,
   }) async {
-    return await dio!.get(path, queryParameters: query);
+    return await dio!.get(path);
   }
 
   static Future<Response> postData({
