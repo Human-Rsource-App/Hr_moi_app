@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_moi/shared/components/components.dart';
+
 import 'package:hr_moi/shared/style/color.dart';
 
 class EmpIdentity extends StatefulWidget {
