@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_moi/models/hr_profile_model.dart';
 import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
@@ -17,8 +18,11 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
     emit(HrNumGetLoadingState());
     DioHelper.getData(path: url)
         .then((val) {
+          HrProfileModel userProfile = HrProfileModel.fromJson(
+            val.data['data'],
+          );
           if (val.data != null) {
-            if (val.data['data']['data']['empCode'] == hrFromTextField) {
+            if (userProfile.data!.empCode == hrFromTextField) {
               if (context.mounted) {
                 Navigator.pushReplacement(
                   context,

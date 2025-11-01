@@ -65,7 +65,9 @@ class HrNumber extends StatelessWidget {
                       defaultButton(
                         context: context,
                         onPressed: () {
-                          final url = Uri.encodeFull(hrUrl + controller.text);
+                          final url = Uri.encodeFull(
+                            baseUrl + hrUrl + controller.text.trim(),
+                          );
                           if (formKey.currentState!.validate()) {
                             cubit.getHrNumber(
                               url: url,
