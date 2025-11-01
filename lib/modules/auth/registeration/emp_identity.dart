@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hr_moi/shared/components/components.dart';
+
 import 'package:hr_moi/shared/style/color.dart';
 
 class EmpIdentity extends StatefulWidget {
@@ -25,6 +26,7 @@ class _EmpIdentityState extends State<EmpIdentity> {
           },
         ),
       ),
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -50,7 +52,7 @@ class _EmpIdentityState extends State<EmpIdentity> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                     Center(
+                    Center(
                       child: Text(
                         'المعلومات الشخصية',
                         style: TextTheme.of(context).labelMedium,
@@ -69,13 +71,21 @@ class _EmpIdentityState extends State<EmpIdentity> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
+                          child: _buildInfoColumn(
+                            'الرقم الاحصائي',
+                            '867456466',
+                          ),
                         ),
+                        Expanded(child: _buildInfoColumn('الرتبة', 'مقدم')),
                       ],
                     ),
                     const SizedBox(height: 10),
                     _buildInfoColumn('الاسم الكامل', 'احمد علي حسين علي'),
                     const SizedBox(height: 10),
                     _buildInfoColumn(
+                      'الدائرة',
+                      'مديرية الاتصالات والنظم المعلوماتية',
+                    ),
                     const SizedBox(height: 10),
                     _buildInfoColumn('رقم الهاتف', '07712345678'),
                     const SizedBox(height: 10),
@@ -95,6 +105,8 @@ class _EmpIdentityState extends State<EmpIdentity> {
                     });
                   },
                 ),
+                Text(
+                  'نعم٬ اؤكد صحة هذه المعلومات',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -105,6 +117,7 @@ class _EmpIdentityState extends State<EmpIdentity> {
               lable: 'استمرار',
               onPressed: _isChecked ? () {} : null,
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -129,12 +142,19 @@ class _EmpIdentityState extends State<EmpIdentity> {
                   alignment: Alignment.topLeft,
                   child: GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
+                    child: defaultCircleAvatar(
+                      radius: 20,
                       child: Icon(Icons.close, color: Colors.black),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
+                Text('تحديث المعلومات', style: TextTheme.of(context).bodyLarge),
                 const SizedBox(height: 10),
+                Text(
+                  'يرجى تحديث معلوماتك في نظام HR',
+                  style: TextTheme.of(context).labelSmall,
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
               ],
@@ -149,7 +169,9 @@ class _EmpIdentityState extends State<EmpIdentity> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(title, style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 5),
+        Text(subtitle, style: TextTheme.of(context).labelSmall),
       ],
     );
   }
