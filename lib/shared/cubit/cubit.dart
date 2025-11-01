@@ -10,7 +10,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
   static HrMoiCubit get(BuildContext context) => BlocProvider.of(context);
 
   //hr screen logic
-  void getHrNumber({
+  void getHrUserData({
     required String url,
     required String hrFromTextField,
     required BuildContext context,
@@ -21,6 +21,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
           HrProfileModel userProfile = HrProfileModel.fromJson(
             val.data['data'],
           );
+
           if (val.data != null) {
             if (userProfile.data!.empCode == hrFromTextField) {
               if (context.mounted) {
@@ -62,4 +63,6 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
           emit(HrNumGetFailState());
         });
   }
+
+  //otp screen
 }

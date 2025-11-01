@@ -69,7 +69,7 @@ class HrNumber extends StatelessWidget {
                             baseUrl + hrUrl + controller.text.trim(),
                           );
                           if (formKey.currentState!.validate()) {
-                            cubit.getHrNumber(
+                            cubit.getHrUserData(
                               url: url,
                               hrFromTextField: controller.text,
                               context: context,
