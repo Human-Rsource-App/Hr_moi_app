@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
+import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import 'package:hr_moi/shared/style/styles.dart';
@@ -20,14 +22,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'HR MOI APP',
-      theme: lightTheme,
-      home: Directionality(
-        textDirection: TextDirection.rtl,
-        child:
-            HrNumber(), // FaceDetectionScreen(camera: camera,), //PinCodeVerificationScreen(), //CameraScreen(camera: camera),
+    return BlocProvider(
+      create: (context) => HrMoiCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'HR MOI APP',
+        theme: lightTheme,
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child:
+              HrNumber(), // FaceDetectionScreen(camera: camera,), //PinCodeVerificationScreen(), //CameraScreen(camera: camera),
+        ),
       ),
     );
   }
