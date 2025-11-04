@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:hr_moi/shared/components/components.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -83,7 +84,7 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<void> scanOnce() async {
     if (scanning) return;
     scanning = true;
-    setState(() => result = 'Scanning...');
+    setState(() => result = 'جاري المسح...');
 
     try {
       final photo = await _takePictureFile();
@@ -122,7 +123,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
       setState(() {
         if (parsed == null || parsed.isEmpty) {
-          result = 'No MRZ detected yet...';
+          result = 'لم يتم اكتشاف MRZ حتى الآن...';
         } else {
           result = parsed.entries.map((e) => '${e.key}: ${e.value}').join('\n');
         }
@@ -141,7 +142,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void startAutoScan() async {
     if (autoScanning) return;
     autoScanning = true;
-    setState(() => result = 'Auto scanning... Align MRZ with mask');
+    setState(() => result = 'المسح التلقائي... محاذاة MRZ مع القناع');
 
     while (autoScanning && mounted) {
       await scanOnce();
@@ -155,61 +156,56 @@ class _CameraScreenState extends State<CameraScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(child: CameraPreview(_controller)),
-          Positioned.fill(
-            child: IgnorePointer(child: CustomPaint(painter: MrzMaskPainter())),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 14,
-                    ),
-                  ),
-                  onPressed: scanning ? null : startAutoScan,
-                  child: Text(scanning ? 'Scanning...' : 'Start Auto Scan'),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 14,
-                    ),
-                  ),
-                  onPressed: () => setState(() {
-                    result = '';
-                    autoScanning = false;
-                  }),
-                  child: const Text('Stop / Clear'),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  width: double.infinity,
-                  color: Colors.black54,
-                  padding: const EdgeInsets.all(8),
-                  child: SingleChildScrollView(
-                    child: Text(
-                      result,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ),
-                ),
-              ],
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Positioned.fill(child: CameraPreview(_controller)),
+            Positioned.fill(
+              child: IgnorePointer(
+                child: CustomPaint(painter: MrzMaskPainter()),
+              ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+                  defaultElevatBtn(
+                    context: context,
+                    label: scanning
+                        ? 'جاري المسح الضوئي... '
+                        : 'بدء المسح التلقائي',
+                    onPressed: scanning ? null : startAutoScan,
+                  ),
+                  const SizedBox(height: 10),
+                  defaultElevatBtn(
+                    context: context,
+                    label: 'تحقق',
+                    onPressed: () {},
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    color: Colors.black54,
+                    padding: const EdgeInsets.all(8),
+                    child: SingleChildScrollView(
+                      child: Text(
+                        result,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -241,8 +237,8 @@ class MrzMaskPainter extends CustomPainter {
     canvas.drawRRect(RRect.fromRectXY(rect, 12, 12), border);
 
     const maskLines = [
-      'IDIRQC872855450199168716848<<<',
-      '9104255M3209103IRQ<<<<<<<<<<<6',
+      'IDIRQC871853450100167716848<<<',
+      '4108255M3009107IRQ<<<<<<<<<<<6',
       '<<XAEYMN<<<<<<<<<<<<<<<<<<<<<<',
     ];
 
@@ -279,10 +275,7 @@ Map<String, String> tryParseMrz(List<String> lines) {
   if (lines.length == 3 && lines.every((l) => l.length >= 30)) {
     return parseTd1(lines);
   }
-  if (lines.length == 2 && lines[0].length >= 36 && lines[1].length >= 36) {
-    if (lines[0].length >= 44) return parseTd3(lines);
-    return parseTd2(lines);
-  }
+
   return {};
 }
 
@@ -290,77 +283,19 @@ Map<String, String> parseTd1(List<String> l) {
   final a = l[0].padRight(30, '<');
   final b = l[1].padRight(30, '<');
   final c = l[2].padRight(30, '<');
-  final docType = a.substring(0, 2);
-  final country = a.substring(2, 5);
   final docNum = a.substring(5, 14).replaceAll('<', '');
+  final nID = a.substring(15, 29).replaceAll('<', '');
   final birth = b.substring(0, 6);
-  final sex = b.substring(7, 8);
   final expiry = b.substring(8, 14);
-  final nationality = b.substring(15, 18);
-  final optional = b.substring(18, 29).replaceAll('<', '');
   final names = parseNames(c);
 
   return {
-    'Format': 'TD1 (ID Card)',
-    'Document Type': docType,
-    'Issuing Country': country,
-    'Document Number': docNum,
-    'Date of Birth': formatDate(birth),
-    'Sex': sex,
-    'Expiry Date': formatDate(expiry),
-    'Nationality': nationality,
-    'Optional Number': optional,
-    'Name': '${names['surname']} ${names['given']}',
-  };
-}
-
-Map<String, String> parseTd2(List<String> l) {
-  final a = l[0].padRight(36, '<');
-  final b = l[1].padRight(36, '<');
-  final docType = a.substring(0, 2);
-  final country = a.substring(2, 5);
-  final names = parseNames(a.substring(5));
-  final docNum = b.substring(0, 9).replaceAll('<', '');
-  final nationality = b.substring(10, 13);
-  final birth = b.substring(13, 19);
-  final sex = b.substring(20, 21);
-  final expiry = b.substring(21, 27);
-
-  return {
-    'Format': 'TD2 (Residence Card)',
-    'Document Type': docType,
-    'Issuing Country': country,
-    'Document Number': docNum,
-    'Nationality': nationality,
-    'Date of Birth': formatDate(birth),
-    'Sex': sex,
-    'Expiry Date': formatDate(expiry),
-    'Name': '${names['surname']} ${names['given']}',
-  };
-}
-
-Map<String, String> parseTd3(List<String> l) {
-  final a = l[0].padRight(44, '<');
-  final b = l[1].padRight(44, '<');
-  final docType = a.substring(0, 2);
-  final country = a.substring(2, 5);
-  final names = parseNames(a.substring(5));
-  final docNum = b.substring(0, 9).replaceAll('<', '');
-  final nationality = b.substring(10, 13);
-  final birth = b.substring(13, 19);
-  final sex = b.substring(20, 21);
-  final expiry = b.substring(21, 27);
-
-  return {
-    'Format': 'TD3 (Passport)',
-    'Document Type': docType,
-    'Issuing Country': country,
-    'Document Number': docNum,
-    'Nationality': nationality,
-    'Date of Birth': formatDate(birth),
-    'Sex': sex,
-    'Expiry Date': formatDate(expiry),
-    'Name': '${names['surname']} ${names['given']}',
+    'النوع': 'بطاقة وطنية عراقية',
+    'رقم الوثيقة': docNum,
+    'رقم الهوية': nID,
+    'تاريخ الميلاد': formatDate(birth),
+    'النفاذية': formatDate(expiry),
+    'الاسم': '${names['surname']} ${names['given']}',
   };
 }
 

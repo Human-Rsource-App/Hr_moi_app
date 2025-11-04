@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/shared/components/components.dart';
+import 'package:hr_moi/shared/cubit/cubit.dart';
+import 'package:hr_moi/shared/cubit/states.dart';
 
 import 'package:hr_moi/shared/style/color.dart';
 
@@ -15,112 +18,117 @@ class _EmpIdentityState extends State<EmpIdentity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () {
-            _showErrorDialog(context);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            defaultCard(
-              context: context,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: defaultCircleAvatar(
-                        radius: 50,
-                        backgroundColor: backgColor,
-                        child: Image.asset('assets/icons/moi.png'),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Center(
-                      child: Text(
-                        'الهوية الرقمية',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Center(
-                      child: Text(
-                        'المعلومات الشخصية',
-                        style: TextTheme.of(context).labelMedium,
-                      ),
-                    ),
-                    const Divider(
-                      height: 10,
-                      thickness: 1,
-                      color: Colors.grey,
-                      indent: 16,
-                      endIndent: 16,
-                    ),
-                    const SizedBox(height: 10),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocConsumer<HrMoiCubit, HrMoiStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              onPressed: () {
+                _showErrorDialog(context);
+              },
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                defaultCard(
+                  context: context,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: _buildInfoColumn(
-                            'الرقم الاحصائي',
-                            '867456466',
+                        Center(
+                          child: defaultCircleAvatar(
+                            radius: 50,
+                            backgroundColor: backgColor,
+                            child: Image.asset('assets/icons/moi.png'),
                           ),
                         ),
-                        Expanded(child: _buildInfoColumn('الرتبة', 'مقدم')),
+                        const SizedBox(height: 10),
+                        Center(
+                          child: Text(
+                            'الهوية الرقمية',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Center(
+                          child: Text(
+                            'المعلومات الشخصية',
+                            style: TextTheme.of(context).labelMedium,
+                          ),
+                        ),
+                        const Divider(
+                          height: 10,
+                          thickness: 1,
+                          color: Colors.grey,
+                          indent: 16,
+                          endIndent: 16,
+                        ),
+                        const SizedBox(height: 10),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: _buildInfoColumn(
+                                'الرقم الاحصائي',
+                                '867456466',
+                              ),
+                            ),
+                            Expanded(child: _buildInfoColumn('الرتبة', 'مقدم')),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        _buildInfoColumn('الاسم الكامل', 'احمد علي حسين علي'),
+                        const SizedBox(height: 10),
+                        _buildInfoColumn(
+                          'الدائرة',
+                          'مديرية الاتصالات والنظم المعلوماتية',
+                        ),
+                        const SizedBox(height: 10),
+                        _buildInfoColumn('رقم الهاتف', '07712345678'),
+                        const SizedBox(height: 10),
+                        _buildInfoColumn('الصنف', 'ضابط'),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    _buildInfoColumn('الاسم الكامل', 'احمد علي حسين علي'),
-                    const SizedBox(height: 10),
-                    _buildInfoColumn(
-                      'الدائرة',
-                      'مديرية الاتصالات والنظم المعلوماتية',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isChecked = value!;
+                        });
+                      },
                     ),
-                    const SizedBox(height: 10),
-                    _buildInfoColumn('رقم الهاتف', '07712345678'),
-                    const SizedBox(height: 10),
-                    _buildInfoColumn('الصنف', 'ضابط'),
+                    Text(
+                      'نعم٬ اؤكد صحة هذه المعلومات',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Checkbox(
-                  value: _isChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _isChecked = value!;
-                    });
-                  },
+                const Spacer(),
+                defaultButton(
+                  context: context,
+                  lable: 'استمرار',
+                  onPressed: _isChecked ? () {} : null,
                 ),
-                Text(
-                  'نعم٬ اؤكد صحة هذه المعلومات',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                const SizedBox(height: 20),
               ],
             ),
-            const Spacer(),
-            defaultButton(
-              context: context,
-              lable: 'استمرار',
-              onPressed: _isChecked ? () {} : null,
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

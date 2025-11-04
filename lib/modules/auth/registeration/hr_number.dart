@@ -66,13 +66,13 @@ class HrNumber extends StatelessWidget {
                         context: context,
                         onPressed: () {
                           final url = Uri.encodeFull(
-                            baseUrl + hrUrl + controller.text.trim(),
+                            baseUrl + hrUrl + controller.text,
                           );
                           if (formKey.currentState!.validate()) {
-                            cubit.getHrUserData(
+                            cubit.getEmpCode(
                               url: url,
-                              hrFromTextField: controller.text,
                               context: context,
+                              empCode: controller.text,
                             );
                           }
                         },
