@@ -1,7 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
+import 'package:hr_moi/modules/auth/registeration/mrz_screen.dart';
+import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
@@ -11,8 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   CacheHelper.init();
-  final cameras = await availableCameras();
-  runApp(MyApp(camera: cameras.last));
+  cameras = await availableCameras();
+  runApp(MyApp(camera: cameras!.last));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,8 +31,9 @@ class MyApp extends StatelessWidget {
         theme: lightTheme,
         home: Directionality(
           textDirection: TextDirection.rtl,
-          child:
-              HrNumber(), // FaceDetectionScreen(camera: camera,), //PinCodeVerificationScreen(), //CameraScreen(camera: camera),
+          child: CameraScreen(
+            camera: cameras!.first,
+          ), // FaceDetectionScreen(camera: camera,), //PinCodeVerificationScreen(), //CameraScreen(camera: camera),
         ),
       ),
     );
