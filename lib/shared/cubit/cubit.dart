@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/models/hr_otp_model.dart';
-import 'package:hr_moi/models/hr_profile_model.dart';
+import 'package:hr_moi/models/hr_model.dart';
+import 'package:hr_moi/models/identity_model.dart';
+import 'package:hr_moi/models/natinal_id_model.dart';
 import 'package:hr_moi/models/otp_model.dart';
+import 'package:hr_moi/modules/auth/registeration/face_verification_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/mrz_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
 import 'package:hr_moi/shared/components/components.dart';
@@ -35,7 +37,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
                   ),
                 ),
               );
-              emit(HrOtpGetSuccState());
+              emit(HrGetSuccState());
             }
           } else {
             if (context.mounted) {
@@ -43,7 +45,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
                 message: 'الرقم الاحصائي غير موجود او غير صحيح.',
                 context: context,
               );
-              emit(HrOtpGetFailState());
+              emit(HrGetFailState());
             }
           }
         })
@@ -53,7 +55,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
               message: 'الرقم الاحصائي غير موجود او غير صحيح.',
               context: context,
             );
-            emit(HrOtpGetFailState());
+            emit(HrGetFailState());
           }
         });
   }
@@ -66,9 +68,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
   }) {
     DioHelper.getData(path: url)
         .then((val) {
-          OtpModel otp = OtpModel.fromJson(
-            val.data,
-          ); //otp.data!.otp==currentText
+          // OtpModel otp = OtpModel.fromJson(val.data,); //otp.data!.otp==currentText
           if (currentText == '123456') {
             if (context.mounted) {
               Navigator.of(context).pushReplacement(
@@ -93,6 +93,39 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
             showMessage(message: 'خطأ في ادخال الرمز المرسل', context: context);
             emit(OtpGetSuccState());
           }
+        });
+  }
+
+  //mrz screen
+  void getNationalId({required String url, required BuildContext context}) {
+    DioHelper.getData(path: url)
+        .then((val) {
+          NationalIdModel nId = NationalIdModel.fromJson(val.data);
+
+          if (nId.success == true) {
+            //
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FaceDetectionScreen()),
+              );
+              emit(MrzGetSuccState());
+            } else {
+              if (context.mounted) {
+                showMessage(
+                  message: 'الرقم الوطني غير موجود',
+                  context: context,
+                );
+              }
+              emit(MrzGetFailState());
+            }
+          }
+        })
+        .catchError((error) {
+          if (context.mounted) {
+            showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+          }
+          emit(MrzGetFailState());
         });
   }
 
