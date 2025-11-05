@@ -125,3 +125,56 @@ Widget defaultCircleAvatar({
   backgroundColor: backgroundColor ?? mainColor,
   child: child,
 );
+
+//default snack bar message
+ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showMessage({
+  required String message,
+  required BuildContext context,
+  Color? backgroundColor,
+}) {
+  return ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: backgroundColor ?? Colors.red,
+    ),
+  );
+}
+
+//default pin code text field
+
+Widget pinCodeField({
+  required BuildContext appContext,
+  String? Function(String?)? validator,
+  StreamController<ErrorAnimationType>? errorAnimationController,
+  TextEditingController? controller,
+  void Function(String)? onCompleted,
+  void Function(String)? onChanged,
+  bool Function(String?)? beforeTextPaste,
+}) => pinCodeTextField(
+  appContext: appContext,
+
+  validator: validator,
+  errorAnimationController: errorAnimationController,
+  controller: controller,
+  onCompleted: onCompleted,
+  onChanged: onChanged,
+  beforeTextPaste: beforeTextPaste,
+);
+
+//default elevated button
+Widget defaultElevatBtn({
+  required BuildContext context,
+  required void Function()? onPressed,
+  required String label,
+}) => ElevatedButton(
+  style: ElevatedButton.styleFrom(
+    backgroundColor: btnColor,
+    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+  ),
+  onPressed: onPressed,
+  child: Text(label, style: TextTheme.of(context).labelMedium),
+);
