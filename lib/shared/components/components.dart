@@ -45,6 +45,8 @@ Widget defaultTextField({
   ),
 );
 
+
+
 // icon button
 Widget defaultIconButton({
   required IconData icon,
@@ -178,3 +180,29 @@ Widget defaultElevatBtn({
   onPressed: onPressed,
   child: Text(label, style: TextTheme.of(context).labelMedium),
 );
+
+Widget defaultPasswordTextField({
+  required TextEditingController controller,
+  required bool obscureText,
+  required VoidCallback onSuffixIconPressed,
+  required String labelText,
+}) {
+  return TextField(
+    controller: controller,
+    obscureText: obscureText,
+    decoration: InputDecoration(
+      labelText: labelText,
+      border: const OutlineInputBorder(),
+      suffixIcon: IconButton(
+        icon: Icon(
+          obscureText ? Icons.visibility_off : Icons.visibility,
+        ),
+        onPressed: onSuffixIconPressed,
+      ),
+    ),
+  );
+}
+
+Widget defaultArrowBack() {
+  return const Icon(Icons.arrow_back_ios, color: Colors.black);
+}

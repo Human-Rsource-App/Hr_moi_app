@@ -25,13 +25,8 @@ class _EmpIdentityState extends State<EmpIdentity> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-              onPressed: () {
-                _showErrorDialog(context);
-              },
+              leading: IconButton(onPressed: (){_showErrorDialog(context);}, icon: defaultArrowBack()),
             ),
-          ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -117,7 +112,7 @@ class _EmpIdentityState extends State<EmpIdentity> {
                     ),
                   ],
                 ),
-                const Spacer(),
+                 Spacer(),
                 defaultButton(
                   context: context,
                   lable: 'استمرار',

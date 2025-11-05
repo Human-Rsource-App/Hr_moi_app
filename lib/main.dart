@@ -7,12 +7,14 @@ import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import 'package:hr_moi/shared/style/styles.dart';
 
+import 'modules/auth/registeration/create_password.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DioHelper.init();
   CacheHelper.init();
   final cameras = await availableCameras();
-  runApp(MyApp(camera: cameras.last));
+  runApp(MyApp(camera: cameras.first));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,16 +24,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HrMoiCubit(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'HR MOI APP',
-        theme: lightTheme,
-        home: Directionality(
-          textDirection: TextDirection.rtl,
-          child:
-              HrNumber(), // FaceDetectionScreen(camera: camera,), //PinCodeVerificationScreen(), //CameraScreen(camera: camera),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'HR MOI APP',
+      theme: lightTheme,
+      home: BlocProvider(
+        create: (context) => HrMoiCubit(),
+        child: const Directionality(
+          textDirection: TextDirection.ltr,
+          child: CreatePasswordScreen(),
         ),
       ),
     );
