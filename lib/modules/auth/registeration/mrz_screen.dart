@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:hr_moi/shared/components/components.dart';
+import 'package:hr_moi/shared/components/constants.dart';
+import 'package:hr_moi/shared/cubit/cubit.dart';
+import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -158,54 +162,65 @@ class _CameraScreenState extends State<CameraScreen> {
 
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Positioned.fill(child: CameraPreview(_controller)),
-            Positioned.fill(
-              child: IgnorePointer(
-                child: CustomPaint(painter: MrzMaskPainter()),
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Column(
-                children: [
-                  defaultElevatBtn(
-                    context: context,
-                    label: scanning
-                        ? 'جاري المسح الضوئي... '
-                        : 'بدء المسح التلقائي',
-                    onPressed: scanning ? null : startAutoScan,
+      child: BlocConsumer<HrMoiCubit, HrMoiStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var cubit = HrMoiCubit.get(context);
+          return Scaffold(
+            body: Stack(
+              children: [
+                Positioned.fill(child: CameraPreview(_controller)),
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: CustomPaint(painter: MrzMaskPainter()),
                   ),
-                  const SizedBox(height: 10),
-                  defaultElevatBtn(
-                    context: context,
-                    label: 'تحقق',
-                    onPressed: () {},
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: double.infinity,
-                    color: Colors.black54,
-                    padding: const EdgeInsets.all(8),
-                    child: SingleChildScrollView(
-                      child: Text(
-                        result,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: [
+                      defaultElevatBtn(
+                        context: context,
+                        label: scanning
+                            ? 'جاري المسح الضوئي... '
+                            : 'بدء المسح التلقائي',
+                        onPressed: scanning ? null : startAutoScan,
+                      ),
+                      const SizedBox(height: 10),
+                      defaultElevatBtn(
+                        context: context,
+                        label: 'تحقق',
+                        onPressed: () {
+                          cubit.getNationalId(
+                            url: '$baseUrl$mrzUrl$nID',
+                            context: context,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: double.infinity,
+                        color: Colors.black54,
+                        padding: const EdgeInsets.all(8),
+                        child: SingleChildScrollView(
+                          child: Text(
+                            result,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -247,7 +262,7 @@ class MrzMaskPainter extends CustomPainter {
         text: TextSpan(
           text: text,
           style: const TextStyle(
-            color: Colors.white70,
+            color: Colors.black,
             fontFamily: 'monospace',
             fontSize: 16,
             letterSpacing: 1.5,
@@ -284,7 +299,7 @@ Map<String, String> parseTd1(List<String> l) {
   final b = l[1].padRight(30, '<');
   final c = l[2].padRight(30, '<');
   final docNum = a.substring(5, 14).replaceAll('<', '');
-  final nID = a.substring(15, 29).replaceAll('<', '');
+  nID = a.substring(15, 29).replaceAll('<', '');
   final birth = b.substring(0, 6);
   final expiry = b.substring(8, 14);
   final names = parseNames(c);
@@ -308,5 +323,5 @@ Map<String, String> parseNames(String s) {
 
 String formatDate(String yymmdd) {
   if (yymmdd.length != 6) return yymmdd;
-  return '20${yymmdd.substring(0, 2)}-${yymmdd.substring(2, 4)}-${yymmdd.substring(4, 6)}';
+  return '${yymmdd.substring(0, 2)}-${yymmdd.substring(2, 4)}-${yymmdd.substring(4, 6)}';
 }
