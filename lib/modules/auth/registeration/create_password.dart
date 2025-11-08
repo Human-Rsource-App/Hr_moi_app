@@ -109,12 +109,12 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             const SizedBox(height: 10),
                             const Text('يجب ان تحتوي كلمة المرور على:'),
                             const SizedBox(height: 8),
-                            _buildRequirementRow('8-32 محرف', _has8to32Chars),
+                            _buildRequirementRow('8-32 حرف', _has8to32Chars),
                             const SizedBox(height: 8),
                             _buildRequirementRow('رقم واحد', _hasNumber),
                             const SizedBox(height: 8),
                             _buildRequirementRow(
-                                'محرف خاص واحد e.g. !@#\$%',
+                                'رمز خاص واحد e.g. !@#\$%',
                                 _hasSpecialChar),
                             if (isPasswordValid) ...[
                               const SizedBox(height: 16),
