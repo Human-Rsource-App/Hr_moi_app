@@ -7,8 +7,12 @@ ThemeData lightTheme = ThemeData(
     bodyLarge: TextStyle(fontSize: 20.0, fontFamily: 'Amiri Bold'),
     bodyMedium: TextStyle(fontSize: 18.0, fontFamily: 'Amiri Regular'),
     bodySmall: TextStyle(fontSize: 16.0, fontFamily: 'Amiri Regular'),
+    titleSmall: TextStyle(fontSize: 10.0, fontFamily: 'Amiri Regular'),
     labelLarge: TextStyle(fontSize: 25.0, fontFamily: 'Amiri Bold'),
     labelMedium: TextStyle(fontSize: 20.0, fontFamily: 'Amiri Bold'),
     labelSmall: TextStyle(fontSize: 18.0, fontFamily: 'Amiri Bold'),
+  ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: Colors.transparent,
   ),
 );

@@ -32,6 +32,8 @@ Widget defaultTextField({
   TextInputType? keyboardType,
   required String lable,
   required BuildContext context,
+  IconData? suffixIcon,
+  void Function()? onPressed,
 }) => TextFormField(
   controller: controller,
   validator: validator,
@@ -40,6 +42,7 @@ Widget defaultTextField({
   keyboardType: keyboardType,
 
   decoration: InputDecoration(
+    suffixIcon: IconButton(onPressed: onPressed, icon: Icon(suffixIcon)),
     label: Text(lable, style: TextTheme.of(context).bodySmall),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
   ),
