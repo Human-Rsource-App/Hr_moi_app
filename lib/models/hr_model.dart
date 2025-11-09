@@ -1,10 +1,10 @@
-class HrOtpModel {
+class HrModel {
   bool? success;
-  String? message;
+  String? msg;
   DateModel? data;
-  HrOtpModel.fromJson(Map<String, dynamic> json) {
+  HrModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    message = json['message'];
+    msg = json['msg'];
     data = json['data'] != null ? DateModel.fromJson(json['data']) : null;
   }
 }

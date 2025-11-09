@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:hr_moi/shared/components/components.dart';
+import 'package:hr_moi/shared/components/constants.dart';
+import 'package:hr_moi/shared/cubit/cubit.dart';
+import 'package:hr_moi/shared/cubit/states.dart';
 
 class FaceDetectionScreen extends StatefulWidget {
   const FaceDetectionScreen({super.key});
@@ -295,27 +300,48 @@ class DisplayImagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.file(File(imagePath)),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: defaultButton(
-                  context: context,
-                  lable: 'تحقق',
-                  onPressed: () {},
-                ),
+    String image64Trans({required String imagePath}) {
+      final personalImage = File(imagePath);
+      List<int> personalImageByte = personalImage.readAsBytesSync();
+      final personalImageBase64 = base64Encode(personalImageByte);
+      return personalImageBase64;
+    }
+
+    return BlocConsumer<HrMoiCubit, HrMoiStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = HrMoiCubit.get(context);
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.file(File(imagePath)),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: defaultButton(
+                      context: context,
+                      lable: 'استمرار',
+                      onPressed: () {
+                        var stringImage = image64Trans(imagePath: imagePath);
+                        print(stringImage);
+                        cubit.postUserFace(
+                          url: '$baseUrl$faceUrl$hrNum'.toString(),
+                          data: stringImage,
+                          context: context,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                ],
               ),
-              const SizedBox(height: 10.0),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

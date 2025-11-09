@@ -153,6 +153,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                           onPressed: () => showMessage(
                             message: 'تم أعادة الأرسال',
                             context: context,
+                            backgroundColor: Colors.green,
                           ),
                           child: Text(
                             "اعادة ارسال!",
@@ -165,37 +166,39 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 14),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: defaultButton(
-                        context: context,
-                        onPressed: () {
-                          formKey.currentState!.validate();
-                          // conditions for validating
-                          if (currentText.length != 6) {
-                            errorController!.add(
-                              ErrorAnimationType.shake,
-                            ); // Triggering error shake animation
-                            setState(() => hasError = true);
-                          } else {
-                            setState(() {
-                              hasError = false;
-                              cubit.getOtp(
-                                url:
-                                    '$baseUrl$otpUrl${widget.empCode}/${widget.phoneNumber}',
-                                currentText: currentText,
-                                context: context,
-                              );
-                            });
-                          }
-                        },
-                        lable: 'تحقق',
-                      ),
-                    ),
-                    const SizedBox(height: 16),
                   ],
                 ),
+              ),
+            ),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.only(
+                left: 30.0,
+                right: 30.0,
+                bottom: 40,
+              ),
+              child: defaultButton(
+                context: context,
+                onPressed: () {
+                  formKey.currentState!.validate();
+                  // conditions for validating
+                  if (currentText.length != 6) {
+                    errorController!.add(
+                      ErrorAnimationType.shake,
+                    ); // Triggering error shake animation
+                    setState(() => hasError = true);
+                  } else {
+                    setState(() {
+                      hasError = false;
+                      cubit.getOtp(
+                        url:
+                            '$baseUrl$otpUrl${widget.empCode}/${widget.phoneNumber}',
+                        currentText: currentText.toString(),
+                        context: context,
+                      );
+                    });
+                  }
+                },
+                lable: 'تحقق',
               ),
             ),
           ),

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/models/hr_model.dart';
 import 'package:hr_moi/models/identity_model.dart';
 import 'package:hr_moi/models/natinal_id_model.dart';
-import 'package:hr_moi/models/otp_model.dart';
 import 'package:hr_moi/modules/auth/registeration/face_verification_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/mrz_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
@@ -24,8 +23,10 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
   }) {
     DioHelper.getData(path: url)
         .then((val) {
-          HrOtpModel hrOtp = HrOtpModel.fromJson(val.data['data']);
+          HrModel hrOtp = HrModel.fromJson(val.data);
 
+          //this because i need it in face recognition so i but it as public
+          // hrNum = empCode;
           if (hrOtp.success == true && hrOtp.data != null) {
             if (context.mounted) {
               Navigator.pushReplacement(
@@ -37,6 +38,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
                   ),
                 ),
               );
+
               emit(HrGetSuccState());
             }
           } else {
@@ -51,10 +53,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
         })
         .catchError((error) {
           if (context.mounted) {
-            showMessage(
-              message: 'الرقم الاحصائي غير موجود او غير صحيح.',
-              context: context,
-            );
+            showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
             emit(HrGetFailState());
           }
         });
@@ -73,7 +72,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
             if (context.mounted) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => CameraScreen(camera: cameras!.last),
+                  builder: (context) => CameraScreen(camera: cameras!.first),
                 ),
               );
             }
@@ -126,6 +125,25 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
             showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
           }
           emit(MrzGetFailState());
+        });
+  }
+
+  //face recog screen
+  void postUserFace({
+    required String url,
+    required String data,
+    required BuildContext context,
+  }) {
+    DioHelper.postData(path: url, data: {'image_data': data})
+        .then((val) {
+          if (val.data) {
+            showMessage(message: 'تم التسجيل', context: context);
+          } else {
+            showMessage(message: 'لا توجد بيانات', context: context);
+          }
+        })
+        .catchError((error) {
+          showMessage(message: 'فشل عملية التسجيل', context: context);
         });
   }
 
