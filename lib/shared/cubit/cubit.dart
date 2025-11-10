@@ -15,7 +15,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
   HrMoiCubit() : super(InitialState());
   static HrMoiCubit get(BuildContext context) => BlocProvider.of(context);
 
-  //empCode logic for hr screen
+  //hr number page logic
   void getEmpCode({
     required String url,
     required BuildContext context,
@@ -29,6 +29,10 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
           // hrNum = empCode;
           if (hrOtp.success == true && hrOtp.data != null) {
             if (context.mounted) {
+              getHrUserData(
+                context: context,
+                url: '$baseUrl$userProfUrl$empCode',
+              );
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -152,12 +156,10 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
     emit(HrNumGetLoadingState());
     DioHelper.getData(path: url)
         .then((val) {
-          HrProfileModel userProfile = HrProfileModel.fromJson(
-            val.data['data'],
-          );
+          userProfile = HrProfileModel.fromJson(val.data['data']);
 
           if (val.data != null) {
-            if (userProfile.success == true) {
+            if (userProfile!.success == true) {
               if (context.mounted) {
                 // Navigator.pushReplacement(
                 //   context,
@@ -198,6 +200,4 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
           emit(HrNumGetFailState());
         });
   }
-
-  //otp screen
 }
