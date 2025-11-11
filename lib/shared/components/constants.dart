@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:hr_moi/models/identity_model.dart';
-import 'package:path/path.dart';
 
 const String baseUrl = 'http://10.21.10.181:3090/api/';
 const String userProfUrl = 'moiApp/user_profile/';
