@@ -16,73 +16,81 @@ class HrNumber extends StatelessWidget {
     return BlocConsumer<HrMoiCubit, HrMoiStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        final size = MediaQuery.of(context).size;
         var cubit = HrMoiCubit.get(context);
-        return Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    spacing: 10.0,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    width: size.width,
 
-                    children: [
-                      Text(
-                        'ادخل التفاصيل',
-                        style: TextTheme.of(context).bodySmall,
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        spacing: 10.0,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+
+                        children: [
+                          Text(
+                            'ادخل التفاصيل',
+                            style: TextTheme.of(context).bodySmall,
+                          ),
+                          Text(
+                            'أدخل رقمك الإحصائي للبدء',
+                            style: TextTheme.of(
+                              context,
+                            ).bodySmall!.copyWith(color: Colors.grey),
+                          ),
+                          SizedBox(height: 20),
+                          defaultTextField(
+                            keyboardType: TextInputType.numberWithOptions(),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'يرجى ادخال الرقم الاحصائي';
+                              }
+
+                              final reg = RegExp(r'^[1-9]\d{0,11}$');
+                              if (!reg.hasMatch(value)) {
+                                return 'الرقم الاحصائي غير صالح';
+                              }
+                              return null;
+                            },
+                            onChanged: (String val) {},
+                            lable: 'الرقم الإحصائي',
+                            context: context,
+                            controller: controller,
+                          ),
+                        ],
                       ),
-                      Text(
-                        'أدخل رقمك الإحصائي للبدء',
-                        style: TextTheme.of(
-                          context,
-                        ).bodySmall!.copyWith(color: Colors.grey),
-                      ),
-                      SizedBox(height: 20),
-                      defaultTextField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'يرجى ادخال الرقم الاحصائي';
-                          }
-
-                          final reg = RegExp(r'^[1-9]\d{0,11}$');
-                          if (!reg.hasMatch(value)) {
-                            return 'الرقم الاحصائي غير صالح';
-                          }
-                          return null;
-                        },
-                        onChanged: (String val) {},
-                        lable: ' الرقم الإحصائي',
-                        context: context,
-                        controller: controller,
-                      ),
-
-                      Spacer(),
-
-                      defaultButton(
-                        context: context,
-                        onPressed: () {
-                          final url = Uri.encodeFull(
-                            baseUrl + hrUrl + controller.text,
-                          );
-                          if (formKey.currentState!.validate()) {
-                            cubit.getEmpCode(
-                              url: url,
-                              context: context,
-                              empCode: controller.text,
-                            );
-                          }
-                        },
-                        lable: 'استمرار',
-                      ),
-
-                      SizedBox(height: 50.0),
-                    ],
+                    ),
                   ),
                 ),
+              ),
+            ),
+
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.only(left: 30.0, right: 30, bottom: 40),
+              child: defaultButton(
+                context: context,
+                onPressed: () {
+                  final url = Uri.encodeFull(
+                    baseUrl + hrUrl + controller.text.toString(),
+                  );
+
+                  if (formKey.currentState!.validate()) {
+                    cubit.getEmpCode(
+                      url: url,
+                      context: context,
+                      empCode: controller.text.toString(),
+                    );
+                  }
+                },
+                lable: 'استمرار',
               ),
             ),
           ),

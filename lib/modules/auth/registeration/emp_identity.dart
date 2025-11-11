@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/shared/components/components.dart';
+import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 
@@ -74,7 +75,7 @@ class _EmpIdentityState extends State<EmpIdentity> {
                             Expanded(
                               child: _buildInfoColumn(
                                 'الرقم الاحصائي',
-                                '867456466',
+                                userProfile!.data!.empCode.toString(),
                               ),
                             ),
                             Expanded(child: _buildInfoColumn('الرتبة', 'مقدم')),
