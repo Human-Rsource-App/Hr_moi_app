@@ -1,24 +1,36 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_moi/modules/auth/login/login.dart';
+import 'package:hr_moi/modules/splash_screen/splash.dart';
+import 'package:hr_moi/shared/components/constants.dart';
+import 'package:hr_moi/shared/cubit/cubit.dart';
+import 'package:hr_moi/shared/network/local/cache_helper.dart';
+import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import 'package:hr_moi/shared/style/styles.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DioHelper.init();
+  CacheHelper.init();
+  cameras = await availableCameras();
+  runApp(MyApp(camera: cameras!.last));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final CameraDescription camera;
+  const MyApp({required this.camera, super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'HR MOI APP',
-      theme: lightTheme,
-      home: Directionality(
-        textDirection: TextDirection.rtl,
-        child: PinCodeVerificationScreen(),
+    return BlocProvider(
+      create: (context) => HrMoiCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'HR MOI APP',
+        theme: lightTheme,
+        home: Directionality(textDirection: TextDirection.rtl, child: Login()),
       ),
     );
   }
