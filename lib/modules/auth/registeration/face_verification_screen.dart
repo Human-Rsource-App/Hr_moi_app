@@ -1,347 +1,285 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:hr_moi/shared/components/components.dart';
+import 'package:google_mlkit_commons/google_mlkit_commons.dart' as mlkit;
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-class FaceDetectionScreen extends StatefulWidget {
-  const FaceDetectionScreen({super.key});
+class FaceLivenessPage extends StatefulWidget {
+  const FaceLivenessPage({super.key});
 
   @override
-  State<FaceDetectionScreen> createState() => _FaceDetectionScreenState();
+  State<FaceLivenessPage> createState() => _FaceLivenessPageState();
 }
 
-class _FaceDetectionScreenState extends State<FaceDetectionScreen>
-    with SingleTickerProviderStateMixin {
-  CameraController? _cameraController;
-  bool _cameraInitialized = false;
-  CameraDescription? _camera;
-  FaceDetector? _faceDetector;
-  Face? currentFace;
+class _FaceLivenessPageState extends State<FaceLivenessPage> {
+  CameraController? _controller;
+  late FaceDetector _faceDetector;
   Timer? _frameTimer;
-  bool _processing = false;
-  XFile? _capturedImage;
-  DateTime? _faceStableSince;
-  Size? _previewSize;
+  bool _isProcessing = false;
+  bool _livenessPassed = false;
+  String _status = 'Initializing camera...';
+  bool _flashOverlay = false;
+  final player = AudioPlayer();
 
-  final double _stableDurationSeconds = 2.0;
+  File? _verifiedImage; // هنا سنخزن الصورة النهائية للتحقق
 
-  late AnimationController _animationController;
-  late Animation<Color?> _colorAnimation;
+  final List<String> _challenges = [
+    'ارمش',
+    'استدر لليمين',
+    'استدر لليسار',
+    'ابتسم',
+  ];
+  int _challengeIndex = 0;
 
-  bool faceInsideOval = false;
-  String _hintText = "قم بمحاذاة وجهك داخل الشكل مع الحفاظ على اضاءة جيدة ";
+  String get _currentChallenge => _challenges[_challengeIndex];
 
   @override
   void initState() {
     super.initState();
-    _initCamera();
+    _initFaceDetector();
+    _startCamera();
+  }
+
+  void _initFaceDetector() {
     _faceDetector = FaceDetector(
-      options: FaceDetectorOptions(performanceMode: FaceDetectorMode.fast),
-    );
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    _colorAnimation =
-        ColorTween(
-          begin: Colors.red,
-          end: Colors.green,
-        ).animate(_animationController)..addListener(() {
-          setState(() {});
-        });
-  }
-
-  Future<void> _initCamera() async {
-    final cameras = await availableCameras();
-    _camera = cameras.firstWhere(
-      (c) => c.lensDirection == CameraLensDirection.front,
-      orElse: () => cameras.first,
-    );
-
-    _cameraController = CameraController(
-      _camera!,
-      ResolutionPreset.medium,
-      enableAudio: false,
-    );
-
-    await _cameraController!.initialize();
-    _cameraInitialized = true;
-    _previewSize = _cameraController!.value.previewSize;
-
-    _frameTimer = Timer.periodic(
-      const Duration(milliseconds: 300),
-      (_) => _captureFrameForDetection(),
-    );
-
-    if (mounted) setState(() {});
-  }
-
-  Rect _getOvalRect(Size size) {
-    final double width = size.width * 0.7;
-    final double height = size.height * 0.5;
-    final double left = (size.width - width) / 2;
-    final double top = (size.height - height) / 2;
-    return Rect.fromLTWH(left, top, width, height);
-  }
-
-  bool _isFaceInsideOval(Face face, Size widgetSize) {
-    final ovalRect = _getOvalRect(widgetSize);
-
-    final scaleX = widgetSize.width / (_previewSize?.width ?? widgetSize.width);
-    final scaleY =
-        widgetSize.height / (_previewSize?.height ?? widgetSize.height);
-
-    double left = face.boundingBox.left * scaleX;
-    double top = face.boundingBox.top * scaleY;
-    double right = face.boundingBox.right * scaleX;
-    double bottom = face.boundingBox.bottom * scaleY;
-
-    final faceCenterX = (left + right) / 2;
-    final faceCenterY = (top + bottom) / 2;
-
-    final a = ovalRect.width / 2;
-    final b = ovalRect.height / 2;
-    final cx = ovalRect.left + a;
-    final cy = ovalRect.top + b;
-
-    final value =
-        ((faceCenterX - cx) * (faceCenterX - cx)) / (a * a) +
-        ((faceCenterY - cy) * (faceCenterY - cy)) / (b * b);
-
-    return value <= 1.0;
-  }
-
-  Future<void> _captureFrameForDetection() async {
-    if (_processing) return;
-    if (!_cameraInitialized ||
-        _cameraController == null ||
-        !_cameraController!.value.isInitialized) {
-      return;
-    }
-    _processing = true;
-
-    try {
-      final file = await _cameraController!.takePicture();
-      final inputImage = InputImage.fromFilePath(file.path);
-      final faces = await _faceDetector!.processImage(inputImage);
-
-      if (faces.isNotEmpty) {
-        final face = faces.first;
-        currentFace = face;
-
-        if (_previewSize != null) {
-          final widgetSize = MediaQuery.of(context).size;
-          final inside = _isFaceInsideOval(face, widgetSize);
-          faceInsideOval = inside;
-
-          if (inside) {
-            _animationController.forward();
-            _hintText = "رجاءا ثبت الهاتف ...";
-
-            _faceStableSince ??= DateTime.now();
-
-            final stableDuration = DateTime.now()
-                .difference(_faceStableSince!)
-                .inMilliseconds;
-            if (stableDuration >= (_stableDurationSeconds * 1000) &&
-                _capturedImage == null) {
-              _capturedImage = await _cameraController!.takePicture();
-              _hintText = "Captured!";
-              _navigateToResult(_capturedImage!);
-            }
-          } else {
-            _animationController.reverse();
-            _faceStableSince = null;
-            _hintText = "قم بتقريب وابعاد الكامرة لافضل صورة";
-          }
-        }
-      } else {
-        currentFace = null;
-        _faceStableSince = null;
-        faceInsideOval = false;
-        _animationController.reverse();
-        _hintText = "قم بمحاذاة وجهك داخل الشكل مع الحفاظ على اضاءة جيدة";
-      }
-
-      try {
-        await File(file.path).delete();
-      } catch (_) {}
-    } catch (e) {
-      if (mounted) showMessage(context: context, message: 'Error: $e');
-    } finally {
-      _processing = false;
-    }
-  }
-
-  void _navigateToResult(XFile image) {
-    try {
-      _frameTimer?.cancel();
-    } catch (_) {}
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => DisplayImagePage(imagePath: image.path),
+      options: FaceDetectorOptions(
+        enableClassification: true,
+        enableTracking: true,
+        enableLandmarks: true,
       ),
     );
   }
 
+  Future<void> _startCamera() async {
+    await Permission.camera.request();
+    final cameras = await availableCameras();
+    final frontCamera = cameras.firstWhere(
+      (c) => c.lensDirection == CameraLensDirection.front,
+    );
+
+    _controller = CameraController(frontCamera, ResolutionPreset.medium);
+    await _controller!.initialize();
+
+    _startFaceStream();
+    setState(() => _status = 'اضبط وجهك داخل الدائرة وابدأ التحديات');
+  }
+
+  void _startFaceStream() {
+    _frameTimer?.cancel();
+    _frameTimer = Timer.periodic(const Duration(milliseconds: 600), (_) async {
+      if (_isProcessing || _livenessPassed) return;
+      _isProcessing = true;
+
+      try {
+        final file = await _controller!.takePicture();
+
+        final input = mlkit.InputImage.fromFilePath(file.path);
+        final faces = await _faceDetector.processImage(input);
+
+        if (faces.isNotEmpty) {
+          _evaluateFace(faces.first, file);
+        } else {
+          setState(() => _status = 'لا يوجد وجه. حاول مرة أخرى.');
+        }
+      } catch (_) {
+      } finally {
+        _isProcessing = false;
+      }
+    });
+  }
+
+  void _evaluateFace(Face face, XFile file) {
+    bool passed = false;
+
+    switch (_currentChallenge) {
+      case 'ارمش':
+        passed =
+            (face.leftEyeOpenProbability ?? 1) < 0.3 ||
+            (face.rightEyeOpenProbability ?? 1) < 0.3;
+        break;
+      case 'استدر لليمين':
+        passed = face.headEulerAngleY != null && face.headEulerAngleY! < -15;
+        break;
+      case 'استدر لليسار':
+        passed = face.headEulerAngleY != null && face.headEulerAngleY! > 15;
+        break;
+      case 'ابتسم':
+        passed = (face.smilingProbability ?? 0) > 0.7;
+        break;
+    }
+
+    if (passed) {
+      _nextChallenge(file);
+    } else {
+      setState(() => _status = 'قم: $_currentChallenge');
+    }
+  }
+
+  Future<void> _nextChallenge(XFile file) async {
+    if (_challengeIndex < _challenges.length - 1) {
+      _challengeIndex++;
+      await _playFeedback();
+      setState(() => _status = 'جيد المرحله التالية: $_currentChallenge');
+    } else {
+      await _onLivenessSuccess(file);
+    }
+  }
+
+  Future<void> _onLivenessSuccess(XFile file) async {
+    _livenessPassed = true;
+    _frameTimer?.cancel();
+
+    _verifiedImage = File(file.path); // حفظ الصورة النهائية
+
+    setState(() => _status = '✔ تم التحقق من الحيوية بنجاح!');
+    await _playFeedback();
+  }
+
+  Future<void> _playFeedback() async {
+    setState(() => _flashOverlay = true);
+    await Future.delayed(const Duration(milliseconds: 150));
+    setState(() => _flashOverlay = false);
+    await player.play(AssetSource('sounds/success.mp3'));
+  }
+
   @override
   void dispose() {
-    try {
-      _frameTimer?.cancel();
-    } catch (_) {}
-    try {
-      _cameraController?.dispose();
-    } catch (_) {}
-    _faceDetector?.close();
-    _animationController.dispose();
+    _frameTimer?.cancel();
+    _controller?.dispose();
+    _faceDetector.close();
+    player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_cameraInitialized ||
-        _cameraController == null ||
-        !_cameraController!.value.isInitialized) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    final preview = CameraPreview(_cameraController!);
-
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final widgetSize = constraints.biggest;
-
-          return Stack(
-            children: [
-              preview,
-              Positioned.fill(
-                child: CustomPaint(
-                  painter: _OvalGuidePainter(
-                    widgetSize: widgetSize,
-                    color: _colorAnimation.value ?? Colors.red,
-                  ),
-                ),
-              ),
-              // Hint text
-              Positioned(
-                bottom: 50,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Text(
-                        _hintText,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _OvalGuidePainter extends CustomPainter {
-  final Size widgetSize;
-  final Color color;
-  _OvalGuidePainter({required this.widgetSize, required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..color = color;
-
-    final double width = size.width * 0.7;
-    final double height = size.height * 0.5;
-    final double left = (size.width - width) / 2;
-    final double top = (size.height - height) / 2;
-
-    final rect = Rect.fromLTWH(left, top, width, height);
-    canvas.drawOval(rect, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _OvalGuidePainter oldDelegate) =>
-      oldDelegate.color != color;
-}
-
-class DisplayImagePage extends StatelessWidget {
-  final String imagePath;
-  const DisplayImagePage({super.key, required this.imagePath});
-
-  @override
-  Widget build(BuildContext context) {
-    String image64Trans({required String imagePath}) {
-      final personalImage = File(imagePath);
-      List<int> personalImageByte = personalImage.readAsBytesSync();
-      final personalImageBase64 = base64Encode(personalImageByte);
-      return personalImageBase64;
-    }
-
+    HrMoiCubit cubit = HrMoiCubit.get(context);
     return BlocConsumer<HrMoiCubit, HrMoiStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = HrMoiCubit.get(context);
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.file(File(imagePath)),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: defaultButton(
-                      context: context,
-                      lable: 'استمرار',
-                      onPressed: () {
-                        var stringImage = image64Trans(imagePath: imagePath);
-                        print(stringImage);
-                        cubit.postUserFace(
-                          url: '$baseUrl$faceUrl$hrNum'.toString(),
-                          data: stringImage,
-                          context: context,
-                        );
-                      },
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Stack(
+              alignment: Alignment.center,
+              children: [
+                if (_controller != null && _controller!.value.isInitialized)
+                  CameraPreview(_controller!),
+
+                CustomPaint(painter: _OvalPainter(), child: Container()),
+
+                Positioned(
+                  bottom: 120,
+                  left: 0,
+                  right: 0,
+                  child: Text(
+                    _status,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 10.0),
-                ],
-              ),
+                ),
+                if (!_livenessPassed)
+                  Positioned(
+                    bottom: 60,
+                    child: Text(
+                      'خطوة ${_challengeIndex + 1} من ${_challenges.length}',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+
+                if (_livenessPassed)
+                  Positioned(
+                    bottom: 20,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_verifiedImage != null) {
+                          var stringImage = image64Trans(
+                            imagePath: _verifiedImage!.path,
+                          );
+
+                          cubit.postUserFace(
+                            url: '$baseUrl$faceUrl$hrNum'.toString(),
+                            data: stringImage,
+                            context: context,
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 14,
+                        ),
+                      ),
+                      child: const Text(
+                        "تابع التسجيل",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
+                  ),
+
+                if (_flashOverlay)
+                  Container(color: Colors.white.withValues(alpha: .8)),
+              ],
             ),
           ),
         );
       },
     );
   }
+
+  String image64Trans({required String imagePath}) {
+    final personalImage = File(imagePath);
+    List<int> personalImageByte = personalImage.readAsBytesSync();
+    final personalImageBase64 = base64Encode(personalImageByte);
+    return personalImageBase64;
+  }
+}
+
+class _OvalPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paintOverlay = Paint()
+      ..color = Colors.black.withValues(alpha: .6)
+      ..style = PaintingStyle.fill;
+
+    final fullPath = Path()
+      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+    final ovalPath = Path()
+      ..addOval(
+        Rect.fromCenter(
+          center: Offset(size.width / 2, size.height / 2.3),
+          width: size.width * 0.7,
+          height: size.height * 0.5,
+        ),
+      );
+
+    final overlay = Path.combine(PathOperation.difference, fullPath, ovalPath);
+    canvas.drawPath(overlay, paintOverlay);
+
+    final border = Paint()
+      ..color = Colors.white.withValues(alpha: .9)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+    canvas.drawPath(ovalPath, border);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hr_moi/shared/components/components.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textTheme = TextTheme.of(context);
-    final formKey = GlobalKey<FormState>();
+
     TextEditingController controller = TextEditingController();
     return Directionality(
       textDirection: TextDirection.rtl,

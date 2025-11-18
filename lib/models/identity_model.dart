@@ -6,7 +6,6 @@ class HrProfileModel {
   HrProfileModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    error = json['error'];
     data = json['data'] != null ? UserData.fromJson(json['data']) : null;
   }
 }

@@ -41,6 +41,16 @@ dependencies:
   heexacolor: 
   dio: 
   pin_code_fields: 
+  camera:
+  google_mlkit_face_detection:
+  google_mlkit_text_recognition:
+  image:
+  path_provider:
+  permission_handler:
+  audioplayers:
+  google_mlkit_commons:
+
+
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_moi/models/face_model.dart';
 import 'package:hr_moi/models/hr_model.dart';
 import 'package:hr_moi/models/identity_model.dart';
 import 'package:hr_moi/models/natinal_id_model.dart';
+import 'package:hr_moi/modules/auth/registeration/emp_identity.dart';
 import 'package:hr_moi/modules/auth/registeration/face_verification_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/mrz_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
@@ -25,9 +27,9 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
         .then((val) {
           HrModel hrOtp = HrModel.fromJson(val.data);
 
-          //this because i need it in face recognition so i but it as public
-          // hrNum = empCode;
           if (hrOtp.success == true && hrOtp.data != null) {
+            //this because i need it in face recognition so i but it as public
+            hrNum = empCode.toString();
             if (context.mounted) {
               getHrUserData(
                 context: context,
@@ -110,7 +112,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
             if (context.mounted) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => FaceDetectionScreen()),
+                MaterialPageRoute(builder: (context) => FaceLivenessPage()),
               );
               emit(MrzGetSuccState());
             } else {
@@ -140,14 +142,26 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
   }) {
     DioHelper.postData(path: url, data: {'image_data': data})
         .then((val) {
-          if (val.data) {
-            showMessage(message: 'تم التسجيل', context: context);
+          FaceModel face = FaceModel.fromJson(val.data);
+          if (face.success == true) {
+            if (context.mounted) {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => EmpIdentity()),
+              );
+            }
+            emit(FaceRecGetSuccState());
           } else {
-            showMessage(message: 'لا توجد بيانات', context: context);
+            if (context.mounted) {
+              showMessage(message: 'لا توجد بيانات', context: context);
+            }
+
+            emit(FaceRecGetFailState());
           }
         })
         .catchError((error) {
-          showMessage(message: 'فشل عملية التسجيل', context: context);
+          if (context.mounted) {
+            showMessage(message: 'فشل عملية التسجيل', context: context);
+          }
         });
   }
 
@@ -159,7 +173,7 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
           userProfile = HrProfileModel.fromJson(val.data['data']);
 
           if (val.data != null) {
-            if (userProfile!.success == true) {
+            if (userProfile.success == true) {
               if (context.mounted) {
                 // Navigator.pushReplacement(
                 //   context,

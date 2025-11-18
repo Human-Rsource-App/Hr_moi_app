@@ -19,6 +19,11 @@ class MrzGetSuccState extends HrMoiStates {}
 
 class MrzGetFailState extends HrMoiStates {}
 
+//face recognition screen
+class FaceRecGetSuccState extends HrMoiStates {}
+
+class FaceRecGetFailState extends HrMoiStates {}
+
 //user profile
 class HrNumGetLoadingState extends HrMoiStates {}
 

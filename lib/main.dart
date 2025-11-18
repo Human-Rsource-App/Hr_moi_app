@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/modules/auth/login/login.dart';
 import 'package:hr_moi/modules/splash_screen/splash.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
@@ -30,7 +29,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'HR MOI APP',
         theme: lightTheme,
-        home: Directionality(textDirection: TextDirection.rtl, child: Login()),
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: MoiView(),
+        ),
       ),
     );
   }

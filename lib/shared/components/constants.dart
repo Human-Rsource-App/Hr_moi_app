@@ -8,7 +8,7 @@ const String otpUrl = 'otpGet/otp/';
 const String mrzUrl = 'moiApp/National_id_check/';
 const String faceUrl = 'moiApp/ai_reg_img/';
 //general var
-HrProfileModel? userProfile;
 List<CameraDescription>? cameras;
 late String nID;
-final String hrNum = '911720011';
+late String hrNum;
+late HrProfileModel userProfile;
