@@ -32,13 +32,14 @@ Widget defaultTextField({
   TextInputType? keyboardType,
   required String lable,
   required BuildContext context,
+  bool obscureText = false,
   IconData? suffixIcon,
   void Function()? onPressed,
 }) => TextFormField(
   controller: controller,
   validator: validator,
   onChanged: onChanged,
-
+  obscureText: obscureText,
   keyboardType: keyboardType,
 
   decoration: InputDecoration(

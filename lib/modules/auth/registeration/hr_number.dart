@@ -22,6 +22,21 @@ class HrNumber extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: Scaffold(
             resizeToAvoidBottomInset: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),

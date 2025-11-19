@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/modules/auth/registeration/registration_success.dart';
+import 'package:hr_moi/modules/auth/login/login.dart';
 import 'package:hr_moi/shared/components/components.dart';
+import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 
@@ -59,13 +60,25 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     return BlocConsumer<HrMoiCubit, HrMoiStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        var cubit = HrMoiCubit.get(context);
+        HrMoiCubit cubit = HrMoiCubit.get(context);
         return Scaffold(
           appBar: AppBar(
             title: const Text('انشاء كلمة المرور'),
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0,
+            actions: [
+              IconButton(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
+                icon: Icon(Icons.login, size: 30),
+              ),
+            ],
             leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -155,11 +168,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               context: context,
               onPressed: isPasswordValid && doPasswordsMatch
                   ? () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const RegistrationSuccessScreen(),
-                        ),
+                      cubit.createPass(
+                        url: '$baseUrl$regUrl',
+                        empCode: hrNum.toString(),
+                        password: _passwordController.text.toString(),
+                        context: context,
                       );
                     }
                   : null,

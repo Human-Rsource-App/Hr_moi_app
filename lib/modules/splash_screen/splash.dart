@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:heexacolor/heexacolor.dart';
-import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
+import 'package:hr_moi/modules/auth/login/login.dart';
 import 'package:hr_moi/shared/style/color.dart';
 
 class MoiView extends StatelessWidget {
@@ -106,7 +106,7 @@ class MoiView extends StatelessWidget {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const HrNumber()),
+              MaterialPageRoute(builder: (context) => const Login()),
             );
           },
           child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),

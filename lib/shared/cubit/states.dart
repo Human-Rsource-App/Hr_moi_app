@@ -30,3 +30,18 @@ class HrNumGetLoadingState extends HrMoiStates {}
 class HrNumGetSuccState extends HrMoiStates {}
 
 class HrNumGetFailState extends HrMoiStates {}
+
+//create pass
+class CreatePassLoadingState extends HrMoiStates {}
+
+class CreatePassSuccState extends HrMoiStates {}
+
+class CreatePassFailState extends HrMoiStates {}
+
+//login states
+
+class LoginLoadingState extends HrMoiStates {}
+
+class LoginSuccState extends HrMoiStates {}
+
+class LoginFailState extends HrMoiStates {}

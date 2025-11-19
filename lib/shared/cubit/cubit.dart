@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_moi/models/login_model.dart';
+import 'package:hr_moi/models/register_model.dart';
 import 'package:hr_moi/models/face_model.dart';
 import 'package:hr_moi/models/hr_model.dart';
 import 'package:hr_moi/models/identity_model.dart';
@@ -8,6 +10,8 @@ import 'package:hr_moi/modules/auth/registeration/emp_identity.dart';
 import 'package:hr_moi/modules/auth/registeration/face_verification_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/mrz_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
+import 'package:hr_moi/modules/auth/registeration/registration_success.dart';
+import 'package:hr_moi/modules/home_screen/home_screen.dart';
 import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
@@ -212,6 +216,87 @@ class HrMoiCubit extends Cubit<HrMoiStates> {
             );
           }
           emit(HrNumGetFailState());
+        });
+  }
+
+  //create pass
+  void createPass({
+    required String url,
+    required String empCode,
+    required String password,
+    required BuildContext context,
+  }) {
+    DioHelper.postData(
+          path: url,
+          data: {"empcode": empCode, "password": password},
+        )
+        .then((val) {
+          CreatePassModel pass = CreatePassModel.fromJson(val.data);
+
+          if (pass.success == true) {
+            //
+            if (context.mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RegistrationSuccessScreen(),
+                ),
+              );
+              emit(CreatePassSuccState());
+            } else {
+              if (context.mounted) {
+                showMessage(message: 'هذا المستخدم موجود', context: context);
+              }
+              emit(CreatePassFailState());
+            }
+          }
+        })
+        .catchError((error) {
+          if (context.mounted) {
+            showMessage(message: 'هذا المستخدم موجود', context: context);
+          }
+          emit(CreatePassFailState());
+        });
+  }
+
+  //Login logic
+  void loginData({
+    required String url,
+    required String empCode,
+    required String password,
+    required BuildContext context,
+  }) {
+    DioHelper.postData(
+          path: url,
+          data: {"empcode": empCode, "password": password},
+        )
+        .then((val) {
+          LoginModel pass = LoginModel.fromJson(val.data);
+
+          if (pass.success == true) {
+            //
+            if (context.mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+              emit(LoginSuccState());
+            } else {
+              if (context.mounted) {
+                showMessage(
+                  message: 'هذا المستخدم غير موجود',
+                  context: context,
+                );
+              }
+              emit(LoginFailState());
+            }
+          }
+        })
+        .catchError((error) {
+          if (context.mounted) {
+            showMessage(message: 'خطا في الباسورد المدخل', context: context);
+          }
+          emit(LoginFailState());
         });
   }
 }
