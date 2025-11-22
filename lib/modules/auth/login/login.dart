@@ -5,6 +5,7 @@ import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
+import 'package:hr_moi/shared/style/color.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool _isPasswordVisible = true;
   final formKey = GlobalKey<FormState>();
   TextEditingController empCode = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -42,22 +44,23 @@ class _LoginState extends State<Login> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: SingleChildScrollView(
-                      child: Column(
-                        spacing: 10.0,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/icons/moi.png'),
-                          const SizedBox(height: 10.0),
-                          Text('مرحبا بعودتك', style: textTheme.bodyLarge),
-                          Text(
-                            'أدخل رقمك الإحصائي وكلمة المرور لتسجيل الدخول',
-                            style: textTheme.titleSmall,
-                          ),
-                          const SizedBox(height: 20.0),
-                          Form(
-                            key: formKey,
-                            child: defaultTextField(
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          spacing: 10.0,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/icons/moi.png'),
+                            const SizedBox(height: 10.0),
+                            Text('مرحبا بعودتك', style: textTheme.bodyLarge),
+                            Text(
+                              'أدخل رقمك الإحصائي وكلمة المرور لتسجيل الدخول',
+                              style: textTheme.titleSmall,
+                            ),
+                            const SizedBox(height: 20.0),
+
+                            defaultTextField(
                               lable: 'الرقم الاحصائي',
                               context: context,
                               controller: empCode,
@@ -74,44 +77,75 @@ class _LoginState extends State<Login> {
                                 return null;
                               },
                             ),
-                          ),
-                          defaultTextField(
-                            controller: password,
-                            obscureText: true,
-                            keyboardType: TextInputType.visiblePassword,
-                            lable: 'كلمة المرور',
-                            context: context,
-                            suffixIcon: Icons.remove_red_eye_outlined,
-                            onPressed: () {},
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  'نسيت كلمة السر ؟',
+
+                            defaultTextField(
+                              controller: password,
+                              obscureText: _isPasswordVisible,
+                              keyboardType: TextInputType.visiblePassword,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'يرجى ادخال كلمة المرور';
+                                }
+                                return null;
+                              },
+                              lable: 'كلمة المرور',
+                              context: context,
+                              suffixIcon: _isPasswordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              onSuffixIconPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Navigate to forgot password screen
+                                  },
+                                  child: Text(
+                                    'هل نسيت كلمة المرور؟',
+                                    style: textTheme.bodySmall!.copyWith(
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: mainColor,
+                                      color: mainColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'ليس لديك حساب؟',
                                   style: textTheme.bodySmall,
                                 ),
-                              ),
-                            ],
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HrNumber(),
+                                SizedBox(width: 5.0),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HrNumber(),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'انشاء حساب جديد!',
+                                    style: textTheme.bodySmall!.copyWith(
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: mainColor,
+                                      color: mainColor,
+                                    ),
+                                  ),
                                 ),
-                              );
-                            },
-
-                            child: Text(
-                              'انشاء حساب جديد!',
-                              style: textTheme.bodySmall,
+                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -34,7 +34,7 @@ Widget defaultTextField({
   required BuildContext context,
   bool obscureText = false,
   IconData? suffixIcon,
-  void Function()? onPressed,
+  VoidCallback? onSuffixIconPressed, //here modification
 }) => TextFormField(
   controller: controller,
   validator: validator,
@@ -43,7 +43,10 @@ Widget defaultTextField({
   keyboardType: keyboardType,
 
   decoration: InputDecoration(
-    suffixIcon: IconButton(onPressed: onPressed, icon: Icon(suffixIcon)),
+    suffixIcon: IconButton(
+      onPressed: onSuffixIconPressed,
+      icon: Icon(suffixIcon),
+    ),
     label: Text(lable, style: TextTheme.of(context).bodySmall),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
   ),
@@ -183,7 +186,7 @@ Widget defaultElevatBtn({
   child: Text(label, style: TextTheme.of(context).labelMedium),
 );
 
-// Password requirement row widget
+// Password requirement row widget..................................
 Widget defaultPasswordTextField({
   required TextEditingController controller,
   required bool obscureText,
