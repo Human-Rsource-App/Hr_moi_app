@@ -56,7 +56,7 @@ class _EmpIdentityState extends State<EmpIdentity> {
                             Center(
                               child: defaultCircleAvatar(
                                 radius: 50,
-                                backgroundColor: backgColor,
+                                backgroundColor: Colors.white,
                                 child: Image.asset('assets/icons/moi.png'),
                               ),
                             ),
@@ -173,7 +173,7 @@ class _EmpIdentityState extends State<EmpIdentity> {
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
-            side: BorderSide(color: backgColor, width: 4),
+            side: BorderSide(color: Colors.white, width: 4),
           ),
           child: Container(
             padding: const EdgeInsets.all(16.0),

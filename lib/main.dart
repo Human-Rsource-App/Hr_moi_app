@@ -28,11 +28,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'HR MOI APP',
+        themeMode: ThemeMode.dark,
         theme: lightTheme,
-        home: Directionality(
-          textDirection: TextDirection.rtl,
-          child: MoiView(),
-        ),
+        home: MoiView(),
       ),
     );
   }

@@ -42,9 +42,7 @@ class MoiView extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 20),
                     child: Text(
                       'جمهورية العراق',
-                      style: textTheme.labelLarge!.copyWith(
-                        color: Colors.white,
-                      ),
+                      style: textTheme.labelLarge
                     ),
                   ),
                   Container(
@@ -72,9 +70,7 @@ class MoiView extends StatelessWidget {
                     children: [
                       Text(
                         'وزارة الداخلية',
-                        style: textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                        ),
+                        style: textTheme.labelMedium
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 140),
@@ -83,15 +79,12 @@ class MoiView extends StatelessWidget {
                       const SizedBox(height: 30.0),
                       Text(
                         'نظام إدارة الموارد البشرية',
-                        style: textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                        ),
+                        style: textTheme.bodyMedium
                       ),
+                      const SizedBox(height: 10.0),
                       Text(
                         'إدارة متكاملة لخدمات مديرية الموارد البشرية',
-                        style: textTheme.titleSmall!.copyWith(
-                          color: Colors.white,
-                        ),
+                        style: textTheme.bodySmall
                       ),
                     ],
                   ),

@@ -54,7 +54,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
         return Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: backgColor,
+            backgroundColor: Colors.white,
             body: GestureDetector(
               onTap: () {},
               child: SizedBox(

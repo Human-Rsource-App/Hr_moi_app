@@ -31,148 +31,145 @@ class _LoginState extends State<Login> {
         builder: (context, state) {
           final cubit = HrMoiCubit.get(context);
           return Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: SafeArea(
-              child: Form(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.0,
-                    horizontal: 10.0,
-                  ),
-                  width: size.width,
-                  height: size.height,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          spacing: 10.0,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/icons/moi.png'),
-                            const SizedBox(height: 10.0),
-                            Text('مرحبا بعودتك', style: textTheme.bodyLarge),
-                            Text(
-                              'أدخل رقمك الإحصائي وكلمة المرور لتسجيل الدخول',
-                              style: textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: 20.0),
+            backgroundColor: Colors.transparent,
+            body: Container(
+              decoration: BoxDecoration(
+             gradient: LinearGradient(colors: backGrColor,
+               begin: Alignment.topCenter,
+               end: Alignment.bottomCenter,
+             )
+              ),
+              width: size.width,
+              height: size.height,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        spacing: 20.0,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/icons/moi.png'),
+                          Text('مرحبا بعودتك', style: textTheme.labelLarge),
+                          Text(
+                            'أدخل رقمك الإحصائي وكلمة المرور لتسجيل الدخول',
+                            style: textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: 5.0),
+                          defaultTextField(
+                            lable: 'الرقم الاحصائي',
+                            context: context,
+                            controller: empCode,
+                            keyboardType: TextInputType.numberWithOptions(),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'يرجى ادخال الرقم الاحصائي';
+                              }
+                
+                              final reg = RegExp(r'^[1-9]\d{0,11}$');
+                              if (!reg.hasMatch(value)) {
+                                return 'الرقم الاحصائي غير صالح';
+                              }
+                              return null;
+                            },
+                          ),
+                
+                          defaultTextField(
+                            controller: password,
+                            obscureText: _isPasswordVisible,
+                            keyboardType: TextInputType.visiblePassword,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'يرجى ادخال كلمة المرور';
+                              }
+                              return null;
+                            },
+                            lable: 'كلمة المرور',
+                            context: context,
+                            suffixIcon: _isPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            onSuffixIconPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                          //login button
+                          defaultButton(
+                            context: context,
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                cubit.loginData(
+                                  url: '$baseUrl$loginUrl',
+                                  empCode: empCode.text.toString(),
+                                  password: password.text.toString(),
+                                  context: context,
+                                );
+                              }
+                            },
+                            lable: 'تسجيل الدخول',
+                          ),
 
-                            defaultTextField(
-                              lable: 'الرقم الاحصائي',
-                              context: context,
-                              controller: empCode,
-                              keyboardType: TextInputType.numberWithOptions(),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'يرجى ادخال الرقم الاحصائي';
-                                }
-
-                                final reg = RegExp(r'^[1-9]\d{0,11}$');
-                                if (!reg.hasMatch(value)) {
-                                  return 'الرقم الاحصائي غير صالح';
-                                }
-                                return null;
-                              },
-                            ),
-
-                            defaultTextField(
-                              controller: password,
-                              obscureText: _isPasswordVisible,
-                              keyboardType: TextInputType.visiblePassword,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'يرجى ادخال كلمة المرور';
-                                }
-                                return null;
-                              },
-                              lable: 'كلمة المرور',
-                              context: context,
-                              suffixIcon: _isPasswordVisible
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              onSuffixIconPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Navigate to forgot password screen
-                                  },
-                                  child: Text(
-                                    'هل نسيت كلمة المرور؟',
-                                    style: textTheme.bodySmall!.copyWith(
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: mainColor,
-                                      color: mainColor,
-                                    ),
+                          //===============================================
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  // Navigate to forgot password screen
+                                },
+                                child: Text(
+                                  'هل نسيت كلمة المرور؟',
+                                  style: textTheme.bodySmall!.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: mainColor,
+                                    color: mainColor,
                                   ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'ليس لديك حساب؟',
-                                  style: textTheme.bodySmall,
-                                ),
-                                SizedBox(width: 5.0),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HrNumber(),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    'انشاء حساب جديد!',
-                                    style: textTheme.bodySmall!.copyWith(
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: mainColor,
-                                      color: mainColor,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'ليس لديك حساب؟',
+                                style: textTheme.bodySmall,
+                              ),
+                              SizedBox(width: 5.0),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HrNumber(),
                                     ),
+                                  );
+                                },
+                                child: Text(
+                                  'انشاء حساب جديد!',
+                                  style: textTheme.bodySmall!.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: mainColor,
+                                    color: mainColor,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+
+
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.only(
-                left: 30.0,
-                right: 30.0,
-                bottom: 40.0,
-              ),
-              child: defaultButton(
-                context: context,
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    cubit.loginData(
-                      url: '$baseUrl$loginUrl',
-                      empCode: empCode.text.toString(),
-                      password: password.text.toString(),
-                      context: context,
-                    );
-                  }
-                },
-                lable: 'تسجيل الدخول',
-              ),
-            ),
+
           );
         },
       ),

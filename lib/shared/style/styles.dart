@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hr_moi/shared/style/color.dart';
-
 ThemeData lightTheme = ThemeData(
-  scaffoldBackgroundColor: backgColor,
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: Colors.transparent,
+    ),
   textTheme: TextTheme(
-    bodyLarge: TextStyle(fontSize: 20.0, fontFamily: 'Amiri Bold'),
-    bodyMedium: TextStyle(fontSize: 18.0, fontFamily: 'Amiri Regular'),
-    bodySmall: TextStyle(fontSize: 16.0, fontFamily: 'Amiri Regular'),
-    titleSmall: TextStyle(fontSize: 10.0, fontFamily: 'Amiri Regular'),
-    labelLarge: TextStyle(fontSize: 25.0, fontFamily: 'Amiri Bold'),
-    labelMedium: TextStyle(fontSize: 20.0, fontFamily: 'Amiri Bold'),
-    labelSmall: TextStyle(fontSize: 18.0, fontFamily: 'Amiri Bold'),
+    bodyLarge: TextStyle(fontSize: 20.0, fontFamily: 'Cairo Medium',color:Colors.white),
+    bodyMedium: TextStyle(fontSize: 18.0, fontFamily: 'Cairo Regular',color:Colors.white),
+    bodySmall: TextStyle(fontSize: 14.0, fontFamily: 'Cairo Regular',color:Colors.white),
+    titleSmall: TextStyle(fontSize: 10.0, fontFamily: 'Cairo Regular',color:Colors.white),
+    labelLarge: TextStyle(fontSize: 25.0, fontFamily: 'Cairo SemiBold',color:Colors.white),
+    labelMedium: TextStyle(fontSize: 20.0, fontFamily: 'Cairo SemiBold',color:Colors.white),
+    labelSmall: TextStyle(fontSize: 18.0, fontFamily: 'Cairo SemiBold',color:Colors.white),
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.transparent,
