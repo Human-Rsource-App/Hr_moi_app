@@ -43,12 +43,12 @@ Widget defaultTextField({
   keyboardType: keyboardType,
 
   decoration: InputDecoration(
+
     suffixIcon: IconButton(
       onPressed: onSuffixIconPressed,
       icon: Icon(suffixIcon),
     ),
     label: Text(lable, style: TextTheme.of(context).bodySmall),
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
   ),
 );
 

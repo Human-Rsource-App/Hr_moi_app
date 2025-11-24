@@ -6,7 +6,6 @@ import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
-import 'package:hr_moi/shared/style/color.dart';
 
 class EmpIdentity extends StatefulWidget {
   const EmpIdentity({super.key});

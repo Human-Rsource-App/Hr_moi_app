@@ -7,6 +7,8 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 
+import '../../../generated/assets.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -16,13 +18,13 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _isPasswordVisible = true;
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController empCode = TextEditingController();
   TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final textTheme = TextTheme.of(context);
+    final Size size = MediaQuery.of(context).size;
+    final TextTheme textTheme = TextTheme.of(context);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -43,7 +45,7 @@ class _LoginState extends State<Login> {
               height: size.height,
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
                   child: SingleChildScrollView(
                     child: Form(
                       key: formKey,
@@ -52,10 +54,10 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset('assets/icons/moi.png'),
-                          Text('مرحبا بعودتك', style: textTheme.labelLarge),
+                          Image.asset(Assets.iconsOip,fit: BoxFit.cover,),
+                          Text('مرحباً', style: textTheme.labelLarge),
                           Text(
-                            'أدخل رقمك الإحصائي وكلمة المرور لتسجيل الدخول',
+                            'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',
                             style: textTheme.bodySmall,
                           ),
                           const SizedBox(height: 5.0),
@@ -69,7 +71,7 @@ class _LoginState extends State<Login> {
                                 return 'يرجى ادخال الرقم الاحصائي';
                               }
                 
-                              final reg = RegExp(r'^[1-9]\d{0,11}$');
+                              final RegExp reg = RegExp(r'^[1-9]\d{0,11}$');
                               if (!reg.hasMatch(value)) {
                                 return 'الرقم الاحصائي غير صالح';
                               }
