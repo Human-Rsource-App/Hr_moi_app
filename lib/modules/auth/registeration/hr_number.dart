@@ -5,112 +5,135 @@ import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 
-class HrNumber extends StatelessWidget {
-  const HrNumber({super.key});
+import '../../../shared/style/color.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    TextEditingController controller = TextEditingController();
+class HrNumber extends StatelessWidget
+{
+    const HrNumber({super.key});
 
-    return BlocConsumer<HrMoiCubit, HrMoiStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        final size = MediaQuery.of(context).size;
-        var cubit = HrMoiCubit.get(context);
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.black,
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
+    @override
+    Widget build(BuildContext context)
+    {
+        final formKey = GlobalKey<FormState>();
+        TextEditingController controller = TextEditingController();
 
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: SingleChildScrollView(
-                  child: SizedBox(
-                    width: size.width,
+        return BlocConsumer<HrMoiCubit, HrMoiStates>(
+            listener: (context, state)
+            {
+            },
+            builder: (context, state)
+            {
+                final size = MediaQuery.of(context).size;
+                var cubit = HrMoiCubit.get(context);
+                return Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Scaffold(
+                        resizeToAvoidBottomInset: true,
 
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        spacing: 10.0,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-
-                        children: [
-                          Text(
-                            'ادخل التفاصيل',
-                            style: TextTheme.of(context).bodySmall,
+                        body: Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: backGrColor,
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              )
                           ),
-                          Text(
-                            'أدخل رقمك الإحصائي للبدء',
-                            style: TextTheme.of(
-                              context,
-                            ).bodySmall!.copyWith(color: Colors.grey),
-                          ),
-                          SizedBox(height: 20),
-                          defaultTextField(
-                            keyboardType: TextInputType.numberWithOptions(),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'يرجى ادخال الرقم الاحصائي';
-                              }
+                          width: size.width,
+                          height: size.height,
+                          child: SafeArea(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: SingleChildScrollView(
+                                      child: SizedBox(
+                                          width: size.width,
 
-                              final reg = RegExp(r'^[1-9]\d{0,11}$');
-                              if (!reg.hasMatch(value)) {
-                                return 'الرقم الاحصائي غير صالح';
-                              }
-                              return null;
-                            },
-                            onChanged: (String val) {},
-                            lable: 'الرقم الإحصائي',
-                            context: context,
-                            controller: controller,
+                                          child: Form(
+                                              key: formKey,
+                                              child: Column(
+                                                  spacing: 10.0,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                                                  children: [
+                                                    //u should to edit this align
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                        Icons.arrow_back_ios_new_rounded,
+                                                        color: Colors.black,
+                                                        size: 30,
+                                                      ),
+                                                      onPressed: ()
+                                                      {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+
+                                                    Text(
+                                                          'إنشاء حساب جديد',
+                                                          style: TextTheme.of(context).labelLarge,
+                                                      ),
+                                                      Text(
+                                                          'أدخل الرقم الإحصائي للبدء',
+                                                          style: TextTheme.of(
+                                                              context,
+                                                          ).bodySmall!.copyWith(color: Colors.grey),
+                                                      ),
+                                                      SizedBox(height: 20),
+                                                      defaultTextField(
+                                                          keyboardType: TextInputType.numberWithOptions(),
+                                                          validator: (value)
+                                                          {
+                                                              if (value == null || value.isEmpty)
+                                                              {
+                                                                  return 'يرجى ادخال الرقم الاحصائي';
+                                                              }
+
+                                                              final reg = RegExp(r'^[1-9]\d{0,11}$');
+                                                              if (!reg.hasMatch(value))
+                                                              {
+                                                                  return 'الرقم الاحصائي غير صالح';
+                                                              }
+                                                              return null;
+                                                          },
+                                                          onChanged: (String val)
+                                                          {
+                                                          },
+                                                          lable: 'أدخل رقمك الإحصائي',
+                                                          context: context,
+                                                          controller: controller,
+                                                      ),
+                                                    const SizedBox(
+                                                      height: 50.0,
+                                                    ),
+                                                    defaultButton(
+                                                      context: context,
+                                                      onPressed: ()
+                                                      {
+                                                        final url = Uri.encodeFull(
+                                                          baseUrl + hrUrl + controller.text.toString(),
+                                                        );
+
+                                                        if (formKey.currentState!.validate())
+                                                        {
+                                                          cubit.getEmpCode(
+                                                            url: url,
+                                                            context: context,
+                                                            empCode: controller.text.toString(),
+                                                          );
+                                                        }
+                                                      },
+                                                      lable: 'متابعة',
+                                                    ),
+
+                                                  ],
+                                              ),
+                                          ),
+                                      ),
+                                  ),
+                              ),
                           ),
-                        ],
-                      ),
+                        ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.only(left: 30.0, right: 30, bottom: 40),
-              child: defaultButton(
-                context: context,
-                onPressed: () {
-                  final url = Uri.encodeFull(
-                    baseUrl + hrUrl + controller.text.toString(),
-                  );
-
-                  if (formKey.currentState!.validate()) {
-                    cubit.getEmpCode(
-                      url: url,
-                      context: context,
-                      empCode: controller.text.toString(),
-                    );
-                  }
-                },
-                lable: 'استمرار',
-              ),
-            ),
-          ),
+                );
+            },
         );
-      },
-    );
-  }
+    }
 }
