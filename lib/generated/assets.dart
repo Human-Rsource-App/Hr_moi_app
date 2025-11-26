@@ -11,6 +11,7 @@ class Assets {
   static const String iconsOip = 'assets/icons/oip.png';
   static const String imagesBrowser5 = 'assets/images/browser-5.png';
   static const String imagesFrame = 'assets/images/Frame.png';
+  static const String faceId = 'assets/icons/FaceId.png';
   static const String soundsSuccess = 'assets/sounds/success.mp3';
 
 }

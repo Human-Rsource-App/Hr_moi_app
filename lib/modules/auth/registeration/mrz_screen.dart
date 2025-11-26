@@ -181,7 +181,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   right: 0,
                   child: Column(
                     children: [
-                      defaultElevatBtn(
+                      defaultElevationBtn(
                         context: context,
                         label: scanning
                             ? 'جاري المسح الضوئي... '
@@ -189,7 +189,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         onPressed: scanning ? null : startAutoScan,
                       ),
                       const SizedBox(height: 10),
-                      defaultElevatBtn(
+                      defaultElevationBtn(
                         context: context,
                         label: 'تحقق',
                         onPressed: () {

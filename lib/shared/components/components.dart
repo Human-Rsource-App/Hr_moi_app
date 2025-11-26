@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-//default button
+//default material button
 Widget defaultButton({
   required BuildContext context,
   required void Function()? onPressed,
@@ -14,17 +14,58 @@ Widget defaultButton({
   height: 52.0,
 
   clipBehavior: Clip.antiAlias,
-  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
+  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),
+  gradient: LinearGradient(colors: btnColor),
+  ),
   child: MaterialButton(
     onPressed: onPressed,
     disabledColor: disabledColor,
-    color: btnColor,
-    child: Text(lable, style: TextTheme.of(context).labelMedium),
+
+    child: Text(lable, style: TextTheme.of(context).labelMedium!.copyWith(color: Colors.black)),
+  ),
+);
+//==============================================================================
+//default elevated button
+Widget defaultElevationBtn({
+  required BuildContext context,
+  required void Function()? onPressed,
+  required String label,
+}) => ElevatedButton(
+  style: ElevatedButton.styleFrom(
+    backgroundColor: elevBtnColor,
+    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+  ),
+  onPressed: onPressed,
+  child: Text(label, style: TextTheme.of(context).labelMedium),
+);
+//==============================================================================
+// icon button
+Widget defaultIconButton({
+  required IconData icon,
+  double? iconSize,
+  Color? color,
+}) => IconButton(
+  onPressed: () {},
+  icon: Icon(icon),
+  iconSize: iconSize,
+  color: color ?? mainColor,
+);
+//==============================================================================
+//default text button
+Widget defaultTextBtn({required void Function() onPressed,required String label, required dynamic textTheme})=> TextButton(
+  onPressed:onPressed,
+  child: Text(
+    label,
+    style: textTheme.bodySmall!.copyWith(
+     // decoration: TextDecoration.underline,
+     // decorationColor: mainColor,
+      color: textBtnColor,
+    ),
   ),
 );
 
+//==============================================================================
 //default Text Form Field
-
 Widget defaultTextField({
   TextEditingController? controller,
   String? Function(String?)? validator,
@@ -41,31 +82,16 @@ Widget defaultTextField({
   onChanged: onChanged,
   obscureText: obscureText,
   keyboardType: keyboardType,
-
   decoration: InputDecoration(
-
     suffixIcon: IconButton(
       onPressed: onSuffixIconPressed,
-      icon: Icon(suffixIcon),
+      icon: Icon(suffixIcon,color: Colors.white,),
     ),
     label: Text(lable, style: TextTheme.of(context).bodySmall),
   ),
 );
-
-// icon button
-Widget defaultIconButton({
-  required IconData icon,
-  double? iconSize,
-  Color? color,
-}) => IconButton(
-  onPressed: () {},
-  icon: Icon(icon),
-  iconSize: iconSize,
-  color: color ?? mainColor,
-);
-
+//==============================================================================
 //OTP pin cod
-
 Widget pinCodeTextField({
   required BuildContext appContext,
   String? Function(String?)? validator,
@@ -150,9 +176,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showMessage({
     ),
   );
 }
-
 //default pin code text field
-
 Widget pinCodeField({
   required BuildContext appContext,
   String? Function(String?)? validator,
@@ -171,21 +195,6 @@ Widget pinCodeField({
   onChanged: onChanged,
   beforeTextPaste: beforeTextPaste,
 );
-
-//default elevated button
-Widget defaultElevatBtn({
-  required BuildContext context,
-  required void Function()? onPressed,
-  required String label,
-}) => ElevatedButton(
-  style: ElevatedButton.styleFrom(
-    backgroundColor: btnColor,
-    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-  ),
-  onPressed: onPressed,
-  child: Text(label, style: TextTheme.of(context).labelMedium),
-);
-
 // Password requirement row widget..................................
 Widget defaultPasswordTextField({
   required TextEditingController controller,

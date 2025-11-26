@@ -100,6 +100,7 @@ class _LoginState extends State<Login> {
                               });
                             },
                           ),
+                          const SizedBox(height: 5.0,),
                           //login button
                           defaultButton(
                             context: context,
@@ -117,52 +118,53 @@ class _LoginState extends State<Login> {
                           ),
 
                           //===============================================
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  // Navigate to forgot password screen
-                                },
-                                child: Text(
-                                  'هل نسيت كلمة المرور؟',
-                                  style: textTheme.bodySmall!.copyWith(
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: mainColor,
-                                    color: mainColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'ليس لديك حساب؟',
-                                style: textTheme.bodySmall,
-                              ),
-                              SizedBox(width: 5.0),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HrNumber(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'انشاء حساب جديد!',
-                                  style: textTheme.bodySmall!.copyWith(
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: mainColor,
-                                    color: mainColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                         Column(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           children: [
+                             //bio login
+                           Text('أوسجل دخولك عبر',style: TextTheme.of(context).bodySmall,),
+                             Image.asset(Assets.faceId,width: 100.0,height: 100.0,),
+                             //===============================================================
+                             //forget pass
+                             Row(
+                               mainAxisAlignment: MainAxisAlignment.center,
+                               children: [
+                                 defaultTextBtn(label:'هل نسيت كلمة المرور؟',onPressed: () {
+                                   Navigator.push(
+                                     context,
+                                     MaterialPageRoute(
+                                       builder: (context) => HrNumber(),
+                                     ),
+                                   );
+                                 }, textTheme: textTheme),
+                               ],
+                             ),
+                             //=================================================
+                             //u do not have an account
+                             Row(
+                               mainAxisAlignment: MainAxisAlignment.center,
+                               children: [
+                                 Text(
+                                   'ليس لديك حساب؟',
+                                   style: textTheme.bodySmall,
+                                 ),
+                                 SizedBox(width: 5.0),
+                                 defaultTextBtn(label:'انشاء حساب جديد!',onPressed: () {
+                                   Navigator.push(
+                                     context,
+                                     MaterialPageRoute(
+                                       builder: (context) => HrNumber(),
+                                     ),
+                                   );
+                                 }, textTheme: textTheme),
 
+                               ],
+                             ),
+
+
+
+                           ],),
 
                         ],
                       ),
