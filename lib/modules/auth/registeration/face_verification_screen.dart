@@ -10,7 +10,7 @@ import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:audioplayers/audioplayers.dart';
+
 
 class FaceLivenessPage extends StatefulWidget {
   const FaceLivenessPage({super.key});
@@ -27,7 +27,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
   bool _livenessPassed = false;
   String _status = 'Initializing camera...';
   bool _flashOverlay = false;
-  final player = AudioPlayer();
+  //final player = AudioPlayer();
 
   File? _verifiedImage; // هنا سنخزن الصورة النهائية للتحقق
 
@@ -146,8 +146,8 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
   Future<void> _playFeedback() async {
     setState(() => _flashOverlay = true);
     await Future.delayed(const Duration(milliseconds: 150));
-    setState(() => _flashOverlay = false);
-    await player.play(AssetSource('sounds/success.mp3'));
+    // setState(() => _flashOverlay = false);
+    // await player.play(AssetSource('sounds/success.mp3'));
   }
 
   @override
@@ -155,7 +155,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage> {
     _frameTimer?.cancel();
     _controller?.dispose();
     _faceDetector.close();
-    player.dispose();
+   // player.dispose();
     super.dispose();
   }
 

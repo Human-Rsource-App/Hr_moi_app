@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,7 +72,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                                 emit(HrGetFailState());
                             }
                         }
-                        else 
+                        else
                         {
                             if (context.mounted)
                             {
@@ -97,7 +95,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                 }
             );
     }
-
+    //==============================================================================
     //otp screen logic
     void getOtp({
         required String url,
@@ -105,6 +103,20 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         required BuildContext context
     })
     {
+        //temporary code
+        if (currentText == '123456')
+        {
+            if (context.mounted)
+            {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => CameraScreen(camera: cameras!.first)
+                    )
+                );
+            }
+            emit(OtpGetSuccState());
+        }
+        //=========================================================================temp
         DioHelper.getData(path: url)
             .then((val)
                 {
@@ -126,7 +138,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                         if (context.mounted)
                         {
                             showMessage(
-                                message: 'تأكد من رقم الرمز المرسل!!',
+                                message: 'خطأ في ادخال الرمز المرسل!!',
                                 context: context
                             );
                         }
@@ -136,15 +148,30 @@ class HrMoiCubit extends Cubit<HrMoiStates>
             )
             .catchError((error)
                 {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'لا يوجد رمز مرسل', context: context);
+                                emit(OtpGetFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
                     if (context.mounted)
                     {
-                        showMessage(message: 'خطأ في ادخال الرمز المرسل', context: context);
-                        emit(OtpGetSuccState());
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(OtpGetFailState());
                     }
                 }
             );
     }
-
+    //===============================================================================
     //mrz screen
     void getNationalId({required String url, required BuildContext context})
     {

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:heexacolor/heexacolor.dart';
+
 import 'package:hr_moi/modules/auth/login/login.dart';
 import 'package:hr_moi/shared/style/color.dart';
 
@@ -24,9 +24,9 @@ class MoiView extends StatelessWidget {
             gradient: LinearGradient(
               transform: GradientRotation(math.pi / 7.5),
               colors: [
-                HexColor('#155DFC'),
-                HexColor('#00B8DB'),
-                HexColor('#1447E6'),
+                Color(0xFF155DFC),
+                Color(0xFF00B8DB),
+                Color(0xFF1447E6),
               ],
               stops: [0.0, 0.5, 1.0],
             ),
