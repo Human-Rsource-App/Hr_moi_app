@@ -14,126 +14,125 @@ class HrNumber extends StatelessWidget
     @override
     Widget build(BuildContext context)
     {
-        final formKey = GlobalKey<FormState>();
+        final GlobalKey<FormState> formKey = GlobalKey<FormState>();
         TextEditingController controller = TextEditingController();
 
         return BlocConsumer<HrMoiCubit, HrMoiStates>(
-            listener: (context, state)
+            listener: (BuildContext context, HrMoiStates state)
             {
             },
-            builder: (context, state)
+            builder: (BuildContext context, HrMoiStates state)
             {
-                final size = MediaQuery.of(context).size;
-                var cubit = HrMoiCubit.get(context);
+                final Size size = MediaQuery.of(context).size;
+                HrMoiCubit cubit = HrMoiCubit.get(context);
                 return Directionality(
                     textDirection: TextDirection.rtl,
                     child: Scaffold(
                         resizeToAvoidBottomInset: true,
 
                         body: Container(
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: backGrColor,
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              )
-                          ),
-                          width: size.width,
-                          height: size.height,
-                          child: SafeArea(
-                              child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: SingleChildScrollView(
-                                      child: SizedBox(
-                                          width: size.width,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(colors: backGrColor,
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter
+                                )
+                            ),
+                            width: size.width,
+                            height: size.height,
+                            child: SafeArea(
+                                child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: SingleChildScrollView(
+                                        child: SizedBox(
+                                            width: size.width,
 
-                                          child: Form(
-                                              key: formKey,
-                                              child: Column(
-                                                  spacing: 10.0,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                            child: Form(
+                                                key: formKey,
+                                                child: Column(
+                                                    spacing: 10.0,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
 
-                                                  children: [
-                                                    //u should to edit this align
-                                                    IconButton(
-                                                      icon: const Icon(
-                                                        Icons.arrow_back_ios_new_rounded,
-                                                        color: Colors.black,
-                                                        size: 30,
-                                                      ),
-                                                      onPressed: ()
-                                                      {
-                                                        Navigator.pop(context);
-                                                      },
-                                                    ),
+                                                    children: [
+                                                        //u should to edit this align
+                                                        Align(
+                                                            alignment: AlignmentGeometry.topRight,
+                                                            child: IconButton(
+                                                                icon: const Icon(
+                                                                    Icons.arrow_back_ios_new_rounded,
+                                                                    color: Colors.white,
+                                                                    size: 30
+                                                                ),
+                                                                onPressed: ()
+                                                                {
+                                                                    Navigator.pop(context);
+                                                                }
+                                                            )
+                                                        ),
 
-                                                    Text(
-                                                          'إنشاء حساب جديد',
-                                                          style: TextTheme.of(context).labelLarge,
-                                                      ),
-                                                      Text(
-                                                          'أدخل الرقم الإحصائي للبدء',
-                                                          style: TextTheme.of(
-                                                              context,
-                                                          ).bodySmall!.copyWith(color: Colors.grey),
-                                                      ),
-                                                      SizedBox(height: 20),
-                                                      defaultTextField(
-                                                          keyboardType: TextInputType.numberWithOptions(),
-                                                          validator: (value)
-                                                          {
-                                                              if (value == null || value.isEmpty)
-                                                              {
-                                                                  return 'يرجى ادخال الرقم الاحصائي';
-                                                              }
+                                                        Text(
+                                                            'إنشاء حساب جديد',
+                                                            style: TextTheme.of(context).labelLarge
+                                                        ),
+                                                        Text(
+                                                            'أدخل الرقم الإحصائي للبدء',
+                                                            style: TextTheme.of(
+                                                                context
+                                                            ).bodySmall!.copyWith(color: Colors.grey)
+                                                        ),
+                                                        SizedBox(height: 20),
+                                                        defaultTextField(
+                                                            keyboardType: TextInputType.numberWithOptions(),
+                                                            validator: (value)
+                                                            {
+                                                                if (value == null || value.isEmpty)
+                                                                {
+                                                                    return 'يرجى ادخال الرقم الاحصائي';
+                                                                }
 
-                                                              final reg = RegExp(r'^[1-9]\d{0,11}$');
-                                                              if (!reg.hasMatch(value))
-                                                              {
-                                                                  return 'الرقم الاحصائي غير صالح';
-                                                              }
-                                                              return null;
-                                                          },
-                                                          onChanged: (String val)
-                                                          {
-                                                          },
-                                                          lable: 'أدخل رقمك الإحصائي',
-                                                          context: context,
-                                                          controller: controller,
-                                                      ),
-                                                    const SizedBox(
-                                                      height: 50.0,
-                                                    ),
-                                                    defaultButton(
-                                                      context: context,
-                                                      onPressed: ()
-                                                      {
-                                                        final url = Uri.encodeFull(
-                                                          baseUrl + hrUrl + controller.text.toString(),
-                                                        );
-
-                                                        if (formKey.currentState!.validate())
-                                                        {
-                                                          cubit.getEmpCode(
-                                                            url: url,
+                                                                final RegExp reg = RegExp(r'^[1-9]\d{0,11}$');
+                                                                if (!reg.hasMatch(value))
+                                                                {
+                                                                    return 'الرقم الاحصائي غير صالح';
+                                                                }
+                                                                return null;
+                                                            },
+                                                            onChanged: (String val)
+                                                            {
+                                                            },
+                                                            lable: 'أدخل رقمك الإحصائي',
                                                             context: context,
-                                                            empCode: controller.text.toString(),
-                                                          );
-                                                        }
-                                                      },
-                                                      lable: 'متابعة',
-                                                    ),
+                                                            controller: controller
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 50.0
+                                                        ),
+                                                        defaultButton(
+                                                            context: context,
+                                                            onPressed: ()
+                                                            {
+                                                                if (formKey.currentState!.validate())
+                                                                {
+                                                                    cubit.getEmpCode(
+                                                                        url: '$baseUrl$hrUrl${controller.text.toString()}',
+                                                                        context: context,
+                                                                        empCode: controller.text.toString()
+                                                                    );
+                                                                }
+                                                            },
+                                                            lable: 'متابعة'
+                                                        )
 
-                                                  ],
-                                              ),
-                                          ),
-                                      ),
-                                  ),
-                              ),
-                          ),
-                        ),
-                    ),
+                                                    ]
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
                 );
-            },
+            }
         );
     }
 }
