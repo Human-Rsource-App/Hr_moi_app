@@ -10,6 +10,9 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:camera/camera.dart';
 
+import '../../../generated/assets.dart';
+import '../../../shared/style/color.dart';
+
 class CameraScreen extends StatefulWidget
 {
     final CameraDescription camera;
@@ -207,34 +210,15 @@ class _CameraScreenState extends State<CameraScreen>
                                     )
                                 ),
                                 Positioned(
-                                    bottom: 20,
-                                    left: 0,
-                                    right: 0,
+                                    bottom: 8,
+                                    left: 20,
+                                    right: 20,
                                     child: Column(
                                         children: [
-                                            defaultElevationBtn(
-                                                context: context,
-                                                label: scanning
-                                                    ? 'جاري المسح الضوئي... '
-                                                    : 'بدء المسح التلقائي',
-                                                onPressed: scanning ? null : startAutoScan
-                                            ),
-                                            const SizedBox(height: 10),
-                                            !autoScanning&&result.isNotEmpty ? defaultElevationBtn(
-                                                    context: context,
-                                                    label: 'متابعة',
-                                                    onPressed: ()
-                                                    {
-                                                        cubit.getNationalId(
-                                                            url: '$baseUrl$mrzUrl$nID',
-                                                            context: context
-                                                        );
-                                                    }
-                                                ) : SizedBox.shrink(),
-                                            const SizedBox(height: 10),
+
                                             Container(
                                                 width: double.infinity,
-                                                color: Colors.black54,
+                                                color: !autoScanning || result.isNotEmpty ? Colors.black54 : null,
                                                 padding: const EdgeInsets.all(8),
                                                 child: SingleChildScrollView(
                                                     child: Text(
@@ -245,11 +229,47 @@ class _CameraScreenState extends State<CameraScreen>
                                                         )
                                                     )
                                                 )
-                                            )
+                                            ),
+                                          defaultElevationBtn(
+                                              context: context,
+                                              label: 'متابعة',
+                                              onPressed: !autoScanning && result.isNotEmpty ? ()
+                                              {
+                                                cubit.getNationalId(
+                                                    url: '$baseUrl$mrzUrl$nID',
+                                                    context: context
+                                                );
+                                              }
+                                                  : null
+                                          ),
                                         ]
                                     )
                                 )
                             ]
+                        ),
+                        bottomNavigationBar: Container(
+
+                            decoration: BoxDecoration(
+
+                                gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: backGrColor
+                                )
+                            ),
+                            child: Column(
+                                spacing: 5.0,
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                    SizedBox(height: 10.0),
+                                    IconButton(onPressed: scanning ? null : startAutoScan, icon: Image.asset(Assets.iconsMrz, width: 24.0, height: 24.0)),
+                                    Text('امسح الرمز في الوجه الخلفي للبطاقة الوطنية', style: TextTheme.of(context).bodySmall),
+                                    Text('يرجى محاذاة البطاقة الوطنية داخل الاطار', style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
+                                    IconButton(onPressed: scanning ? null : startAutoScan, icon: Image.asset(Assets.iconsScaning, width: 72.0, height: 72.0))
+
+                                ]
+                            )
                         )
                     );
                 }
@@ -264,12 +284,16 @@ class MrzMaskPainter extends CustomPainter
     @override
     void paint(Canvas canvas, Size size)
     {
-        final overlayPaint = Paint()..color = Colors.black54;
+        final overlayPaint = Paint()..shader = LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: backGrColor
+        ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
         final cutWidth = size.width * 0.92;
         final cutHeight = size.height * 0.4;
         final left = (size.width - cutWidth) / 2;
-        final top = (size.height - cutHeight) / 2;
+        final top = (size.height - cutHeight) / 3;
         final rect = Rect.fromLTWH(left, top, cutWidth, cutHeight);
 
         final path = Path.combine(
@@ -280,7 +304,7 @@ class MrzMaskPainter extends CustomPainter
         canvas.drawPath(path, overlayPaint);
 
         final border = Paint()
-            ..color = Colors.white
+            ..color = Colors.orange
             ..strokeWidth = 2.5
             ..style = PaintingStyle.stroke;
         canvas.drawRRect(RRect.fromRectXY(rect, 12, 12), border);
@@ -297,16 +321,17 @@ class MrzMaskPainter extends CustomPainter
                 text: TextSpan(
                     text: text,
                     style: const TextStyle(
-                        color: Colors.black,
+                        color: Colors.orange,
                         fontFamily: 'monospace',
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         letterSpacing: 1.5
                     )
                 ),
                 textDirection: TextDirection.ltr
             );
             tp.layout(maxWidth: cutWidth);
-            tp.paint(canvas, Offset(left + 15, y));
+            tp.paint(canvas, Offset(left + 11, y));
         }
 
         final lineSpacing = 26.0;

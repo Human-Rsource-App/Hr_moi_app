@@ -185,37 +185,49 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                         //
                         if (context.mounted)
                         {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => FaceLivenessPage())
+                                MaterialPageRoute(builder: (context) => EmpIdentity())
                             );
                             emit(MrzGetSuccState());
-                        }
-                        else
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(
-                                    message: 'الرقم الوطني غير موجود',
-                                    context: context
-                                );
-                            }
-                            emit(MrzGetFailState());
                         }
                     }
                 }
             )
             .catchError((error)
                 {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'الرقم الوطني غير موجود.حدث معلوماتك في نظام HR', context: context);
+                                emit(MrzGetFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(MrzGetFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
                     if (context.mounted)
                     {
                         showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(MrzGetFailState());
                     }
-                    emit(MrzGetFailState());
                 }
             );
     }
-
+    //==============================================================================
     //face recog screen
     void postUserFace({
         required String url,
@@ -232,7 +244,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                         if (context.mounted)
                         {
                             Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) => EmpIdentity())
+                                MaterialPageRoute(builder: (context) => FaceLivenessPage())
                             );
                         }
                         emit(FaceRecGetSuccState());
@@ -257,7 +269,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                 }
             );
     }
-
+    //==============================================================================
     //user profile for identity logic
     void getHrUserData({required String url, required BuildContext context})
     {

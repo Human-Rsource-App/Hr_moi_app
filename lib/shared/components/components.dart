@@ -33,10 +33,12 @@ Widget defaultElevationBtn({
 }) => ElevatedButton(
     style: ElevatedButton.styleFrom(
         backgroundColor: elevBtnColor,
+        disabledBackgroundColor:Colors.black26,
 
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)
     ),
     onPressed: onPressed,
+
     child: Text(label, style: TextTheme.of(context).bodyMedium!.copyWith(color: Colors.black))
 );
 //==============================================================================

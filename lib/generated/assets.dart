@@ -6,12 +6,14 @@ class Assets {
   static const String fontsCairoRegular = 'assets/fonts/Cairo-Regular.ttf';
   static const String fontsCairoSemiBold = 'assets/fonts/Cairo-SemiBold.ttf';
   static const String iconsChecked = 'assets/icons/checked.png';
+  static const String iconsFaceId = 'assets/icons/FaceId.png';
   static const String iconsMoi = 'assets/icons/moi.png';
   static const String iconsMoi36 = 'assets/icons/moi36.png';
+  static const String iconsMrz = 'assets/icons/mrz.png';
   static const String iconsOip = 'assets/icons/oip.png';
+  static const String iconsScaning = 'assets/icons/scaning.png';
   static const String imagesBrowser5 = 'assets/images/browser-5.png';
   static const String imagesFrame = 'assets/images/Frame.png';
-  static const String faceId = 'assets/icons/FaceId.png';
   static const String soundsSuccess = 'assets/sounds/success.mp3';
 
 }
