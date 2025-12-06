@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/modules/splash_screen/splash.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/network/local/cache_helper.dart';

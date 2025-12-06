@@ -41,10 +41,10 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                         hrNum = empCode.toString();
                         if (context.mounted)
                         {
-                            getHrUserData(
-                                context: context,
-                                url: '$baseUrl$userProfUrl$empCode'
-                            );
+                            // getHrUserData(
+                            //     context: context,
+                            //     url: '$baseUrl$userProfUrl$empCode'
+                            // );
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -227,6 +227,92 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                 }
             );
     }
+
+    //==============================================================================
+    //user profile for identity logic
+    void getHrUserData({required String url, required BuildContext context})
+    {
+        emit(HrNumGetLoadingState());
+        DioHelper.getData(path: url)
+            .then((val)
+                {
+
+                    userProfile = HrProfileModel.fromJson(val.data);
+                    if (val.data != null)
+                    {
+                        if (userProfile.success == true)
+                        {
+                            emit(HrNumGetSuccState());
+                            emit(HrNumGetFailState());
+                        }
+
+                    }
+                }
+            )
+            .catchError((error)
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'الرقم الوطني غير موجود.حدث معلوماتك في نظام HR', context: context);
+                                emit(MrzGetFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(MrzGetFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted)
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(MrzGetFailState());
+                    }
+                }
+            ).catchError((error)
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(MrzGetFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(MrzGetFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted)
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(MrzGetFailState());
+                    }
+                }
+            );
+    }
     //==============================================================================
     //face recog screen
     void postUserFace({
@@ -270,71 +356,6 @@ class HrMoiCubit extends Cubit<HrMoiStates>
             );
     }
     //==============================================================================
-    //user profile for identity logic
-    void getHrUserData({required String url, required BuildContext context})
-    {
-        emit(HrNumGetLoadingState());
-        DioHelper.getData(path: url)
-            .then((val)
-                {
-                    userProfile = HrProfileModel.fromJson(val.data['data']);
-
-                    if (val.data != null)
-                    {
-                        if (userProfile.success == true)
-                        {
-                            if (context.mounted)
-                            {
-                                // Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => const PinCodeVerificationScreen(),
-                                //   ),
-                                // );
-
-                                emit(HrNumGetSuccState());
-                            }
-                        }
-                        else
-                        {
-                            if (context.mounted)
-                            {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'الرقم الاحصائي غير موجود تحقق منه مرة ثانية'
-                                        )
-                                    )
-                                );
-                                emit(HrNumGetFailState());
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (context.mounted)
-                        {
-                            ScaffoldMessenger.of(
-                                context
-                            ).showSnackBar(SnackBar(content: Text('لا توجد بيانات')));
-                        }
-                    }
-                    emit(HrNumGetFailState());
-                }
-            )
-            .catchError((err)
-                {
-                    if (context.mounted)
-                    {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('خطأ في لاتصال تاكد من اتصالك بالشبكة'))
-                        );
-                    }
-                    emit(HrNumGetFailState());
-                }
-            );
-    }
-
     //create pass
     void createPass({
         required String url,

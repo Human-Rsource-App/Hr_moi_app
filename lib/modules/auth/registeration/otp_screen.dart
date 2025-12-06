@@ -160,7 +160,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen>
                                                 children: [
                                                     Text(
                                                         "لم تستلم الرمز ؟ ",
-                                                        style: TextTheme.of(context).bodyMedium
+                                                        style: TextTheme.of(context).bodyMedium!.copyWith(fontSize: 14.0)
                                                     ),
                                                     TextButton(
                                                         onPressed: () => showMessage(
@@ -170,7 +170,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen>
                                                         ),
                                                         child: Text(
                                                             "اعادة ارسال!",
-                                                            style: TextTheme.of(context).bodyMedium!.copyWith(color: secondColor)
+                                                            style: TextTheme.of(context).bodyMedium!.copyWith(color: secondColor,fontSize: 14.0)
                                                         )
                                                     )
                                                 ]

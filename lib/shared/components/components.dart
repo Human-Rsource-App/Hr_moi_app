@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -8,20 +9,23 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 Widget defaultButton({
     required BuildContext context,
     required void Function()? onPressed,
+    double width = double.infinity,
+    Color? color,
+    Color fontColor = Colors.black,
     required String lable
 }) => Container(
-    width: double.infinity,
+    width: width,
     height: 52.0,
-
     clipBehavior: Clip.antiAlias,
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0),
         gradient: LinearGradient(colors: btnColor)
+
     ),
     child: MaterialButton(
         onPressed: onPressed,
         disabledColor: disabledColor,
-
-        child: Text(lable, style: TextTheme.of(context).labelMedium!.copyWith(color: Colors.black))
+        color: color,
+        child: Text(lable, style: TextTheme.of(context).labelMedium!.copyWith(color: fontColor))
     )
 );
 //==============================================================================
@@ -29,11 +33,13 @@ Widget defaultButton({
 Widget defaultElevationBtn({
     required BuildContext context,
     required void Function()? onPressed,
+
     required String label
 }) => ElevatedButton(
+
     style: ElevatedButton.styleFrom(
         backgroundColor: elevBtnColor,
-        disabledBackgroundColor:Colors.black26,
+        disabledBackgroundColor: Colors.black26,
 
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)
     ),
@@ -144,15 +150,7 @@ Widget pinCodeTextField({
     onChanged: onChanged,
     beforeTextPaste: beforeTextPaste
 );
-
-//default card
-Widget defaultCard({required BuildContext context, required Widget child}) =>
-Card(
-    elevation: 5.0,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: child
-);
-
+//==============================================================================
 // default CircleAvatar
 Widget defaultCircleAvatar({
     required double radius,
@@ -163,7 +161,7 @@ Widget defaultCircleAvatar({
     backgroundColor: backgroundColor ?? mainColor,
     child: child
 );
-
+//==============================================================================
 //default snack bar message
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showMessage({
     required String message,
@@ -182,6 +180,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showMessage({
         )
     );
 }
+//==============================================================================
 //default pin code text field
 Widget pinCodeField({
     required BuildContext appContext,
@@ -200,6 +199,7 @@ Widget pinCodeField({
     onChanged: onChanged,
     beforeTextPaste: beforeTextPaste
 );
+//==============================================================================
 // Password requirement row widget..................................
 Widget defaultPasswordTextField({
     required TextEditingController controller,
@@ -221,8 +221,103 @@ Widget defaultPasswordTextField({
         )
     );
 }
-
+//==============================================================================
 Widget defaultArrowBack()
 {
     return const Icon(Icons.arrow_back_ios, color: Colors.black);
 }
+//==============================================================================
+//default Text Container
+
+Widget textContainer({
+    required String image,
+    required BuildContext context,
+    required String label,
+    required String data
+}) => Container(
+    padding: EdgeInsets.all(10.0),
+    decoration: BoxDecoration(
+        border: Border.all(color: secondColor),
+        borderRadius: BorderRadius.circular(20.0)
+
+    ),
+    child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 5.0,
+        children: [
+            Image.asset(image, width: 16.0, height: 16.0),
+            Expanded(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 5.0,
+                    children: <Widget>[
+                        Text(label, style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
+                        Text(data, style: TextTheme.of(context).bodySmall)
+                    ]
+                )
+            )
+
+        ]
+    )
+
+);
+//==============================================================================
+//dialog window
+void showErrorDialog({required BuildContext context})
+{
+    showDialog(
+        context: context,
+        builder: (BuildContext context)
+        {
+            return Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    side: BorderSide(color: secondColor, width: 2)
+                ),
+                child: Container(
+
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: backGrColor),
+
+                    ),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                              Align(
+                                  alignment: Alignment.topLeft,
+                                  child: GestureDetector(
+                                      onTap: () => Navigator.of(context).pop(),
+                                      child: defaultCircleAvatar(
+                                        backgroundColor: Colors.red,
+                                          radius: 20,
+                                          child: Icon(Icons.close, color: Colors.white)
+                                      )
+                                  )
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                  'يرجى تحديث معلوماتك في نظام ال HR ومن ثم اكمال عملية التسجيل',
+                                  style: TextTheme.of(context).labelSmall,
+                                  textAlign: TextAlign.center
+                              ),
+                              const SizedBox(height: 20),
+                              defaultButton(
+                                  context: context,
+                                  lable: 'خروج',
+                                  onPressed: ()
+                                  {
+                                      SystemNavigator.pop();
+                                  }
+                              )
+                          ]
+                      ),
+                    )
+                )
+            );
+        }
+    );
+}
+//==============================================================================

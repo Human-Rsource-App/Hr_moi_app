@@ -1,11 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/material.dart' hide showDialog;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/modules/auth/registeration/create_pass.dart';
-import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
+
+import '../../../generated/assets.dart';
+import '../../../shared/components/components.dart';
+import '../../../shared/style/color.dart';
+import 'face_verification_screen.dart';
 
 class EmpIdentity extends StatefulWidget
 {
@@ -17,225 +20,132 @@ class EmpIdentity extends StatefulWidget
 
 class _EmpIdentityState extends State<EmpIdentity>
 {
-    bool _isChecked = false;
-
     @override
-    Widget build(BuildContext context) 
+    Widget build(BuildContext context)
     {
-        return BlocConsumer<HrMoiCubit, HrMoiStates>(
-            listener: (context, state)
-            {
-            },
-            builder: (context, state)
-            {
-                return Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Scaffold(
-                        appBar: AppBar(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            leading: IconButton(
-                                icon: const Icon(
-                                    Icons.exit_to_app_rounded,
-                                    color: Colors.red,
-                                    size: 40
-                                ),
-                                onPressed: ()
-                                {
-                                    _showErrorDialog(context);
-                                }
-                            )
-                        ),
-
-                        body: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: SingleChildScrollView(
-                                child: Column(
-                                    children: [
-                                        defaultCard(
-                                            context: context,
-                                            child: Padding(
-                                                padding: const EdgeInsets.all(16.0),
-                                                child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                        Center(
-                                                            child: defaultCircleAvatar(
-                                                                radius: 50,
-                                                                backgroundColor: Colors.white,
-                                                                child: Image.asset('assets/icons/moi.png')
-                                                            )
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        Center(
-                                                            child: Text(
-                                                                'الهوية الرقمية',
-                                                                style: Theme.of(context).textTheme.bodyMedium
-                                                            )
-                                                        ),
-                                                        const SizedBox(height: 5),
-                                                        Center(
-                                                            child: Text(
-                                                                'المعلومات الشخصية',
-                                                                style: TextTheme.of(context).labelMedium
-                                                            )
-                                                        ),
-                                                        const Divider(
-                                                            height: 10,
-                                                            thickness: 1,
-                                                            color: Colors.grey,
-                                                            indent: 16,
-                                                            endIndent: 16
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                                _buildInfoColumn(
-                                                                    'الرقم الاحصائي',
-                                                                    userProfile.data!.empCode!
-                                                                ),
-                                                                _buildInfoColumn(
-                                                                    'الرتبة',
-                                                                    userProfile.data!.rankName!
-                                                                )
-                                                            ]
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        _buildInfoColumn(
-                                                            'الاسم الكامل',
-                                                            userProfile.data!.empName!
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        _buildInfoColumn(
-                                                            'الدائرة',
-                                                            userProfile.data!.unitName!
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        _buildInfoColumn(
-                                                            'رقم الهاتف',
-                                                            userProfile.data!.phoneNo!
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        _buildInfoColumn(
-                                                            'الصنف',
-                                                            userProfile.data!.rkTypeName!
-                                                        )
-                                                    ]
-                                                )
-                                            )
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                            children: [
-                                                Checkbox(
-                                                    value: _isChecked,
-                                                    onChanged: (bool? value)
-                                                    {
-                                                        setState(()
-                                                            {
-                                                                _isChecked = value!;
-                                                            }
-                                                        );
-                                                    }
-                                                ),
-                                                Text(
-                                                    'نعم٬ اؤكد صحة هذه المعلومات',
-                                                    style: Theme.of(context).textTheme.bodySmall
-                                                )
-                                            ]
-                                        )
-                                    ]
-                                )
-                            )
-                        ),
-                        bottomNavigationBar: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30.0,
-                                right: 30.0,
-                                bottom: 40.0
-                            ),
-                            child: defaultButton(
-                                context: context,
-                                lable: 'استمرار',
-                                onPressed: _isChecked
-                                    ? ()
-                                    {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) => const CreatePasswordScreen()
-                                            )
-                                        );
-                                    }
-                                    : null
-                            )
+        final Size size = MediaQuery.of(context).size;
+        TextTheme font = TextTheme.of(context);
+        return Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+                body: Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: backGrColor,
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter
                         )
-                    )
-                );
-            }
-        );
-    }
-
-    void _showErrorDialog(BuildContext context) 
-    {
-        showDialog(
-            context: context,
-            builder: (BuildContext context)
-            {
-                return Dialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                        side: BorderSide(color: Colors.white, width: 4)
                     ),
-                    child: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                                Align(
-                                    alignment: Alignment.topLeft,
-                                    child: GestureDetector(
-                                        onTap: () => Navigator.of(context).pop(),
-                                        child: defaultCircleAvatar(
-                                            radius: 20,
-                                            child: Icon(Icons.close, color: Colors.red)
-                                        )
-                                    )
-                                ),
-                                const SizedBox(height: 20),
-                                Text('تحديث المعلومات', style: TextTheme.of(context).bodyLarge),
-                                const SizedBox(height: 10),
-                                Text(
-                                    'يرجى تحديث معلوماتك في نظام HR',
-                                    style: TextTheme.of(context).labelSmall,
-                                    textAlign: TextAlign.center
-                                ),
-                                const SizedBox(height: 20),
-                                defaultButton(
-                                    context: context,
-                                    lable: 'حسناً',
-                                    onPressed: ()
+                    width: size.width,
+                    height: size.height,
+
+                    child: SafeArea(child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: BlocProvider(
+                                create: (context) => HrMoiCubit()..getHrUserData(url: '$baseUrl$userProfUrl$hrNum', context: context),
+                                child: BlocConsumer<HrMoiCubit, HrMoiStates>(
+                                    listener: (context, state)
                                     {
-                                        SystemNavigator.pop();
+                                        // TODO: implement listener
+                                    },
+                                    builder: (context, state)
+                                    {
+                                        return ConditionalBuilder(condition: state is ! HrNumGetLoadingState,
+                                            builder: (context)=> SingleChildScrollView(
+                                              child: Column(
+                                                  children: <Widget>[
+                                                    Container(
+                                                        margin: EdgeInsets.all(8.0),
+                                                        padding: EdgeInsets.all(10.0),
+                                                        width: size.width,
+                                                        decoration: BoxDecoration(
+                                                            gradient: LinearGradient(colors: backGrColor),
+                                                            boxShadow: [BoxShadow(color: Color(0xFF5DBBDB), blurRadius: 10, blurStyle: BlurStyle.normal, offset: Offset(0, 0))],
+                                                            borderRadius: BorderRadius.circular(20.0)
+                                              
+                                                        ),
+                                                        child: Column(
+                                                            spacing: 5.0,
+                                                            children: [
+                                                              defaultCircleAvatar(radius: 50.0, child: Image.asset(Assets.iconsPersonalimage), backgroundColor: Colors.transparent),
+                                                              SizedBox(height: 20.0),
+                                                              Text('الهوية الرقمية', style: font.bodySmall!.copyWith(color: Colors.grey)),
+                                                              Text('معلومات الهوية الرقمية', style: font.bodySmall)
+                                                            ]
+                                                        )),
+                                              
+                                                    SizedBox(height: 30.0),
+                                                    Column(
+                                                        spacing: 10.0,
+                                                        children: <Widget>[
+                                                          textContainer(context: context, label: 'الرقم الأحصائي', data: userProfile.data!.empCode.toString(), image: Assets.iconsHrNo),
+                                                          textContainer(context: context, label: 'الرتبة/الدرجة الوظيفية', data:userProfile.data!.rankName.toString() , image: Assets.iconsRank),
+                                                          textContainer(context: context, label: 'الاسم الكامل', data: userProfile.data!.empName.toString(), image: Assets.iconsPersonalName),
+                                                          textContainer(context: context, label: 'جهة الانتساب', data: userProfile.data!.unitName.toString(), image: Assets.iconsWorkName),
+                                                          textContainer(context: context, label: 'رقم الهاتف', data: userProfile.data!.phoneNo.toString(), image: Assets.iconsPhone),
+                                                          textContainer(context: context, label: 'نوع الفئة', data: userProfile.data!.rkTypeName.toString(), image: Assets.iconsGroupName)
+                                              
+                                                        ]
+                                                    )
+                                                  ]
+                                              ),
+                                            ),
+                                            fallback:(context)=> SizedBox(
+                                              width: size.width,
+                                                height: size.height,
+                                                child: Center(child: CircularProgressIndicator(color: secondColor,))));
                                     }
                                 )
-                            ]
+                            )
+                        ))
+                ),
+                bottomNavigationBar: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: backGrColor
                         )
-                    )
-                );
-            }
-        );
-    }
+                    ),
+                    child: Column(
+                        spacing: 5.0,
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                            Text('هل المعلومات صحيحة؟', style: font.bodySmall),
 
-    Widget _buildInfoColumn(String title, String subtitle) 
-    {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-                Text(title, style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 5),
-                Text(subtitle, style: TextTheme.of(context).labelSmall)
-            ]
+                            SizedBox(height: 10.0),
+                            Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Expanded(
+                                    child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                            defaultButton(context: context, onPressed: ()
+                                                {
+                                                  showErrorDialog(context: context);
+                                                }
+                                                , lable: 'كلا', width: 90.0, color: Color(0XFFF44141), fontColor: Colors.white),
+                                            defaultButton(context: context, onPressed: ()
+                                                {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) => FaceLivenessPage()
+                                                      )
+                                                  );
+
+                                                }
+                                                , lable: 'نعم', width: 90.0, color: Color(0XFF4DB8D8), fontColor: Colors.white)
+                                        ]
+                                    )
+                                )
+                            )
+
+                        ]
+                    )
+                )
+
+            )
         );
     }
 }

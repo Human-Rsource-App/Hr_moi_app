@@ -199,53 +199,62 @@ class _CameraScreenState extends State<CameraScreen>
                 },
                 builder: (context, state)
                 {
+                  final Size size = MediaQuery.of(context).size;
                     var cubit = HrMoiCubit.get(context);
                     return Scaffold(
-                        body: Stack(
-                            children: [
-                                Positioned.fill(child: CameraPreview(_controller)),
-                                Positioned.fill(
-                                    child: IgnorePointer(
-                                        child: CustomPaint(painter: MrzMaskPainter())
-                                    )
-                                ),
-                                Positioned(
-                                    bottom: 8,
-                                    left: 20,
-                                    right: 20,
-                                    child: Column(
-                                        children: [
+                        body: Container(
 
-                                            Container(
-                                                width: double.infinity,
-                                                color: !autoScanning || result.isNotEmpty ? Colors.black54 : null,
-                                                padding: const EdgeInsets.all(8),
-                                                child: SingleChildScrollView(
-                                                    child: Text(
-                                                        result,
-                                                        style: const TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14
-                                                        )
-                                                    )
-                                                )
-                                            ),
-                                          defaultElevationBtn(
-                                              context: context,
-                                              label: 'متابعة',
-                                              onPressed: !autoScanning && result.isNotEmpty ? ()
-                                              {
-                                                cubit.getNationalId(
-                                                    url: '$baseUrl$mrzUrl$nID',
-                                                    context: context
-                                                );
-                                              }
-                                                  : null
-                                          ),
-                                        ]
-                                    )
-                                )
-                            ]
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: backGrColor,
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter
+                              )
+                          ),
+                          width: size.width,
+                          height: size.height,
+                          child: Stack(
+
+
+                              children: [
+                                  Positioned.fill(child:autoScanning? CameraPreview(_controller):SizedBox.shrink()),
+                                  Positioned.fill(
+
+                                      child:  autoScanning?IgnorePointer(
+                                          child:CustomPaint(painter: MrzMaskPainter())
+
+                                      ): Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child:GestureDetector(onTap:scanning ? null : startAutoScan, child: Image.asset(Assets.iconsScanid,fit: BoxFit.contain, ))
+                                      ),
+                                  ),
+                                  Positioned(
+                                      bottom: 8,
+                                      left: 20,
+                                      right: 20,
+                                      child: Column(
+                                          children: [
+
+                                              !autoScanning && result.isNotEmpty ? Container(
+                                                      width: double.infinity,
+                                                    //  color: Colors.black54,
+                                                      padding: const EdgeInsets.all(8),
+                                                      child: SingleChildScrollView(
+                                                          child:Image.asset(Assets.iconsChecked,width: 60.0,height: 60.0,),
+                                                          // Text(
+                                                          //     result,
+                                                          //     style: const TextStyle(
+                                                          //         color: Colors.white,
+                                                          //         fontSize: 14
+                                                          //     )
+                                                          // )
+                                                      )
+                                                  ) : SizedBox.shrink()
+
+                                          ]
+                                      )
+                                  )
+                              ]
+                          ),
                         ),
                         bottomNavigationBar: Container(
 
@@ -263,14 +272,25 @@ class _CameraScreenState extends State<CameraScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                     SizedBox(height: 10.0),
-                                    IconButton(onPressed: scanning ? null : startAutoScan, icon: Image.asset(Assets.iconsMrz, width: 24.0, height: 24.0)),
+                                    IconButton(onPressed: scanning ? null : startAutoScan, icon: Image.asset(Assets.iconsMrz, width: 30.0, height: 30.0)),
                                     Text('امسح الرمز في الوجه الخلفي للبطاقة الوطنية', style: TextTheme.of(context).bodySmall),
                                     Text('يرجى محاذاة البطاقة الوطنية داخل الاطار', style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
-                                    IconButton(onPressed: scanning ? null : startAutoScan, icon: Image.asset(Assets.iconsScaning, width: 72.0, height: 72.0))
+                                    Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: defaultButton(context: context, onPressed: !autoScanning && result.isNotEmpty ? ()
+                                                {
+                                                    cubit.getNationalId(
+                                                        url: '$baseUrl$mrzUrl$nID',
+                                                        context: context
+                                                    );
+                                                }
+                                                : null, lable: 'متابعة')
+                                    )
 
                                 ]
                             )
                         )
+
                     );
                 }
             )
@@ -291,9 +311,9 @@ class MrzMaskPainter extends CustomPainter
         ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
         final cutWidth = size.width * 0.92;
-        final cutHeight = size.height * 0.4;
+        final cutHeight = size.height * 0.5;
         final left = (size.width - cutWidth) / 2;
-        final top = (size.height - cutHeight) / 3;
+        final top = (size.height - cutHeight) / 2;
         final rect = Rect.fromLTWH(left, top, cutWidth, cutHeight);
 
         final path = Path.combine(

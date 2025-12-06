@@ -13,5 +13,5 @@ const String loginUrl = 'auth/login';
 //general var
 List<CameraDescription>? cameras;
 late String nID;
-late String hrNum;
+String hrNum='911720011';
 late HrProfileModel userProfile;

@@ -1,11 +1,10 @@
 class HrProfileModel {
   bool? success;
-  String? message;
-  String? error;
+  String? msg;
   UserData? data;
   HrProfileModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    message = json['message'];
+    msg = json['msg'];
     data = json['data'] != null ? UserData.fromJson(json['data']) : null;
   }
 }
