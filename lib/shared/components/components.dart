@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
 //default material button
 Widget defaultButton({
     required BuildContext context,
@@ -36,7 +35,6 @@ Widget defaultElevationBtn({
 
     required String label
 }) => ElevatedButton(
-
     style: ElevatedButton.styleFrom(
         backgroundColor: elevBtnColor,
         disabledBackgroundColor: Colors.black26,
@@ -46,20 +44,6 @@ Widget defaultElevationBtn({
     onPressed: onPressed,
 
     child: Text(label, style: TextTheme.of(context).bodyMedium!.copyWith(color: Colors.black))
-);
-//==============================================================================
-// icon button
-Widget defaultIconButton({
-    required IconData icon,
-    double? iconSize,
-    Color? color
-}) => IconButton(
-    onPressed: ()
-    {
-    },
-    icon: Icon(icon),
-    iconSize: iconSize,
-    color: color ?? mainColor
 );
 //==============================================================================
 //default text button
@@ -74,7 +58,6 @@ Widget defaultTextBtn({required void Function() onPressed, required String label
         )
     )
 );
-
 //==============================================================================
 //default Text Form Field
 Widget defaultTextField({
@@ -113,7 +96,6 @@ Widget pinCodeTextField({
     bool Function(String?)? beforeTextPaste
 }) => PinCodeTextField(
     errorTextSpace: 30.0,
-
     appContext: appContext,
     pastedTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
     length: 6,
@@ -134,7 +116,6 @@ Widget pinCodeTextField({
         inactiveColor: Colors.grey[500]
     ),
     cursorColor: Colors.black,
-
     animationDuration: const Duration(milliseconds: 300),
     enableActiveFill: false,
     errorAnimationController: errorAnimationController,
@@ -200,35 +181,7 @@ Widget pinCodeField({
     beforeTextPaste: beforeTextPaste
 );
 //==============================================================================
-// Password requirement row widget..................................
-Widget defaultPasswordTextField({
-    required TextEditingController controller,
-    required bool obscureText,
-    required VoidCallback onSuffixIconPressed,
-    required String labelText
-})
-{
-    return TextField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            labelText: labelText,
-            border: const OutlineInputBorder(),
-            suffixIcon: IconButton(
-                icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
-                onPressed: onSuffixIconPressed
-            )
-        )
-    );
-}
-//==============================================================================
-Widget defaultArrowBack()
-{
-    return const Icon(Icons.arrow_back_ios, color: Colors.black);
-}
-//==============================================================================
 //default Text Container
-
 Widget textContainer({
     required String image,
     required BuildContext context,
@@ -256,10 +209,8 @@ Widget textContainer({
                     ]
                 )
             )
-
         ]
     )
-
 );
 //==============================================================================
 //dialog window
@@ -278,42 +229,42 @@ void showErrorDialog({required BuildContext context})
 
                     padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: backGrColor),
+                        gradient: LinearGradient(colors: backGrColor)
 
                     ),
                     child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                              Align(
-                                  alignment: Alignment.topLeft,
-                                  child: GestureDetector(
-                                      onTap: () => Navigator.of(context).pop(),
-                                      child: defaultCircleAvatar(
-                                        backgroundColor: Colors.red,
-                                          radius: 20,
-                                          child: Icon(Icons.close, color: Colors.white)
-                                      )
-                                  )
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                  'يرجى تحديث معلوماتك في نظام ال HR ومن ثم اكمال عملية التسجيل',
-                                  style: TextTheme.of(context).labelSmall,
-                                  textAlign: TextAlign.center
-                              ),
-                              const SizedBox(height: 20),
-                              defaultButton(
-                                  context: context,
-                                  lable: 'خروج',
-                                  onPressed: ()
-                                  {
-                                      SystemNavigator.pop();
-                                  }
-                              )
-                          ]
-                      ),
+                        textDirection: TextDirection.rtl,
+                        child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                                Align(
+                                    alignment: Alignment.topLeft,
+                                    child: GestureDetector(
+                                        onTap: () => Navigator.of(context).pop(),
+                                        child: defaultCircleAvatar(
+                                            backgroundColor: Colors.red,
+                                            radius: 20,
+                                            child: Icon(Icons.close, color: Colors.white)
+                                        )
+                                    )
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                    'يرجى تحديث معلوماتك في نظام ال HR ومن ثم اكمال عملية التسجيل',
+                                    style: TextTheme.of(context).labelSmall,
+                                    textAlign: TextAlign.center
+                                ),
+                                const SizedBox(height: 20),
+                                defaultButton(
+                                    context: context,
+                                    lable: 'خروج',
+                                    onPressed: ()
+                                    {
+                                        SystemNavigator.pop();
+                                    }
+                                )
+                            ]
+                        )
                     )
                 )
             );

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart' as mlkit;
+import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
@@ -44,14 +45,14 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
     String get _currentChallenge => _challenges[_challengeIndex];
 
     @override
-    void initState() 
+    void initState()
     {
         super.initState();
         _initFaceDetector();
         _startCamera();
     }
 
-    void _initFaceDetector() 
+    void _initFaceDetector()
     {
         _faceDetector = FaceDetector(
             options: FaceDetectorOptions(
@@ -77,7 +78,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
         setState(() => _status = 'اضبط وجهك داخل الدائرة وابدأ التحديات');
     }
 
-    void _startFaceStream() 
+    void _startFaceStream()
     {
         _frameTimer?.cancel();
         _frameTimer = Timer.periodic(const Duration(milliseconds: 600), (_) async
@@ -92,11 +93,11 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
                     final input = mlkit.InputImage.fromFilePath(file.path);
                     final faces = await _faceDetector.processImage(input);
 
-                    if (faces.isNotEmpty) 
+                    if (faces.isNotEmpty)
                     {
                         _evaluateFace(faces.first, file);
                     }
-                    else 
+                    else
                     {
                         setState(() => _status = 'لا يوجد وجه. حاول مرة أخرى.');
                     }
@@ -112,7 +113,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
         );
     }
 
-    void _evaluateFace(Face face, XFile file) 
+    void _evaluateFace(Face face, XFile file)
     {
         bool passed = false;
 
@@ -134,11 +135,11 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
                 break;
         }
 
-        if (passed) 
+        if (passed)
         {
             _nextChallenge(file);
         }
-        else 
+        else
         {
             setState(() => _status = 'قم: $_currentChallenge');
         }
@@ -146,13 +147,13 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
 
     Future<void> _nextChallenge(XFile file) async
     {
-        if (_challengeIndex < _challenges.length - 1) 
+        if (_challengeIndex < _challenges.length - 1)
         {
             _challengeIndex++;
             await _playFeedback();
             setState(() => _status = 'جيد المرحله التالية: $_currentChallenge');
         }
-        else 
+        else
         {
             await _onLivenessSuccess(file);
         }
@@ -178,7 +179,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
     }
 
     @override
-    void dispose() 
+    void dispose()
     {
         _frameTimer?.cancel();
         _controller?.dispose();
@@ -188,7 +189,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
     }
 
     @override
-    Widget build(BuildContext context) 
+    Widget build(BuildContext context)
     {
         HrMoiCubit cubit = HrMoiCubit.get(context);
         return BlocConsumer<HrMoiCubit, HrMoiStates>(
@@ -238,34 +239,21 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
                                 if (_livenessPassed)
                                 Positioned(
                                     bottom: 20,
-                                    child: ElevatedButton(
-                                        onPressed: ()
-                                        {
-                                            if (_verifiedImage != null) 
-                                            {
-                                                var stringImage = image64Trans(
-                                                    imagePath: _verifiedImage!.path
-                                                );
+                                    child: defaultElevationBtn(context: context,  onPressed: ()
+                                    {
+                                      if (_verifiedImage != null)
+                                      {
+                                        var stringImage = image64Trans(
+                                            imagePath: _verifiedImage!.path
+                                        );
 
-                                                cubit.postUserFace(
-                                                    url: '$baseUrl$faceUrl$hrNum'.toString(),
-                                                    data: stringImage,
-                                                    context: context
-                                                );
-                                            }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 30,
-                                                vertical: 14
-                                            )
-                                        ),
-                                        child: const Text(
-                                            "تابع التسجيل",
-                                            style: TextStyle(fontSize: 18, color: Colors.white)
-                                        )
-                                    )
+                                        cubit.postUserFace(
+                                            url: '$baseUrl$faceUrl$hrNum'.toString(),
+                                            data: stringImage,
+                                            context: context
+                                        );
+                                      }
+                                    }, label: 'تابع التسجيل')
                                 ),
 
                                 if (_flashOverlay)
@@ -278,7 +266,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
         );
     }
 
-    String image64Trans({required String imagePath}) 
+    String image64Trans({required String imagePath})
     {
         final personalImage = File(imagePath);
         List<int> personalImageByte = personalImage.readAsBytesSync();
@@ -290,10 +278,18 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
 class _OvalPainter extends CustomPainter
 {
     @override
-    void paint(Canvas canvas, Size size) 
+    void paint(Canvas canvas, Size size)
     {
         final paintOverlay = Paint()
-            ..color = Colors.black.withValues(alpha: .6)
+          ..shader = LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF0A3D5C), // top blue
+              Color(0xFF1A5577), // mid blue
+              Color(0xFF0F2940), // bottom blue
+            ],
+          ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
             ..style = PaintingStyle.fill;
 
         final fullPath = Path()
