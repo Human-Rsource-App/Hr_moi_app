@@ -1,48 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:hr_moi/generated/assets.dart';
 import 'package:hr_moi/shared/components/components.dart';
 
-class RegistrationSuccessScreen extends StatelessWidget {
-  const RegistrationSuccessScreen({super.key});
+import '../../../shared/style/color.dart';
+import '../../home_screen/home_screen.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Spacer(),
-            defaultCircleAvatar(
-              radius: 60,
-              backgroundColor: const Color(0xFF69C5F8),
-              child: const Icon(Icons.check, color: Colors.white, size: 80),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              '!تم التسجيل بنجاح',
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              ' تم تسجيلك بنجاح في تطبيق خدمات وزارة الداخلية',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const Spacer(),
-            defaultButton(
-              context: context,
-              lable: 'الدخول الى التطبيق',
-              onPressed: () {},
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
+class RegistrationSuccessScreen extends StatelessWidget
+{
+    const RegistrationSuccessScreen({super.key});
+
+    @override
+    Widget build(BuildContext context)
+    {
+        TextTheme font = TextTheme.of(context);
+        return Scaffold(
+            body: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: backGrColor,
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter
+                    )
+                ),
+                child: SafeArea(
+                    child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                                const Spacer(),
+                                Image.asset(Assets.iconsDone, width: 150.0, height: 150.0),
+                                const SizedBox(height: 20),
+                                Text(
+                                    '!تم التسجيل بنجاح', style: font.bodyMedium!.copyWith(color: Colors.lightGreen), textAlign: TextAlign.center
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                    'تهانينا، لقد قمت بالتسجيل بنجاح في تطبيق الموارد البشرية',
+                                    textAlign: TextAlign.center,
+                                    style: font.bodyMedium
+                                ),
+                                const Spacer(),
+                                Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: defaultButton(
+                                        context: context,
+                                        lable: 'الانتقال إلى لوحة التحكم',
+                                        onPressed: ()
+                                        {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => HomeScreen()
+                                                )
+                                            );
+                                        }
+                                    )
+                                ),
+                                const SizedBox(height: 30)
+                            ]
+                        )
+                    )
+                )
+            )
+        );
+    }
 }

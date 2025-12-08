@@ -6,8 +6,7 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import 'package:hr_moi/shared/style/styles.dart';
-
-import 'modules/auth/registeration/otp_screen.dart';
+import 'modules/auth/login/login.dart';
 
 void main() async
 {
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget
 
     // This widget is the root of your application.
     @override
-    Widget build(BuildContext context) 
+    Widget build(BuildContext context)
     {
         return BlocProvider(
             create: (context) => HrMoiCubit(),
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget
                 title: 'HR MOI APP',
                 themeMode: ThemeMode.dark,
                 theme: lightTheme,
-                home: PinCodeVerificationScreen(empCode: '911720011', phoneNumber: '0771719002') // MoiView(),
+                home: Login() // MoiView(),
             )
         );
     }

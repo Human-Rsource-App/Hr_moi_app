@@ -8,6 +8,7 @@ import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 
 import '../../../generated/assets.dart';
+import '../registeration/reset_pass/reset_pass.dart';
 
 class Login extends StatefulWidget
 {
@@ -43,14 +44,14 @@ class _LoginState extends State<Login>
                             decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: backGrColor,
                                     begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
+                                    end: Alignment.bottomCenter
                                 )
                             ),
                             width: size.width,
                             height: size.height,
                             child: SafeArea(
                                 child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
                                     child: SingleChildScrollView(
                                         child: Form(
                                             key: formKey,
@@ -59,11 +60,11 @@ class _LoginState extends State<Login>
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                    Image.asset(Assets.iconsOip,fit: BoxFit.cover,),
+                                                    Image.asset(Assets.iconsOip, fit: BoxFit.cover),
                                                     Text('مرحباً', style: textTheme.labelLarge),
                                                     Text(
                                                         'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',
-                                                        style: textTheme.bodySmall,
+                                                        style: textTheme.bodySmall
                                                     ),
                                                     const SizedBox(height: 5.0),
                                                     defaultTextField(
@@ -84,7 +85,7 @@ class _LoginState extends State<Login>
                                                                 return 'الرقم الاحصائي غير صالح';
                                                             }
                                                             return null;
-                                                        },
+                                                        }
                                                     ),
 
                                                     defaultTextField(
@@ -111,9 +112,9 @@ class _LoginState extends State<Login>
                                                                     _isPasswordVisible = !_isPasswordVisible;
                                                                 }
                                                             );
-                                                        },
+                                                        }
                                                     ),
-                                                    const SizedBox(height: 5.0,),
+                                                    const SizedBox(height: 5.0),
                                                     //login button
                                                     defaultButton(
                                                         context: context,
@@ -125,11 +126,11 @@ class _LoginState extends State<Login>
                                                                     url: '$baseUrl$loginUrl',
                                                                     empCode: empCode.text.toString(),
                                                                     password: password.text.toString(),
-                                                                    context: context,
+                                                                    context: context
                                                                 );
                                                             }
                                                         },
-                                                        lable: 'تسجيل الدخول',
+                                                        lable: 'تسجيل الدخول'
                                                     ),
 
                                                     //===============================================
@@ -138,23 +139,23 @@ class _LoginState extends State<Login>
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
                                                             //bio login
-                                                            Text('أوسجل دخولك عبر',style: TextTheme.of(context).bodySmall,),
-                                                            Image.asset(Assets.iconsFaceId,width: 100.0,height: 100.0,),
+                                                            Text('أوسجل دخولك عبر', style: TextTheme.of(context).bodySmall),
+                                                            Image.asset(Assets.iconsFaceId, width: 100.0, height: 100.0),
                                                             //===============================================================
                                                             //forget pass
                                                             Row(
                                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                                 children: [
-                                                                    defaultTextBtn(label:'هل نسيت كلمة المرور؟',onPressed: ()
+                                                                    defaultTextBtn(label: 'هل نسيت كلمة المرور؟', onPressed: ()
                                                                         {
                                                                             Navigator.push(
                                                                                 context,
                                                                                 MaterialPageRoute(
-                                                                                    builder: (context) => HrNumber(),
-                                                                                ),
+                                                                                    builder: (context) => ResetPass()
+                                                                                )
                                                                             );
-                                                                        }, textTheme: textTheme),
-                                                                ],
+                                                                        }, textTheme: textTheme)
+                                                                ]
                                                             ),
                                                             //=================================================
                                                             //u do not have an account
@@ -163,35 +164,35 @@ class _LoginState extends State<Login>
                                                                 children: [
                                                                     Text(
                                                                         'ليس لديك حساب؟',
-                                                                        style: textTheme.bodySmall,
+                                                                        style: textTheme.bodySmall
                                                                     ),
                                                                     SizedBox(width: 5.0),
-                                                                    defaultTextBtn(label:'انشاء حساب جديد!',onPressed: ()
+                                                                    defaultTextBtn(label: 'انشاء حساب جديد!', onPressed: ()
                                                                         {
                                                                             Navigator.push(
                                                                                 context,
                                                                                 MaterialPageRoute(
-                                                                                    builder: (context) => HrNumber(),
-                                                                                ),
+                                                                                    builder: (context) => HrNumber()
+                                                                                )
                                                                             );
-                                                                        }, textTheme: textTheme),
+                                                                        }, textTheme: textTheme)
 
-                                                                ],
-                                                            ),
+                                                                ]
+                                                            )
 
-                                                        ],),
+                                                        ])
 
-                                                ],
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
+                                                ]
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
 
                     );
-                },
-            ),
+                }
+            )
         );
     }
 }
