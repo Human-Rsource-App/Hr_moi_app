@@ -112,10 +112,10 @@ class ResetPass extends StatelessWidget
                                                     {
                                                       if (formKey.currentState!.validate())
                                                       {
-                                                        cubit.getEmpCode(
-                                                            url: '$baseUrl$hrUrl${controller.text.toString()}',
+                                                        cubit.resetPass(
+                                                           path: '$baseUrl$resetPass',
                                                             context: context,
-                                                            empCode: controller.text.toString()
+                                                            data: {"empCode":controller.text.toString()}
                                                         );
                                                       }
                                                     },

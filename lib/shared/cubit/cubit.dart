@@ -16,8 +16,9 @@ import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
-
+import '../../models/reset_pass/reset_req_model.dart';
 import '../../modules/auth/registeration/create_pass.dart';
+import '../../modules/auth/registeration/reset_pass/otp_reset.dart';
 
 class HrMoiCubit extends Cubit<HrMoiStates>
 {
@@ -308,37 +309,37 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                 }
             )
             .catchError((error)
-        {
-          if (error is DioException)
-          {
-            if (error.response!.statusCode == 409)
-            {
-              if (context.mounted)
-              {
-                showMessage(message: 'هذا المستخدم مسجل مسبقا', context: context);
-                emit(FaceRecGetFailState());
-              }
-            }
-            else
-            {
-              if (context.mounted)
-              {
-                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
-                emit(FaceRecGetFailState());
-              }
-            }
-          }
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 409)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هذا المستخدم مسجل مسبقا', context: context);
+                                emit(FaceRecGetFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(FaceRecGetFailState());
+                            }
+                        }
+                    }
 
-        }
-        ).catchError((error)
-        {
-          if (context.mounted)
-          {
-            showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
-            emit(FaceRecGetFailState());
-          }
-        }
-        );
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted)
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(FaceRecGetFailState());
+                    }
+                }
+            );
     }
     //==============================================================================
     //create pass
@@ -459,4 +460,57 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                 }
             );
     }
+    //============================================================================
+    //reset screen logic
+    void resetPass({required String path, required Map<String, dynamic> data, required BuildContext context})
+    {
+        DioHelper.postData(path: path, data: data).then((val)
+            {
+                ResetReqModel data = ResetReqModel.fromJson(val.data);
+                if (data.success == true)
+                {
+                    if (context.mounted)
+                    {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => OtpReset(empCode: data.data!.empCode!, phoneNumber: data.data!.phone!))
+                        );
+                        emit(ResetPassSuccState());
+                    }
+                }
+            }
+        ).catchError((error)
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هذا المستخدم غير موجود', context: context);
+                                emit(ResetPassFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(ResetPassFailState());
+                            }
+                        }
+                    }
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted) 
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة$error', context: context);
+                        emit(ResetPassFailState());
+                    }
+                }
+            );
+
+    }
 }
+//===============================================================================

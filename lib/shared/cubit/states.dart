@@ -45,3 +45,8 @@ class LoginLoadingState extends HrMoiStates {}
 class LoginSuccState extends HrMoiStates {}
 
 class LoginFailState extends HrMoiStates {}
+
+//reset pass req states
+class ResetPassSuccState extends HrMoiStates {}
+
+class ResetPassFailState extends HrMoiStates {}
