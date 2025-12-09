@@ -1,8 +1,4 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
-
-import 'package:hr_moi/modules/auth/login/login.dart';
 import 'package:hr_moi/shared/style/color.dart';
 
 class MoiView extends StatelessWidget {
@@ -13,98 +9,132 @@ class MoiView extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     return Directionality(
-      textDirection: TextDirection.ltr,
+      textDirection: TextDirection.rtl,
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.transparent,
         body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: backGrColor,
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter
+              )
+          ),
           width: size.width,
           height: size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              transform: GradientRotation(math.pi / 7.5),
-              colors: [
-                Color(0xFF155DFC),
-                Color(0xFF00B8DB),
-                Color(0xFF1447E6),
-              ],
-              stops: [0.0, 0.5, 1.0],
-            ),
-          ),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: size.height / 7),
             child: SingleChildScrollView(
               child: Column(
-                spacing: 40.0,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'جمهورية العراق',
-                      style: textTheme.labelLarge
-                    ),
-                  ),
-                  Container(
-                    width: 200,
+                  // Logo with rings
+                  _buildLogo(),
+                  const SizedBox(height: 24),
+                  // English title
+                  Text('Human Resources System', style: textTheme.bodyMedium!.copyWith(color: secondColor)),
 
-                    clipBehavior: Clip.antiAlias,
+                  const SizedBox(height: 8),
+                  Container(
+                    width: 150,
+                    height: 2,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(200),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x80FFFFFF),
-                          spreadRadius: 0,
-                          blurRadius: 10.61,
-                          blurStyle: BlurStyle.outer,
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                    child: Image.asset(
-                      'assets/icons/moi.png',
-                      fit: BoxFit.contain,
+                      gradient: LinearGradient(
+                        colors: [Colors.black, secondColor, Colors.black],
+                      ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        'وزارة الداخلية',
-                        style: textTheme.labelMedium
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 140),
-                        child: Divider(),
-                      ),
-                      const SizedBox(height: 30.0),
-                      Text(
-                        'نظام إدارة الموارد البشرية',
-                        style: textTheme.bodyMedium
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        'إدارة متكاملة لخدمات مديرية الموارد البشرية',
-                        style: textTheme.bodySmall
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 16),
+                  // Arabic title
+                  Text(  'ادارة ذكية للموارد البشرية',
+                      style: textTheme.bodyMedium!.copyWith(color: Colors.white)),
                 ],
               ),
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: mainColor,
+      ),
+    );
 
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const Login()),
-            );
-          },
-          child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
+  }
+
+  Widget _buildCornerBracket({bool isTopLeft = false}) {
+    return SizedBox(
+      width: 60,
+      height: 60,
+      child: CustomPaint(
+        painter: _CornerBracketPainter(isTopLeft: isTopLeft),
+      ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Container(
+      width: 300,
+      height: 300,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: mainColor.withOpacity(0.2), width: 4, ),
+      ),
+      child: Center(
+        child: Container(
+          width: 270,
+          height: 270,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: secondColor.withOpacity(0.3), width: 4),
+          ),
+          child: Center(
+            child: Container(
+              width: 240,
+              height: 240,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: secondColor.withOpacity(0.5), width: 4),
+              ),
+              child: Center(
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    // Placeholder for the actual logo
+                    image: DecorationImage(
+                      image: AssetImage('assets/icons/moiLogo.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 }
+
+class _CornerBracketPainter extends CustomPainter {
+  final bool isTopLeft;
+  _CornerBracketPainter({this.isTopLeft = false});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = secondColor.withOpacity(0.3)
+      ..strokeWidth = 4
+      ..style = PaintingStyle.stroke;
+
+    if (isTopLeft) {
+      canvas.drawLine(const Offset(0, 0), const Offset(0, 60), paint);
+      canvas.drawLine(const Offset(0, 0), const Offset(60, 0), paint);
+    } else {
+      canvas.drawLine(Offset(size.width, size.height), Offset(size.width, size.height - 60), paint);
+      canvas.drawLine(Offset(size.width, size.height), Offset(size.width - 60, size.height), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+
+
