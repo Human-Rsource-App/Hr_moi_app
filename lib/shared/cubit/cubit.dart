@@ -18,6 +18,7 @@ import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import '../../models/reset_pass/reset_req_model.dart';
 import '../../modules/auth/registeration/create_pass.dart';
+import '../../modules/auth/registeration/reset_pass/create_newpass.dart';
 import '../../modules/auth/registeration/reset_pass/otp_reset.dart';
 
 class HrMoiCubit extends Cubit<HrMoiStates>
@@ -74,7 +75,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                                 emit(HrGetFailState());
                             }
                         }
-                        else
+                        if (error.response!.statusCode == 404)
                         {
                             if (context.mounted)
                             {
@@ -84,6 +85,17 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                                 );
                                 emit(HrGetFailState());
                             }
+                        }
+                    }
+                    else
+                    {
+                        if (context.mounted)
+                        {
+                            showMessage(
+                                message: 'هنالك مشكله في الخادم',
+                                context: context
+                            );
+                            emit(HrGetFailState());
                         }
                     }
                 }
@@ -118,7 +130,8 @@ class HrMoiCubit extends Cubit<HrMoiStates>
             }
             emit(OtpGetSuccState());
         }
-        //=========================================================================temp
+        //=========================================================================
+        // temp
         DioHelper.getData(path: url)
             .then((val)
                 {
@@ -503,14 +516,160 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                 }
             ).catchError((error)
                 {
-                    if (context.mounted) 
+                    if (context.mounted)
                     {
-                        showMessage(message: 'تأكد من اتصالك بالشبكة$error', context: context);
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
                         emit(ResetPassFailState());
                     }
                 }
             );
 
     }
+
+    //===============================================================================
+    //otp screen for reset pass logic
+    void getOtpResetPass({
+        required String url,
+        required String currentText,
+        required BuildContext context
+    })
+    {
+        //temporary code
+        if (currentText == '123456')
+        {
+            if (context.mounted)
+            {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => CreateNewpass()
+                    )
+                );
+            }
+            emit(OtpRestPassSuccState());
+        }
+        //=========================================================================
+        // temp
+        DioHelper.getData(path: url)
+            .then((val)
+                {
+                    // OtpModel otp = OtpModel.fromJson(val.data,); //otp.data!.otp==currentText
+                    if (currentText == '123456')
+                    {
+                        if (context.mounted)
+                        {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => CreateNewpass()
+                                )
+                            );
+                        }
+                        emit(OtpRestPassSuccState());
+                    }
+                    else
+                    {
+                        if (context.mounted)
+                        {
+                            showMessage(
+                                message: 'خطأ في ادخال الرمز المرسل!!',
+                                context: context
+                            );
+                        }
+                        emit(OtpResetPassFailState());
+                    }
+                }
+            )
+            .catchError((error)
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'لا يوجد رمز مرسل', context: context);
+                                emit(OtpResetPassFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted)
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(OtpResetPassFailState());
+                    }
+                }
+            );
+    }
+
+    //==============================================================================
+//create new pass
+  void createNewPass({
+    required String url,
+    required String empCode,
+    required String otp,
+    required String password,
+    required BuildContext context
+  })
+  {
+    DioHelper.postData(
+        path: url,
+        data: {"empCode": empCode,"otp":otp, "newPassword": password}
+    )
+        .then((val)
+    {
+      CreatePassModel pass = CreatePassModel.fromJson(val.data);
+
+      if (pass.success == true)
+      {
+        //
+        if (context.mounted)
+        {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RegistrationSuccessScreen()
+              )
+          );
+          emit(CreateNewPassSuccState());
+        }
+
+      }
+    }
+    )
+        .catchError((error)
+    {
+      if (error is DioException)
+      {
+        if (error.response!.statusCode == 400)
+        {
+          if (context.mounted)
+          {
+            showMessage(message: 'OTP غير صحيح أو منتهي', context: context);
+            emit(CreateNewPassFailState());
+          }
+        }
+        else
+        {
+          if (context.mounted)
+          {
+            showMessage(message: '$errorهنالك مشكلة في الخادم', context: context);
+            emit(CreateNewPassFailState());
+          }
+        }
+      }
+
+    }
+    ).catchError((error)
+    {
+      if (context.mounted)
+      {
+        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+        emit(CreateNewPassFailState());
+      }
+    }
+    );
+  }
 }
-//===============================================================================

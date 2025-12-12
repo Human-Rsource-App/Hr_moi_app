@@ -208,8 +208,9 @@ class _CreateNewpass extends State<CreateNewpass>
                         onPressed: isPasswordValid && doPasswordsMatch
                             ? ()
                         {
-                          cubit.createPass(
-                              url: '$baseUrl$regUrl',
+                          cubit.createNewPass(
+                              url: '$baseUrl$createNewPass',
+                              otp: '123456',
                               empCode: hrNum.toString(),
                               password: _passwordController.text.toString(),
                               context: context

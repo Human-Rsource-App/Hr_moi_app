@@ -112,10 +112,10 @@ Widget pinCodeTextField({
         activeFillColor: Colors.white,
         errorBorderColor: Colors.red,
         activeColor: mainColor,
-        selectedColor: Colors.black,
+        selectedColor: secondColor,
         inactiveColor: Colors.grey[500]
     ),
-    cursorColor: Colors.black,
+    cursorColor: secondColor,
     animationDuration: const Duration(milliseconds: 300),
     enableActiveFill: false,
     errorAnimationController: errorAnimationController,
@@ -172,6 +172,7 @@ Widget pinCodeField({
     void Function(String)? onChanged,
     bool Function(String?)? beforeTextPaste
 }) => pinCodeTextField(
+
     appContext: appContext,
     validator: validator,
     errorAnimationController: errorAnimationController,

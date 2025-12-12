@@ -1,9 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-
-import 'package:hr_moi/modules/auth/login/login.dart';
 import 'package:hr_moi/shared/style/color.dart';
+
+import '../../generated/assets.dart';
+import '../auth/login/login.dart';
 
 class MoiView extends StatelessWidget {
   const MoiView({super.key});
@@ -15,94 +16,114 @@ class MoiView extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.transparent,
         body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  transform: GradientRotation(math.pi / 7.5),
+                  colors: backGrColor,
+                  stops: [0.0, 0.5, 1.0]
+              )
+
+          ),
           width: size.width,
           height: size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              transform: GradientRotation(math.pi / 7.5),
-              colors: [
-                Color(0xFF155DFC),
-                Color(0xFF00B8DB),
-                Color(0xFF1447E6),
-              ],
-              stops: [0.0, 0.5, 1.0],
-            ),
-          ),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: size.height / 7),
             child: SingleChildScrollView(
               child: Column(
-                spacing: 40.0,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      'جمهورية العراق',
-                      style: textTheme.labelLarge
-                    ),
-                  ),
-                  Container(
-                    width: 200,
+                  // Logo with rings
+                  _buildLogo(size: size),
+                  const SizedBox(height: 24),
+                  // English title
+                  Text('Human Resources System', style: textTheme.bodyMedium!.copyWith(color: secondColor)),
 
-                    clipBehavior: Clip.antiAlias,
+                  const SizedBox(height: 8),
+                  Container(
+                    width: 150,
+                    height: 2,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(200),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x80FFFFFF),
-                          spreadRadius: 0,
-                          blurRadius: 10.61,
-                          blurStyle: BlurStyle.outer,
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                    child: Image.asset(
-                      'assets/icons/moi.png',
-                      fit: BoxFit.contain,
+                      gradient: LinearGradient(
+                        colors: [Colors.black, secondColor, Colors.black],
+                      ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        'وزارة الداخلية',
-                        style: textTheme.labelMedium
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 140),
-                        child: Divider(),
-                      ),
-                      const SizedBox(height: 30.0),
-                      Text(
-                        'نظام إدارة الموارد البشرية',
-                        style: textTheme.bodyMedium
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        'إدارة متكاملة لخدمات مديرية الموارد البشرية',
-                        style: textTheme.bodySmall
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 16),
+                  // Arabic title
+                  Text(  'ادارة ذكية للموارد البشرية',
+                      style: textTheme.bodyMedium!.copyWith(color: Colors.white)),
                 ],
               ),
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: mainColor,
 
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const Login()),
-            );
-          },
-          child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
+        ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: secondColor,
+
+              onPressed: ()
+              {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Login())
+                );
+              },
+              child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white)
+          )
+
+      ),
+    );
+
+  }
+  Widget _buildLogo({required Size size}) {
+    return Container(
+      width: size.width/1.5,
+      height: size.width/1.5,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: mainColor.withValues(alpha: 0.2), width: 4, ),
+          boxShadow: [
+            BoxShadow(
+                color: const Color(0x80FFFFFF),
+                spreadRadius: 0,
+                blurRadius: 10.61,
+                blurStyle: BlurStyle.outer,
+                offset: const Offset(0, 0)
+            )
+          ]
+
+      ),
+      child: Center(
+        child: Container(
+          width:size.width/1.6,
+          height: size.width/1.6,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: secondColor.withValues(alpha: 0.3), width: 4),
+          ),
+          child: Center(
+            child: Container(
+              width:size.width/1.7,
+              height: size.width/1.7,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: secondColor.withValues(alpha: 0.5), width: 4),
+              ),
+              child: Center(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    // Placeholder for the actual logo
+                    image: DecorationImage(
+                      image: AssetImage(Assets.iconsLoginLogo),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

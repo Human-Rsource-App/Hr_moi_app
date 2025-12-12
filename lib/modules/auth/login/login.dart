@@ -51,16 +51,16 @@ class _LoginState extends State<Login>
                             height: size.height,
                             child: SafeArea(
                                 child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                                     child: SingleChildScrollView(
                                         child: Form(
                                             key: formKey,
                                             child: Column(
-                                                spacing: 20.0,
+                                                spacing: 8.0,
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                    Image.asset(Assets.iconsOip, fit: BoxFit.cover),
+                                                    Image.asset(Assets.iconsLoginLogo, fit: BoxFit.contain,width: 200.0,height: 200.0,),
                                                     Text('مرحباً', style: textTheme.labelLarge),
                                                     Text(
                                                         'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',
@@ -139,7 +139,7 @@ class _LoginState extends State<Login>
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
                                                             //bio login
-                                                            Text('أوسجل دخولك عبر', style: TextTheme.of(context).bodySmall),
+                                                            Text('او سجل الدخول من خلال بصمة الوجه', style: TextTheme.of(context).bodySmall),
                                                             Image.asset(Assets.iconsFaceId, width: 100.0, height: 100.0),
                                                             //===============================================================
                                                             //forget pass

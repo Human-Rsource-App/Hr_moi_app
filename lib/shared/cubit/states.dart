@@ -50,3 +50,12 @@ class LoginFailState extends HrMoiStates {}
 class ResetPassSuccState extends HrMoiStates {}
 
 class ResetPassFailState extends HrMoiStates {}
+//otp reset pass
+class OtpRestPassSuccState extends HrMoiStates {}
+
+class OtpResetPassFailState extends HrMoiStates {}
+
+//create new pass states
+class CreateNewPassSuccState extends HrMoiStates {}
+
+class CreateNewPassFailState extends HrMoiStates {}

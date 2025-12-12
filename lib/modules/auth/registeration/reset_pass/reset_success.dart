@@ -48,7 +48,7 @@ class RegistrationSuccessScreen extends StatelessWidget
                                   lable: 'الانتقال إلى لوحة التحكم',
                                   onPressed: ()
                                   {
-                                    Navigator.pushReplacement(
+                                    Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => HomeScreen()
