@@ -273,3 +273,49 @@ void showErrorDialog({required BuildContext context})
     );
 }
 //==============================================================================
+//default container
+Widget defaultContainer({
+    double width = 50,
+    double height = 50,
+  double padding = 1,
+    required Widget child
+}) => Container(
+    width: width,
+    height: height,
+    padding: EdgeInsets.all(padding),
+    decoration: BoxDecoration(
+        color: Color(0xffFFFFFF).withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+            color: Color(0xffFFFFFF).withValues(alpha: 0.4),
+            width: 1.6
+        )
+    ),
+    child: child
+);
+//==============================================================================
+// default divider
+
+Widget defaultDivider(
+{
+  double width=1,
+}
+    )=> Container(
+  width: 1,
+  margin: const EdgeInsets.symmetric(vertical: 10),
+  color: Colors.white.withValues(alpha: 0.35),
+);
+//==============================================================================
+//items for home tasks
+Widget item({required BuildContext context,required String title,required String subTitle,Color color=Colors.white})=>Expanded(
+  child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+
+      children: [
+        Text(title, style: TextTheme.of(context).bodySmall,textAlign: TextAlign.center,),
+        Text(subTitle, style:TextTheme.of(context).bodyMedium!.copyWith(color: color))
+      ]
+  ),
+);
+//===============================================================================

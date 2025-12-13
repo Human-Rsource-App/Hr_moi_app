@@ -3,7 +3,6 @@ import 'package:hr_moi/generated/assets.dart';
 import 'package:hr_moi/shared/components/components.dart';
 
 import '../../../shared/style/color.dart';
-import '../../home_screen/home_screen.dart';
 import '../login/login.dart';
 
 class RegistrationSuccessScreen extends StatelessWidget
