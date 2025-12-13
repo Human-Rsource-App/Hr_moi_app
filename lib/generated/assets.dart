@@ -23,5 +23,7 @@ class Assets {
   static const String imagesBrowser5 = 'assets/images/browser-5.png';
   static const String imagesFrame = 'assets/images/Frame.png';
   static const String soundsSuccess = 'assets/sounds/success.mp3';
-
+  static const String iconsBiometric = 'assets/icons/biometric.png';
+  static const String iconsMoiLogo = 'assets/icons/moiLogo.png';
+  static const String iconRegisterSuccess = 'assets/icons/regSuccess.png';
 }

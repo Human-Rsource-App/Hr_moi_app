@@ -13,10 +13,11 @@ class MoiView extends StatelessWidget {
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-              gradient: LinearGradient(colors: backGrColor,
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter
-              )
+            gradient: LinearGradient(
+              colors: backGrColor,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
           width: size.width,
           height: size.height,
@@ -30,7 +31,10 @@ class MoiView extends StatelessWidget {
                   _buildLogo(),
                   const SizedBox(height: 24),
                   // English title
-                  Text('Human Resources System', style: textTheme.bodyMedium!.copyWith(color: secondColor)),
+                  Text(
+                    'Human Resources System',
+                    style: textTheme.bodyMedium!.copyWith(color: secondColor),
+                  ),
 
                   const SizedBox(height: 8),
                   Container(
@@ -44,8 +48,10 @@ class MoiView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   // Arabic title
-                  Text(  'ادارة ذكية للموارد البشرية',
-                      style: textTheme.bodyMedium!.copyWith(color: Colors.white)),
+                  Text(
+                    'ادارة ذكية للموارد البشرية',
+                    style: textTheme.bodyMedium!.copyWith(color: Colors.white),
+                  ),
                 ],
               ),
             ),
@@ -53,16 +59,13 @@ class MoiView extends StatelessWidget {
         ),
       ),
     );
-
   }
 
   Widget _buildCornerBracket({bool isTopLeft = false}) {
     return SizedBox(
       width: 60,
       height: 60,
-      child: CustomPaint(
-        painter: _CornerBracketPainter(isTopLeft: isTopLeft),
-      ),
+      child: CustomPaint(painter: _CornerBracketPainter(isTopLeft: isTopLeft)),
     );
   }
 
@@ -72,7 +75,7 @@ class MoiView extends StatelessWidget {
       height: 300,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: mainColor.withOpacity(0.2), width: 4, ),
+        border: Border.all(color: mainColor.withOpacity(0.2), width: 4),
       ),
       child: Center(
         child: Container(
@@ -88,7 +91,10 @@ class MoiView extends StatelessWidget {
               height: 240,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: secondColor.withOpacity(0.5), width: 4),
+                border: Border.all(
+                  color: secondColor.withOpacity(0.5),
+                  width: 4,
+                ),
               ),
               child: Center(
                 child: Container(
@@ -127,14 +133,19 @@ class _CornerBracketPainter extends CustomPainter {
       canvas.drawLine(const Offset(0, 0), const Offset(0, 60), paint);
       canvas.drawLine(const Offset(0, 0), const Offset(60, 0), paint);
     } else {
-      canvas.drawLine(Offset(size.width, size.height), Offset(size.width, size.height - 60), paint);
-      canvas.drawLine(Offset(size.width, size.height), Offset(size.width - 60, size.height), paint);
+      canvas.drawLine(
+        Offset(size.width, size.height),
+        Offset(size.width, size.height - 60),
+        paint,
+      );
+      canvas.drawLine(
+        Offset(size.width, size.height),
+        Offset(size.width - 60, size.height),
+        paint,
+      );
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
-
-

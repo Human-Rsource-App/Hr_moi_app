@@ -6,8 +6,7 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import 'package:hr_moi/shared/style/styles.dart';
-
-import 'modules/auth/registeration/registration_success.dart';
+import 'modules/auth/registeration/biometric_activation_screen.dart';
 import 'modules/splash_screen/splash.dart';
 
 void main() async {
@@ -26,13 +25,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => HrMoiCubit(),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'HR MOI APP',
-          themeMode: ThemeMode.dark,
-          theme: lightTheme,
-          home: const RegistrationSuccessScreen(),
-        ));
+      create: (context) => HrMoiCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'HR MOI APP',
+        themeMode: ThemeMode.dark,
+        theme: lightTheme,
+
+        // home: const MoiView(),
+        home: const BiometricActivationScreen(),
+      ),
+    );
   }
 }
