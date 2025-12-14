@@ -2,6 +2,10 @@
 class Assets {
   Assets._();
 
+  static const String appCalender = 'assets/icons/app/calender.png';
+  static const String appDuity = 'assets/icons/app/duity.png';
+  static const String appMessage = 'assets/icons/app/message.png';
+  static const String appVacation = 'assets/icons/app/vacation.png';
   static const String fontsCairoMedium = 'assets/fonts/Cairo-Medium.ttf';
   static const String fontsCairoRegular = 'assets/fonts/Cairo-Regular.ttf';
   static const String fontsCairoSemiBold = 'assets/fonts/Cairo-SemiBold.ttf';

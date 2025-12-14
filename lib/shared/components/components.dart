@@ -277,15 +277,19 @@ void showErrorDialog({required BuildContext context})
 Widget defaultContainer({
     double width = 50,
     double height = 50,
-  double padding = 1,
+  int color= 0xffFFFFFF,
+  double opacity=0.2,
+  double radius=10.0,
+  double vertPadding = 1,
+  double horiPadding = 1,
     required Widget child
 }) => Container(
     width: width,
     height: height,
-    padding: EdgeInsets.all(padding),
+    padding: EdgeInsets.symmetric(vertical: vertPadding,horizontal: horiPadding),
     decoration: BoxDecoration(
-        color: Color(0xffFFFFFF).withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(10),
+        color: Color(color).withValues(alpha: opacity),
+        borderRadius: BorderRadius.circular(radius),
         border: Border.all(
             color: Color(0xffFFFFFF).withValues(alpha: 0.4),
             width: 1.6
@@ -307,15 +311,21 @@ Widget defaultDivider(
 );
 //==============================================================================
 //items for home tasks
-Widget item({required BuildContext context,required String title,required String subTitle,Color color=Colors.white})=>Expanded(
-  child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-
-      children: [
-        Text(title, style: TextTheme.of(context).bodySmall,textAlign: TextAlign.center,),
-        Text(subTitle, style:TextTheme.of(context).bodyMedium!.copyWith(color: color))
-      ]
-  ),
+Widget item(
+    {
+      required BuildContext context,
+      required String title,
+      required String subTitle,
+      Color subColor=Colors.white,
+      Color titleColor=Colors.white,
+      double subTitleSize=20,
+      double titleSize=12,
+    })=>Column(
+    mainAxisSize: MainAxisSize.max,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Flexible(child: Text(title, style: TextTheme.of(context).bodySmall!.copyWith(fontSize: titleSize,color: titleColor),textAlign: TextAlign.center,)),
+      Flexible(child: Text(subTitle, style:TextTheme.of(context).bodyMedium!.copyWith(color: subColor,fontSize: subTitleSize)))
+    ]
 );
 //===============================================================================
