@@ -29,4 +29,10 @@ scaffoldBackgroundColor: Colors.transparent,
             borderSide: BorderSide(color: Colors.white, width: 2.0),
         ),
 
-    ),);
+    ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+backgroundColor: Colors.transparent,
+    elevation: 0.0,
+
+  )
+);
