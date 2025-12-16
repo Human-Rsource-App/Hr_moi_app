@@ -1,26 +1,33 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import '../../../generated/assets.dart';
 import '../../../shared/components/components.dart';
 import 'package:hr_moi/modules/auth/auth_service.dart';
 import 'package:hr_moi/modules/home_screen/home_screen.dart';
 
-import 'package:hr_moi/modules/auth/login/login.dart';
+class BiometricActivationScreen extends StatelessWidget {
+  final String empCode;
+  final String password;
 
-class BiometricActivationScreen extends StatefulWidget {
-  const BiometricActivationScreen({super.key});
-  @override
-  State<BiometricActivationScreen> createState() =>
-      _BiometricActivationScreenState();
-}
+  const BiometricActivationScreen({
+    super.key,
+    required this.empCode,
+    required this.password,
+  });
 
-class _BiometricActivationScreenState extends State<BiometricActivationScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
+
+    void navigateToHome() {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (route) => false,
+      );
+    }
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -43,30 +50,18 @@ class _BiometricActivationScreenState extends State<BiometricActivationScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: size.height * 0.1,
-                        ), // Adjust spacing from top
-                        Image.asset(
-                          Assets.iconsBiometric,
-                          width: 200.0,
-                          height: 200.0,
-                        ),
+                        SizedBox(height: size.height * 0.1),
+                        Image.asset(Assets.iconsBiometric, width: 200.0, height: 200.0),
                         const SizedBox(height: 24),
                         Text(
                           'تفعيل المعرفات الحيوية',
-                          style: textTheme.bodyLarge!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textTheme.bodyLarge!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
                         Text(
                           'مع المعرفات الحيوية، لن تحتاج إلى إدخال كلمة المرور في كل مرة. هذا يساعد على جعل التطبيق أكثر أماناً',
-                          style: textTheme.bodyMedium!.copyWith(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: textTheme.bodyMedium!.copyWith(color: Colors.white70, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -80,58 +75,32 @@ class _BiometricActivationScreenState extends State<BiometricActivationScreen> {
                         context: context,
                         lable: 'تفعيل',
                         onPressed: () async {
-                          bool authenticated = await AuthService.authenticate();
-                          if (authenticated) {
-                            await CacheHelper.saveData(
-                              key: 'biometric_enabled',
-                              value: true,
+                          try {
+                            await AuthService.saveCredentials(
+                              empCode: empCode,
+                              password: password,
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'تم تفعيل المعرفات الحيوية بنجاح',
-                                ),
-                              ),
-                            );
-                            await Future.delayed(const Duration(seconds: 1));
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    // const HomeScreen(),
-                                    const Login(),
-                              ),
-                              (route) => false,
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('تم إلغاء عملية التفعيل'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('تم تفعيل المعرفات الحيوية بنجاح')),
+                              );
+                              navigateToHome();
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('فشل تفعيل المعرفات الحيوية'), backgroundColor: Colors.red),
+                              );
+                            }
                           }
                         },
                       ),
                     ),
                     const SizedBox(width: 16),
-
                     Expanded(
                       child: defaultButton(
                         context: context,
-                        onPressed: () async {
-                          await CacheHelper.saveData(
-                            key: 'biometric_enabled',
-                            value: false,
-                          );
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  // const HomeScreen(),
-                                  const Login(),
-                            ),
-                            (route) => false,
-                          );
-                        },
+                        onPressed: navigateToHome, // Simply navigate without enrolling
                         lable: 'لاحقاً',
                       ),
                     ),

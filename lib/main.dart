@@ -6,6 +6,7 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import 'package:hr_moi/shared/style/styles.dart';
+import 'modules/auth/login/login.dart';
 import 'modules/auth/registeration/biometric_activation_screen.dart';
 import 'modules/splash_screen/splash.dart';
 
@@ -31,9 +32,9 @@ class MyApp extends StatelessWidget {
         title: 'HR MOI APP',
         themeMode: ThemeMode.dark,
         theme: lightTheme,
-
+home: Login(),
         // home: const MoiView(),
-        home: const BiometricActivationScreen(),
+        // home: const BiometricActivationScreen(),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/modules/auth/auth_service.dart';
+import 'package:hr_moi/modules/auth/registeration/biometric_activation_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
 import 'package:hr_moi/modules/home_screen/home_screen.dart';
 import 'package:hr_moi/shared/components/components.dart';
@@ -26,17 +27,17 @@ class _LoginState extends State<Login> {
   TextEditingController password = TextEditingController();
 
   Future<void> _authenticateWithBiometrics() async {
-    bool isBiometricEnabled = CacheHelper.getData(key: 'biometric_enabled') ?? false;
-    if (isBiometricEnabled) {
-      bool authenticated = await AuthService.authenticate();
-      if (authenticated && mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      }
-    }
-    else {
-      showMessage(message: 'المعرفات الحيوية غير مفعلة', context: context);
+    final credentials = await AuthService.getCredentials();
+    if (credentials != null && mounted) {
+      // Use the retrieved credentials to log the user in
+      HrMoiCubit.get(context).loginData(
+        url: '$baseUrl$loginUrl',
+        empCode: credentials['empCode']!,
+        password: credentials['password']!,
+        context: context,
+      );
+    } else if (mounted) {
+      showMessage(message: 'فشل المصادقة بالبصمة', context: context);
     }
   }
 
@@ -48,7 +49,18 @@ class _LoginState extends State<Login> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: BlocConsumer<HrMoiCubit, HrMoiStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is LoginSuccState) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => BiometricActivationScreen(
+                  empCode: empCode.text,
+                  password: password.text,
+                ),
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           final cubit = HrMoiCubit.get(context);
           return Scaffold(
@@ -123,20 +135,23 @@ class _LoginState extends State<Login> {
                           ),
                           const SizedBox(height: 20.0),
                           //login button
-                          defaultButton(
-                            context: context,
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                cubit.loginData(
-                                  url: '$baseUrl$loginUrl',
-                                  empCode: empCode.text.toString(),
-                                  password: password.text.toString(),
-                                  context: context,
-                                );
-                              }
-                            },
-                            lable: 'تسجيل الدخول',
-                          ),
+                          if (state is LoginLoadingState)
+                            const CircularProgressIndicator()
+                          else
+                            defaultButton(
+                              context: context,
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  cubit.loginData(
+                                    url: '$baseUrl$loginUrl',
+                                    empCode: empCode.text.toString(),
+                                    password: password.text.toString(),
+                                    context: context,
+                                  );
+                                }
+                              },
+                              lable: 'تسجيل الدخول',
+                            ),
                           const SizedBox(height: 20.0),
                           //===============================================
                           Column(
