@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/generated/assets.dart';
 import 'package:hr_moi/shared/components/components.dart';
+import 'package:hr_moi/shared/cubit/cubit.dart';
+import 'package:hr_moi/shared/cubit/states.dart';
 
 import '../../shared/style/color.dart';
 
@@ -17,8 +20,15 @@ class _HomeScreenState extends State<HomeScreen>
     @override
     Widget build(BuildContext context)
     {
+
         Size size = MediaQuery.of(context).size;
-        return Directionality(
+        return BlocConsumer<HrMoiCubit, HrMoiStates>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
+    HrMoiCubit cubit=HrMoiCubit.get(context);
+    return Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
 
@@ -33,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen>
                     height: size.height,
                     child: SafeArea(
                         child: Padding(
-                            padding: const EdgeInsets.only(left: 20.0,right: 20.0,),
+                            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                             child: SingleChildScrollView(
                                 child: Column(
                                     spacing: 20,
@@ -153,46 +163,95 @@ class _HomeScreenState extends State<HomeScreen>
                                                             ]
                                                         )
                                                     ),
-                                                    Text('المزيد من التطبيقات...',style: TextTheme.of(context).bodySmall!.copyWith(color: secondColor),)
+                                                    Text('المزيد من التطبيقات...', style: TextTheme.of(context).bodySmall!.copyWith(color: secondColor))
                                                 ]
                                             )
                                         ),
                                         //=======================================================================================================
                                         // news section
                                         defaultContainer(
-                                          width: size.width,
-                                          vertPadding: 15,
-                                          horiPadding: 20,
-                                          height: 400,
-                                          opacity: 1,
-                                          color: 0xff133245,
-                                          child: Column(
-                                                children: <Widget>[],
-                                            ),)
+                                            width: size.width,
+                                            vertPadding: 15,
+                                            horiPadding: 5,
+                                            height: 700,
+                                            opacity: 1,
+                                            color: 0xff133245,
+                                            child: Column(
+                                                spacing: 20,
+                                                children: <Widget>[
+                                                    Text('التعاميم والبرقيات', style: TextTheme.of(context).bodySmall),
+                                                    const SizedBox(height: 20),
+                                                    Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                        child: Row(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: <Widget>[
+                                                                Text('اخر الاخبار', style: TextTheme.of(context).bodySmall),
+                                                                Text('عرض الكل', style: TextTheme.of(context).bodySmall!.copyWith(color: secondColor))
+                                                            ]
+                                                        )
+                                                    ),
+                                                  ListView.separated(itemBuilder: (context,int index)=>  defaultContainer(
+                                                      vertPadding: 15,
+                                                      horiPadding: 15,
+                                                      height: 120,
+                                                      width: size.width,
+                                                      child: Row(
+                                                        spacing: 10,
+                                                        children: <Widget>[
+                                                          defaultContainer(
+                                                              width: 60,
+                                                              height: 60,
+                                                              child: Image.asset(Assets.iconsMoi, width: 8, height: 8, fit: BoxFit.cover)),
+                                                          Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: <
+                                                                Widget>[
+                                                              Text('برقية سريعة', style: TextTheme.of(context).bodyMedium),
+                                                              Text('تاريخ الاستحقاق: 2024-01-15', style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
+                                                              Text('متوسط', style: TextTheme.of(context).bodySmall!.copyWith(color: secondColor))
 
+                                                            ],
+                                                          ),
+                                                        ],
+
+                                                      )),scrollDirection: Axis.vertical,itemCount: 3,shrinkWrap: true,
+                                                  separatorBuilder: (context,int index)=>SizedBox(height: 10,) ,),
+
+                                                ]
+                                            ))
                                     ]
-                                ),
+                                )
 
                             )
                         )
-                    ),
-
-                ),
-              bottomNavigationBar: Container(
-                decoration: BoxDecoration(
-
-                    gradient: LinearGradient(colors: backGrColor,
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter
                     )
+
                 ),
-                child: BottomNavigationBar(items: [
-                  BottomNavigationBarItem(icon: Icon(Icons.settings,),label: 'الاعدادات'),
-                  BottomNavigationBarItem(icon: Icon(Icons.eighteen_mp),label: 'الرئيسية'),
-                  BottomNavigationBarItem(icon: Icon(Icons.eighteen_mp),label: 'التقارير')
-                ]),
-              ),
+                bottomNavigationBar: Container(
+                    decoration: BoxDecoration(
+
+                        gradient: LinearGradient(colors: backGrColor,
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter
+                        )
+                    ),
+                    child: BottomNavigationBar(items: [
+                            BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'الإعدادات'),
+                            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
+                            BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: 'التقارير')
+                        ],currentIndex: cubit.curentIndex,
+
+
+                    onTap: (value) {
+                      cubit.changeNavBar(val: value);
+
+                    },)
+                )
             )
         );
+  },
+);
     }
 }

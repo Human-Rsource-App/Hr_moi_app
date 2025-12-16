@@ -672,4 +672,10 @@ class HrMoiCubit extends Cubit<HrMoiStates>
     }
     );
   }
+  //home screen logic ===========================================================
+  int curentIndex=1;
+    void changeNavBar({required int val}){
+      curentIndex=val;
+      emit(ChangeNavBarState());
+    }
 }

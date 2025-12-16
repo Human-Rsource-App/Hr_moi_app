@@ -59,3 +59,6 @@ class OtpResetPassFailState extends HrMoiStates {}
 class CreateNewPassSuccState extends HrMoiStates {}
 
 class CreateNewPassFailState extends HrMoiStates {}
+//change nav bar states
+class ChangeNavBarState extends HrMoiStates {}
+

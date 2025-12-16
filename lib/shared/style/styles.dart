@@ -33,6 +33,12 @@ scaffoldBackgroundColor: Colors.transparent,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
 backgroundColor: Colors.transparent,
     elevation: 0.0,
+    selectedIconTheme: IconThemeData(color: Colors.white,size: 36),
+    unselectedIconTheme: IconThemeData(color: Colors.grey,size: 30),
+    selectedLabelStyle: TextStyle(fontSize: 18, fontFamily: 'Cairo SemiBold',),
+    unselectedLabelStyle:TextStyle(fontSize: 14, fontFamily: 'Cairo Medium',),
+    selectedItemColor: Colors.white,
+    unselectedItemColor: Colors.grey,
 
-  )
+  ),
 );
