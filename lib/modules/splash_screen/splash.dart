@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -6,8 +7,25 @@ import 'package:hr_moi/shared/style/color.dart';
 import '../../generated/assets.dart';
 import '../auth/login/login.dart';
 
-class MoiView extends StatelessWidget {
+class MoiView extends StatefulWidget {
   const MoiView({super.key});
+
+  @override
+  State<MoiView> createState() => _MoiViewState();
+}
+
+class _MoiViewState extends State<MoiView> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+      const Duration(seconds: 3),
+      () => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Login()),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +39,7 @@ class MoiView extends StatelessWidget {
               gradient: LinearGradient(
                   transform: GradientRotation(math.pi / 7.5),
                   colors: backGrColor,
-                  stops: [0.0, 0.5, 1.0]
-              )
-
-          ),
+                  stops: const [0.0, 0.5, 1.0])),
           width: size.width,
           height: size.height,
           child: Padding(
@@ -37,8 +52,8 @@ class MoiView extends StatelessWidget {
                   _buildLogo(size: size),
                   const SizedBox(height: 24),
                   // English title
-                  Text('Human Resources System', style: textTheme.bodyMedium!.copyWith(color: secondColor)),
-
+                  Text('Human Resources System',
+                      style: textTheme.bodyMedium!.copyWith(color: secondColor)),
                   const SizedBox(height: 8),
                   Container(
                     width: 150,
@@ -51,64 +66,50 @@ class MoiView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   // Arabic title
-                  Text(  'ادارة ذكية للموارد البشرية',
+                  Text('ادارة ذكية للموارد البشرية',
                       style: textTheme.bodyMedium!.copyWith(color: Colors.white)),
                 ],
               ),
             ),
           ),
-
         ),
-          floatingActionButton: FloatingActionButton(
-              backgroundColor: secondColor,
-
-              onPressed: ()
-              {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Login())
-                );
-              },
-              child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white)
-          )
-
       ),
     );
-
   }
+
   Widget _buildLogo({required Size size}) {
     return Container(
-      width: size.width/1.5,
-      height: size.width/1.5,
+      width: size.width / 1.5,
+      height: size.width / 1.5,
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: mainColor.withValues(alpha: 0.2), width: 4, ),
-          boxShadow: [
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: mainColor.withOpacity(0.2),
+            width: 4,
+          ),
+          boxShadow: const [
             BoxShadow(
-                color: const Color(0x80FFFFFF),
+                color: Color(0x80FFFFFF),
                 spreadRadius: 0,
                 blurRadius: 10.61,
                 blurStyle: BlurStyle.outer,
-                offset: const Offset(0, 0)
-            )
-          ]
-
-      ),
+                offset: Offset(0, 0))
+          ]),
       child: Center(
         child: Container(
-          width:size.width/1.6,
-          height: size.width/1.6,
+          width: size.width / 1.6,
+          height: size.width / 1.6,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: secondColor.withValues(alpha: 0.3), width: 4),
+            border: Border.all(color: secondColor.withOpacity(0.3), width: 4),
           ),
           child: Center(
             child: Container(
-              width:size.width/1.7,
-              height: size.width/1.7,
+              width: size.width / 1.7,
+              height: size.width / 1.7,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: secondColor.withValues(alpha: 0.5), width: 4),
+                border: Border.all(color: secondColor.withOpacity(0.5), width: 4),
               ),
               child: Center(
                 child: Container(
