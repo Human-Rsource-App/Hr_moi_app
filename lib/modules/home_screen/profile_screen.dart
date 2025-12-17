@@ -6,7 +6,6 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
 import '../../generated/assets.dart';
 import '../../shared/components/components.dart';
 

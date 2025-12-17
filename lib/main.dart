@@ -11,6 +11,7 @@ import 'package:hr_moi/shared/style/styles.dart';
 
 void main() async
 {
+  //hi
     WidgetsFlutterBinding.ensureInitialized();
     DioHelper.init();
     CacheHelper.init();
