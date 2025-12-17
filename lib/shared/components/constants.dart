@@ -17,5 +17,5 @@ const String createNewPass = 'moiApp/reset_password/confirm';
 //general var
 List<CameraDescription>? cameras;
 late String nID;
-String hrNum='911720011';
+String hrNum = '911720011';
 late HrProfileModel userProfile;

@@ -7,7 +7,7 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import '../../../generated/assets.dart';
-import '../biometric_activation_screen.dart';
+import '../registeration/biometric_activation_screen.dart';
 import 'bio_login.dart';
 
 class Login extends StatefulWidget {
@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(Assets.iconsModeLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
+                          Image.asset(Assets.iconsMoiLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
                           Text('مرحباً', style: textTheme.labelLarge),
                           Text(
                             'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',

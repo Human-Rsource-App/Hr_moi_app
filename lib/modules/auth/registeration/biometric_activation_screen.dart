@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import '../../../generated/assets.dart';
 import '../../../shared/components/components.dart';
+import 'package:hr_moi/modules/auth/auth_service.dart';
 import 'package:hr_moi/modules/home_screen/home_screen.dart';
-
-import 'login/bio_login.dart';
 
 class BiometricActivationScreen extends StatelessWidget {
   final String empCode;
@@ -24,7 +24,7 @@ class BiometricActivationScreen extends StatelessWidget {
     void navigateToHome() {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const HomeScreen()),
-            (route) => false,
+        (route) => false,
       );
     }
 
