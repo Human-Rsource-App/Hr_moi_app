@@ -20,6 +20,7 @@ import '../../models/reset_pass/reset_req_model.dart';
 import '../../modules/auth/registeration/create_pass.dart';
 import '../../modules/auth/registeration/reset_pass/create_newpass.dart';
 import '../../modules/auth/registeration/reset_pass/otp_reset.dart';
+import '../../modules/home_screen/profile_screen.dart';
 
 class HrMoiCubit extends Cubit<HrMoiStates>
 {
@@ -436,6 +437,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         )
             .then((val)
                 {
+                  hrNum=empCode;
                     LoginModel pass = LoginModel.fromJson(val.data);
 
                     if (pass.success == true)
@@ -678,4 +680,66 @@ class HrMoiCubit extends Cubit<HrMoiStates>
       curentIndex=val;
       emit(ChangeNavBarState());
     }
+    //==========================================================================
+//user profile logic
+  void getProfileData({required String url, required BuildContext context})
+  {
+    emit(HrNumGetLoadingState());
+    DioHelper.getData(path: url)
+        .then((val)
+    {
+
+      userProfile = HrProfileModel.fromJson(val.data);
+      if (val.data != null)
+      {
+        if (userProfile.success == true)
+        {
+          if (context.mounted)
+          {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Profile()
+                )
+            );}
+          emit(ProfileGetSuccState());
+        }
+
+      }
+    }
+    )
+        .catchError((error)
+    {
+      if (error is DioException)
+      {
+        if (error.response!.statusCode == 404)
+        {
+          if (context.mounted)
+          {
+            showMessage(message: 'حدثت مشكله اثناء جلب البيانات', context: context);
+            emit(ProfileGetFailState());
+          }
+        }
+        else
+        {
+          if (context.mounted)
+          {
+            showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+            emit(ProfileGetFailState());
+          }
+        }
+      }
+
+    }
+    ).catchError((error)
+    {
+      if (context.mounted)
+      {
+        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+        emit(ProfileGetFailState());
+      }
+    }
+    );
+  }
+  //============================================================================
 }

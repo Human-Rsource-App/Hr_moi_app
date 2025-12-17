@@ -62,3 +62,10 @@ class CreateNewPassFailState extends HrMoiStates {}
 //change nav bar states
 class ChangeNavBarState extends HrMoiStates {}
 
+//user profile states
+class ProfileGetLoadingState extends HrMoiStates {}
+
+class ProfileGetSuccState extends HrMoiStates {}
+
+class ProfileGetFailState extends HrMoiStates {}
+
