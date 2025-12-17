@@ -9,6 +9,7 @@ class Assets {
   static const String fontsCairoMedium = 'assets/fonts/Cairo-Medium.ttf';
   static const String fontsCairoRegular = 'assets/fonts/Cairo-Regular.ttf';
   static const String fontsCairoSemiBold = 'assets/fonts/Cairo-SemiBold.ttf';
+  static const String iconsBiometric = 'assets/icons/biometric.png';
   static const String iconsChecked = 'assets/icons/checked.png';
   static const String iconsDone = 'assets/icons/done.png';
   static const String iconsFaceId = 'assets/icons/FaceId.png';
