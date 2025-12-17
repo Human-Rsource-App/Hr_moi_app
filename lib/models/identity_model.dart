@@ -24,7 +24,6 @@ class UserData {
   String? unit_3;
   String? unit_4;
   String? unit_5;
-
   UserData.fromJson(Map<String, dynamic> json) {
     empCode = json['empCode'];
     rkTypeName = json['rkTypeName'];

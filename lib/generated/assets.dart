@@ -2,16 +2,27 @@
 class Assets {
   Assets._();
 
+  static const String appCalender = 'assets/icons/app/calender.png';
+  static const String appDuity = 'assets/icons/app/duity.png';
+  static const String appMessage = 'assets/icons/app/message.png';
+  static const String appVacation = 'assets/icons/app/vacation.png';
   static const String fontsCairoMedium = 'assets/fonts/Cairo-Medium.ttf';
   static const String fontsCairoRegular = 'assets/fonts/Cairo-Regular.ttf';
   static const String fontsCairoSemiBold = 'assets/fonts/Cairo-SemiBold.ttf';
+  static const String iconsBiometric = 'assets/icons/biometric.png';
   static const String iconsChecked = 'assets/icons/checked.png';
+  static const String iconsDone = 'assets/icons/done.png';
   static const String iconsFaceId = 'assets/icons/FaceId.png';
   static const String iconsGroupName = 'assets/icons/groupName.png';
+  static const String iconsGuideLogo = 'assets/icons/guideLogo.png';
   static const String iconsHrNo = 'assets/icons/hrNo.png';
+  static const String iconsLoginLogo = 'assets/icons/LoginLogo.png';
+  static const String iconsMainLogo = 'assets/icons/mainLogo.png';
+  static const String iconsModeLogo = 'assets/icons/modeLogo.png';
   static const String iconsMoi = 'assets/icons/moi.png';
   static const String iconsMoi36 = 'assets/icons/moi36.png';
   static const String iconsMrz = 'assets/icons/mrz.png';
+  static const String iconsNotifyLogo = 'assets/icons/notifyLogo.png';
   static const String iconsOip = 'assets/icons/oip.png';
   static const String iconsPersonalName = 'assets/icons/personalName.png';
   static const String iconsPersonalimage = 'assets/icons/personalimage.png';

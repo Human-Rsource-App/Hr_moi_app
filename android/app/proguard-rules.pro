@@ -5,27 +5,36 @@
 -keep class com.google.mlkit.vision.common.** { *; }
 
 # ---------------------------
-# ML Kit: Text Recognition
+# ML Kit: Text Recognition (Latin only)
 # ---------------------------
 -keep class com.google.mlkit.vision.text.** { *; }
--keep class com.google.mlkit.vision.text.chinese.** { *; }
--keep class com.google.mlkit.vision.text.japanese.** { *; }
--keep class com.google.mlkit.vision.text.korean.** { *; }
--keep class com.google.mlkit.vision.text.devanagari.** { *; }
+
+# IMPORTANT: Do NOT keep these if you are not using these scripts.
+# Otherwise R8 will look for their classes and break the build.
+-dontwarn com.google.mlkit.vision.text.chinese.**
+-dontwarn com.google.mlkit.vision.text.japanese.**
+-dontwarn com.google.mlkit.vision.text.korean.**
+-dontwarn com.google.mlkit.vision.text.devanagari.**
 
 # ---------------------------
-# ML Kit: Common Utilities
+# ML Kit: Common
 # ---------------------------
 -keep class com.google.mlkit.common.** { *; }
 
 # ---------------------------
-# Keep Flutter plugin generated classes
+# Play Core (fixes SplitInstall errors)
+# ---------------------------
+-keep class com.google.android.play.core.** { *; }
+-dontwarn com.google.android.play.core.**
+
+# ---------------------------
+# Flutter generated & plugin classes
 # ---------------------------
 -keep class io.flutter.embedding.** { *; }
 -keep class io.flutter.plugin.** { *; }
 
 # ---------------------------
-# Optional: Keep Parcelable & Serializable classes
+# Parcelable & Serializable
 # ---------------------------
 -keepclassmembers class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;

@@ -45,3 +45,27 @@ class LoginLoadingState extends HrMoiStates {}
 class LoginSuccState extends HrMoiStates {}
 
 class LoginFailState extends HrMoiStates {}
+
+//reset pass req states
+class ResetPassSuccState extends HrMoiStates {}
+
+class ResetPassFailState extends HrMoiStates {}
+//otp reset pass
+class OtpRestPassSuccState extends HrMoiStates {}
+
+class OtpResetPassFailState extends HrMoiStates {}
+
+//create new pass states
+class CreateNewPassSuccState extends HrMoiStates {}
+
+class CreateNewPassFailState extends HrMoiStates {}
+//change nav bar states
+class ChangeNavBarState extends HrMoiStates {}
+
+//user profile states
+class ProfileGetLoadingState extends HrMoiStates {}
+
+class ProfileGetSuccState extends HrMoiStates {}
+
+class ProfileGetFailState extends HrMoiStates {}
+

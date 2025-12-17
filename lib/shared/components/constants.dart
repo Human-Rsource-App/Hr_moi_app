@@ -9,6 +9,10 @@ const String mrzUrl = 'moiApp/National_id_check/';
 const String faceUrl = 'moiApp/ai_reg_img/';
 const String regUrl = 'auth/register';
 const String loginUrl = 'auth/login';
+const String resetPass = 'moiApp/reset_password/request';
+const String createNewPass = 'moiApp/reset_password/confirm';
+
+
 
 //general var
 List<CameraDescription>? cameras;

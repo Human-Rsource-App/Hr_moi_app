@@ -1,5 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:hr_moi/shared/style/color.dart';
+
+import '../../generated/assets.dart';
+import '../auth/login/login.dart';
 
 class MoiView extends StatelessWidget {
   const MoiView({super.key});
@@ -9,15 +14,16 @@ class MoiView extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: TextDirection.ltr,
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: backGrColor,
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+              gradient: LinearGradient(
+                  transform: GradientRotation(math.pi / 7.5),
+                  colors: backGrColor,
+                  stops: [0.0, 0.5, 1.0]
+              )
+
           ),
           width: size.width,
           height: size.height,
@@ -28,13 +34,10 @@ class MoiView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Logo with rings
-                  _buildLogo(),
+                  _buildLogo(size: size),
                   const SizedBox(height: 24),
                   // English title
-                  Text(
-                    'Human Resources System',
-                    style: textTheme.bodyMedium!.copyWith(color: secondColor),
-                  ),
+                  Text('Human Resources System', style: textTheme.bodyMedium!.copyWith(color: secondColor)),
 
                   const SizedBox(height: 8),
                   Container(
@@ -48,63 +51,72 @@ class MoiView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   // Arabic title
-                  Text(
-                    'ادارة ذكية للموارد البشرية',
-                    style: textTheme.bodyMedium!.copyWith(color: Colors.white),
-                  ),
+                  Text(  'ادارة ذكية للموارد البشرية',
+                      style: textTheme.bodyMedium!.copyWith(color: Colors.white)),
                 ],
               ),
             ),
           ),
+
         ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: secondColor,
+
+              onPressed: ()
+              {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Login())
+                );
+              },
+              child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white)
+          )
+
       ),
     );
-  }
 
-  Widget _buildCornerBracket({bool isTopLeft = false}) {
-    return SizedBox(
-      width: 60,
-      height: 60,
-      child: CustomPaint(painter: _CornerBracketPainter(isTopLeft: isTopLeft)),
-    );
   }
-
-  Widget _buildLogo() {
+  Widget _buildLogo({required Size size}) {
     return Container(
-      width: 300,
-      height: 300,
+      width: size.width/1.5,
+      height: size.width/1.5,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: mainColor.withOpacity(0.2), width: 4),
+        border: Border.all(color: mainColor.withValues(alpha: 0.2), width: 4, ),
+          boxShadow: [
+            BoxShadow(
+                color: const Color(0x80FFFFFF),
+                spreadRadius: 0,
+                blurRadius: 10.61,
+                blurStyle: BlurStyle.outer,
+                offset: const Offset(0, 0)
+            )
+          ]
+
       ),
       child: Center(
         child: Container(
-          width: 270,
-          height: 270,
+          width:size.width/1.6,
+          height: size.width/1.6,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: secondColor.withOpacity(0.3), width: 4),
+            border: Border.all(color: secondColor.withValues(alpha: 0.3), width: 4),
           ),
           child: Center(
             child: Container(
-              width: 240,
-              height: 240,
+              width:size.width/1.7,
+              height: size.width/1.7,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: secondColor.withOpacity(0.5),
-                  width: 4,
-                ),
+                border: Border.all(color: secondColor.withValues(alpha: 0.5), width: 4),
               ),
               child: Center(
                 child: Container(
-                  width: 200,
-                  height: 200,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     // Placeholder for the actual logo
                     image: DecorationImage(
-                      image: AssetImage('assets/icons/moiLogo.png'),
+                      image: AssetImage(Assets.iconsLoginLogo),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -116,36 +128,4 @@ class MoiView extends StatelessWidget {
       ),
     );
   }
-}
-
-class _CornerBracketPainter extends CustomPainter {
-  final bool isTopLeft;
-  _CornerBracketPainter({this.isTopLeft = false});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = secondColor.withOpacity(0.3)
-      ..strokeWidth = 4
-      ..style = PaintingStyle.stroke;
-
-    if (isTopLeft) {
-      canvas.drawLine(const Offset(0, 0), const Offset(0, 60), paint);
-      canvas.drawLine(const Offset(0, 0), const Offset(60, 0), paint);
-    } else {
-      canvas.drawLine(
-        Offset(size.width, size.height),
-        Offset(size.width, size.height - 60),
-        paint,
-      );
-      canvas.drawLine(
-        Offset(size.width, size.height),
-        Offset(size.width - 60, size.height),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

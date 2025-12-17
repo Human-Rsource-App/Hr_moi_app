@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/modules/auth/auth_service.dart';
-import 'package:hr_moi/modules/auth/registeration/biometric_activation_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
-import 'package:hr_moi/modules/home_screen/home_screen.dart';
 import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
-import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/style/color.dart';
-
 import '../../../generated/assets.dart';
+import '../biometric_activation_screen.dart';
+import 'bio_login.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -87,7 +84,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(Assets.iconsMoiLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
+                          Image.asset(Assets.iconsModeLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
                           Text('مرحباً', style: textTheme.labelLarge),
                           Text(
                             'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',
