@@ -7,8 +7,7 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import '../../../generated/assets.dart';
-import '../biometric_activation_screen.dart';
-import 'bio_login.dart';
+import '../registeration/reset_pass/reset_pass.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -23,20 +22,7 @@ class _LoginState extends State<Login> {
   TextEditingController empCode = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  Future<void> _authenticateWithBiometrics() async {
-    final credentials = await AuthService.getCredentials();
-    if (credentials != null && mounted) {
-      // Use the retrieved credentials to log the user in
-      HrMoiCubit.get(context).loginData(
-        url: '$baseUrl$loginUrl',
-        empCode: credentials['empCode']!,
-        password: credentials['password']!,
-        context: context,
-      );
-    } else if (mounted) {
-      showMessage(message: 'فشل المصادقة بالبصمة', context: context);
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +33,7 @@ class _LoginState extends State<Login> {
       textDirection: TextDirection.rtl,
       child: BlocConsumer<HrMoiCubit, HrMoiStates>(
         listener: (context, state) {
-          if (state is LoginSuccState) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => BiometricActivationScreen(
-                  empCode: empCode.text,
-                  password: password.text,
-                ),
-              ),
-            );
-          }
+
         },
         builder: (context, state) {
           final cubit = HrMoiCubit.get(context);
@@ -84,7 +61,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(Assets.iconsModeLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
+                          Image.asset(Assets.iconsMainLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
                           Text('مرحباً', style: textTheme.labelLarge),
                           Text(
                             'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',
@@ -162,7 +139,7 @@ class _LoginState extends State<Login> {
                               ),
                               const SizedBox(height: 10),
                               GestureDetector(
-                                onTap: _authenticateWithBiometrics,
+
                                 child: Image.asset(
                                   Assets.iconsFaceId,
                                   width: 100.0,
@@ -181,7 +158,7 @@ class _LoginState extends State<Login> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => HrNumber(),
+                                          builder: (context) => ResetPass(),
                                         ),
                                       );
                                     },

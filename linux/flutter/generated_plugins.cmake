@@ -3,8 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  biometric_storage
-  flutter_secure_storage_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
