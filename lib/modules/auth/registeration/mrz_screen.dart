@@ -272,7 +272,7 @@ class _CameraScreenState extends State<CameraScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                     SizedBox(height: 10.0),
-                                    IconButton(onPressed: scanning ? null : startAutoScan, icon: Image.asset(Assets.iconsMrz, width: 30.0, height: 30.0)),
+                                    IconButton(onPressed: scanning ? null : startAutoScan, icon: Image.asset(Assets.userProfileMrz, width: 30.0, height: 30.0)),
                                     Text('امسح الرمز في الوجه الخلفي للبطاقة الوطنية', style: TextTheme.of(context).bodySmall),
                                     Text('يرجى محاذاة البطاقة الوطنية داخل الاطار', style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
                                     Padding(

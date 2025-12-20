@@ -70,9 +70,9 @@ class _HomeScreenState extends State<HomeScreen>
                                                             mainAxisSize: MainAxisSize.max,
                                                             spacing: 10,
                                                             children: <Widget>[
-                                                                defaultContainer(child: Image.asset(Assets.iconsGuideLogo, width: 8, height: 8, fit: BoxFit.none)),
-                                                                defaultContainer(child: Image.asset(Assets.iconsNotifyLogo, width: 8, height: 8, fit: BoxFit.none)),
-                                                                defaultContainer(child: Image.asset(Assets.iconsModeLogo, width: 8, height: 8, fit: BoxFit.none))
+                                                                defaultContainer(child: Image.asset(Assets.appBarGuideLogo, width: 8, height: 8, fit: BoxFit.none)),
+                                                                defaultContainer(child: Image.asset(Assets.appBarNotifyLogo, width: 8, height: 8, fit: BoxFit.none)),
+                                                                defaultContainer(child: Image.asset(Assets.appBarModeLogo, width: 8, height: 8, fit: BoxFit.none))
                                                             ]
                                                         )
 

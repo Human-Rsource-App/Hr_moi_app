@@ -77,12 +77,12 @@ class _EmpIdentityState extends State<EmpIdentity>
                                                     Column(
                                                         spacing: 10.0,
                                                         children: <Widget>[
-                                                          textContainer(context: context, label: 'الرقم الأحصائي', data: userProfile.data!.empCode.toString(), image: Assets.iconsHrNo),
-                                                          textContainer(context: context, label: 'الرتبة/الدرجة الوظيفية', data:userProfile.data!.rankName.toString() , image: Assets.iconsRank),
-                                                          textContainer(context: context, label: 'الاسم الكامل', data: userProfile.data!.empName.toString(), image: Assets.iconsPersonalName),
-                                                          textContainer(context: context, label: 'جهة الانتساب', data: userProfile.data!.unitName.toString(), image: Assets.iconsWorkName),
-                                                          textContainer(context: context, label: 'رقم الهاتف', data: userProfile.data!.phoneNo.toString(), image: Assets.iconsPhone),
-                                                          textContainer(context: context, label: 'نوع الفئة', data: userProfile.data!.rkTypeName.toString(), image: Assets.iconsGroupName)
+                                                          textContainer(context: context, label: 'الرقم الأحصائي', data: userProfile.data!.empCode.toString(), image: Assets.userProfileHrNo),
+                                                          textContainer(context: context, label: 'الرتبة/الدرجة الوظيفية', data:userProfile.data!.rankName.toString() , image: Assets.userProfileRank),
+                                                          textContainer(context: context, label: 'الاسم الكامل', data: userProfile.data!.empName.toString(), image: Assets.userProfilePersonalName),
+                                                          textContainer(context: context, label: 'جهة الانتساب', data: userProfile.data!.unitName.toString(), image: Assets.userProfileWorkName),
+                                                          textContainer(context: context, label: 'رقم الهاتف', data: userProfile.data!.phoneNo.toString(), image: Assets.userProfilePhone),
+                                                          textContainer(context: context, label: 'نوع الفئة', data: userProfile.data!.rkTypeName.toString(), image: Assets.userProfileGroupName)
                                               
                                                         ]
                                                     )

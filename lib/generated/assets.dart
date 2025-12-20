@@ -2,6 +2,9 @@
 class Assets {
   Assets._();
 
+  static const String appBarGuideLogo = 'assets/icons/app_bar/guideLogo.png';
+  static const String appBarModeLogo = 'assets/icons/app_bar/modeLogo.png';
+  static const String appBarNotifyLogo = 'assets/icons/app_bar/notifyLogo.png';
   static const String appCalender = 'assets/icons/app/calender.png';
   static const String appDuity = 'assets/icons/app/duity.png';
   static const String appMessage = 'assets/icons/app/message.png';
@@ -9,30 +12,19 @@ class Assets {
   static const String fontsCairoMedium = 'assets/fonts/Cairo-Medium.ttf';
   static const String fontsCairoRegular = 'assets/fonts/Cairo-Regular.ttf';
   static const String fontsCairoSemiBold = 'assets/fonts/Cairo-SemiBold.ttf';
-  static const String iconsBiometric = 'assets/icons/biometric.png';
   static const String iconsChecked = 'assets/icons/checked.png';
   static const String iconsDone = 'assets/icons/done.png';
   static const String iconsFaceId = 'assets/icons/FaceId.png';
-  static const String iconsGroupName = 'assets/icons/groupName.png';
-  static const String iconsGuideLogo = 'assets/icons/guideLogo.png';
-  static const String iconsHrNo = 'assets/icons/hrNo.png';
-  static const String iconsLoginLogo = 'assets/icons/LoginLogo.png';
-  static const String iconsMainLogo = 'assets/icons/mainLogo.png';
-  static const String iconsModeLogo = 'assets/icons/modeLogo.png';
+  static const String iconsLoginLogo = 'assets/icons/MainLogo.png';
   static const String iconsMoi = 'assets/icons/moi.png';
-  static const String iconsMoi36 = 'assets/icons/moi36.png';
-  static const String iconsMrz = 'assets/icons/mrz.png';
-  static const String iconsNotifyLogo = 'assets/icons/notifyLogo.png';
-  static const String iconsOip = 'assets/icons/oip.png';
-  static const String iconsPersonalName = 'assets/icons/personalName.png';
   static const String iconsPersonalimage = 'assets/icons/personalimage.png';
-  static const String iconsPhone = 'assets/icons/phone.png';
-  static const String iconsRank = 'assets/icons/rank.png';
   static const String iconsScanid = 'assets/icons/scanid.png';
-  static const String iconsScaning = 'assets/icons/scaning.png';
-  static const String iconsWorkName = 'assets/icons/workName.png';
-  static const String imagesBrowser5 = 'assets/images/browser-5.png';
-  static const String imagesFrame = 'assets/images/Frame.png';
-  static const String soundsSuccess = 'assets/sounds/success.mp3';
+  static const String userProfileGroupName = 'assets/icons/user_profile/groupName.png';
+  static const String userProfileHrNo = 'assets/icons/user_profile/hrNo.png';
+  static const String userProfileMrz = 'assets/icons/user_profile/mrz.png';
+  static const String userProfilePersonalName = 'assets/icons/user_profile/personalName.png';
+  static const String userProfilePhone = 'assets/icons/user_profile/phone.png';
+  static const String userProfileRank = 'assets/icons/user_profile/rank.png';
+  static const String userProfileWorkName = 'assets/icons/user_profile/workName.png';
 
 }

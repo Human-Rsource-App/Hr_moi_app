@@ -61,7 +61,7 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(Assets.iconsMainLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
+                          Image.asset(Assets.iconsLoginLogo,fit: BoxFit.contain,width: 200.0,height: 200.0),
                           Text('مرحباً', style: textTheme.labelLarge),
                           Text(
                             'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',
