@@ -66,12 +66,16 @@ Widget defaultTextField({
     void Function(String)? onChanged,
     TextInputType? keyboardType,
     required String lable,
+  TextAlign textAlign = TextAlign.start,
+  TextDirection? textDirection,
     required BuildContext context,
     bool obscureText = false,
     IconData? suffixIcon,
     VoidCallback? onSuffixIconPressed //here modification
 }) => TextFormField(
     controller: controller,
+    textAlign: textAlign,
+    textDirection:textDirection,
     validator: validator,
     onChanged: onChanged,
     obscureText: obscureText,
