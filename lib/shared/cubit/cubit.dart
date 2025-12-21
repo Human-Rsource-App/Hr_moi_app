@@ -16,6 +16,7 @@ import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
+import '../../models/profile_image.dart';
 import '../../models/reset_pass/reset_req_model.dart';
 import '../../modules/auth/registeration/create_pass.dart';
 import '../../modules/auth/registeration/reset_pass/create_newpass.dart';
@@ -437,7 +438,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         )
             .then((val)
                 {
-                  hrNum=empCode;
+                    hrNum = empCode;
                     LoginModel pass = LoginModel.fromJson(val.data);
 
                     if (pass.success == true)
@@ -607,139 +608,194 @@ class HrMoiCubit extends Cubit<HrMoiStates>
     }
 
     //==============================================================================
-//create new pass
-  void createNewPass({
-    required String url,
-    required String empCode,
-    required String otp,
-    required String password,
-    required BuildContext context
-  })
-  {
-    DioHelper.postData(
-        path: url,
-        data: {"empCode": empCode,"otp":otp, "newPassword": password}
-    )
-        .then((val)
+    //create new pass
+    void createNewPass({
+        required String url,
+        required String empCode,
+        required String otp,
+        required String password,
+        required BuildContext context
+    })
     {
-      CreatePassModel pass = CreatePassModel.fromJson(val.data);
+        DioHelper.postData(
+            path: url,
+            data: {"empCode": empCode,"otp":otp, "newPassword": password}
+        )
+            .then((val)
+                {
+                    CreatePassModel pass = CreatePassModel.fromJson(val.data);
 
-      if (pass.success == true)
-      {
-        //
-        if (context.mounted)
-        {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => RegistrationSuccessScreen()
-              )
-          );
-          emit(CreateNewPassSuccState());
-        }
+                    if (pass.success == true)
+                    {
+                        //
+                        if (context.mounted)
+                        {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegistrationSuccessScreen()
+                                )
+                            );
+                            emit(CreateNewPassSuccState());
+                        }
 
-      }
+                    }
+                }
+            )
+            .catchError((error)
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 400)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'OTP غير صحيح أو منتهي', context: context);
+                                emit(CreateNewPassFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: '$errorهنالك مشكلة في الخادم', context: context);
+                                emit(CreateNewPassFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted)
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(CreateNewPassFailState());
+                    }
+                }
+            );
     }
-    )
-        .catchError((error)
+    //home screen logic ===========================================================
+    int curentIndex = 1;
+    void changeNavBar({required int val})
     {
-      if (error is DioException)
-      {
-        if (error.response!.statusCode == 400)
-        {
-          if (context.mounted)
-          {
-            showMessage(message: 'OTP غير صحيح أو منتهي', context: context);
-            emit(CreateNewPassFailState());
-          }
-        }
-        else
-        {
-          if (context.mounted)
-          {
-            showMessage(message: '$errorهنالك مشكلة في الخادم', context: context);
-            emit(CreateNewPassFailState());
-          }
-        }
-      }
-
-    }
-    ).catchError((error)
-    {
-      if (context.mounted)
-      {
-        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
-        emit(CreateNewPassFailState());
-      }
-    }
-    );
-  }
-  //home screen logic ===========================================================
-  int curentIndex=1;
-    void changeNavBar({required int val}){
-      curentIndex=val;
-      emit(ChangeNavBarState());
+        curentIndex = val;
+        emit(ChangeNavBarState());
     }
     //==========================================================================
-//user profile logic
-  void getProfileData({required String url, required BuildContext context})
-  {
-    emit(HrNumGetLoadingState());
-    DioHelper.getData(path: url)
-        .then((val)
+    //user profile logic
+    void getProfileData({required String url, required BuildContext context})
     {
+        emit(HrNumGetLoadingState());
+        DioHelper.getData(path: url)
+            .then((val)
+                {
 
-      userProfile = HrProfileModel.fromJson(val.data);
-      if (val.data != null)
-      {
-        if (userProfile.success == true)
-        {
-          if (context.mounted)
-          {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Profile()
-                )
-            );}
-          emit(ProfileGetSuccState());
-        }
+                    userProfile = HrProfileModel.fromJson(val.data);
+                    if (val.data != null)
+                    {
+                        if (userProfile.success == true)
+                        {
+                            if (context.mounted)
+                            {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Profile()
+                                    )
+                                );
+                            }
+                            emit(ProfileGetSuccState());
+                        }
 
-      }
+                    }
+                }
+            )
+            .catchError((error)
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'حدثت مشكله اثناء جلب البيانات', context: context);
+                                emit(ProfileGetFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(ProfileGetFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted)
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(ProfileGetFailState());
+                    }
+                }
+            );
     }
-    )
-        .catchError((error)
+    //============================================================================
+    //get profile image
+    void getImageData({required String url, required BuildContext context})
     {
-      if (error is DioException)
-      {
-        if (error.response!.statusCode == 404)
-        {
-          if (context.mounted)
-          {
-            showMessage(message: 'حدثت مشكله اثناء جلب البيانات', context: context);
-            emit(ProfileGetFailState());
-          }
-        }
-        else
-        {
-          if (context.mounted)
-          {
-            showMessage(message: 'هنالك مشكلة في الخادم', context: context);
-            emit(ProfileGetFailState());
-          }
-        }
-      }
+        DioHelper.getData(path: url)
+            .then((val)
+                {
+                  imageProfile = ProfileImage.fromJson(val.data);
+                    if (val.data != null)
+                    {
+                        if (imageProfile.success == true)
+                        {
 
+                            emit(GetImageSucState());
+                        }
+
+                    }
+                }
+            )
+            .catchError((error)
+                {
+                    if (error is DioException)
+                    {
+                        if (error.response!.statusCode == 404)
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'حدثت مشكله اثناء جلب البيانات', context: context);
+                                emit(GetImageFailState());
+                            }
+                        }
+                        else
+                        {
+                            if (context.mounted)
+                            {
+                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
+                                emit(GetImageFailState());
+                            }
+                        }
+                    }
+
+                }
+            ).catchError((error)
+                {
+                    if (context.mounted)
+                    {
+                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        emit(GetImageFailState());
+                    }
+                }
+            );
     }
-    ).catchError((error)
-    {
-      if (context.mounted)
-      {
-        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
-        emit(ProfileGetFailState());
-      }
-    }
-    );
-  }
-  //============================================================================
+
+    //============================================================================
 }

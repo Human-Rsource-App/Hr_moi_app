@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:hr_moi/models/identity_model.dart';
 
+import '../../models/profile_image.dart';
+
 const String baseUrl = 'http://10.21.10.181:3090/api/';
 const String userProfUrl = 'moiApp/user_profile/';
 const String hrUrl = 'moiApp/search/';
@@ -11,11 +13,13 @@ const String regUrl = 'auth/register';
 const String loginUrl = 'auth/login';
 const String resetPass = 'moiApp/reset_password/request';
 const String createNewPass = 'moiApp/reset_password/confirm';
+const String profileImage = 'moiApp/get_image/';
 
 
 
 //general var
 List<CameraDescription>? cameras;
 late String nID;
-String hrNum='911720011';
+String hrNum='881790088';
 late HrProfileModel userProfile;
+late ProfileImage imageProfile;

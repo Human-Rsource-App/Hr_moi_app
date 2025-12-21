@@ -68,4 +68,9 @@ class ProfileGetLoadingState extends HrMoiStates {}
 class ProfileGetSuccState extends HrMoiStates {}
 
 class ProfileGetFailState extends HrMoiStates {}
+//user image state
+class GetImageSucState extends HrMoiStates {}
+
+class GetImageFailState extends HrMoiStates {}
+
 
