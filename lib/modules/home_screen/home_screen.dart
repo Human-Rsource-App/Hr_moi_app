@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/generated/assets.dart';
@@ -25,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen>
 
         Size size = MediaQuery.of(context).size;
         return BlocProvider(
-            create: (context) => HrMoiCubit()..getImageData(context: context,url: '$baseUrl$profileImage$hrNum'),
+            create: (context) => HrMoiCubit()..getImageData(context: context, url: '$baseUrl$profileImage$hrNum'),
             child: BlocConsumer<HrMoiCubit, HrMoiStates>(
                 listener: (context, state)
                 {
@@ -33,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen>
                 },
                 builder: (context, state)
                 {
-                  Uint8List bytes = base64Decode(imageProfile.data!.imageBase64!);
                     HrMoiCubit cubit = HrMoiCubit.get(context);
                     return Directionality(
                         textDirection: TextDirection.rtl,
@@ -68,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                                     cubit.getProfileData(url: '$baseUrl$userProfUrl$hrNum', context: context);
                                                                 },
                                                                 child: defaultCircleAvatar(radius: 44,
-                                                                    child:Image.asset(Assets.iconsPersonalimage),
+                                                                    child: Image.asset(Assets.iconsPersonalimage),
                                                                     backgroundColor: Colors.black45))
                                                             //App bar ================================================================================================================
                                                             , Row(
@@ -206,32 +203,34 @@ class _HomeScreenState extends State<HomeScreen>
                                                                         ]
                                                                     )
                                                                 ),
-                                                                ListView.separated(itemBuilder: (context, int index) => defaultContainer(
-                                                                        vertPadding: 15,
-                                                                        horiPadding: 15,
-                                                                        height: 120,
-                                                                        width: size.width,
-                                                                        child: Row(
-                                                                            spacing: 10,
-                                                                            children: <Widget>[
-                                                                                defaultContainer(
-                                                                                    width: 60,
-                                                                                    height: 60,
-                                                                                    child: Image.asset(Assets.iconsMoi, width: 8, height: 8, fit: BoxFit.cover)),
-                                                                                Column(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: <
-                                                                                    Widget>[
-                                                                                        Text('برقية سريعة', style: TextTheme.of(context).bodyMedium),
-                                                                                        Text('تاريخ الاستحقاق: 2024-01-15', style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
-                                                                                        Text('متوسط', style: TextTheme.of(context).bodySmall!.copyWith(color: secondColor))
+                                                                Expanded(
+                                                                  child: ListView.separated(itemBuilder: (context, int index) => defaultContainer(
+                                                                          vertPadding: 15,
+                                                                          horiPadding: 15,
+                                                                          height: 120,
+                                                                          width: size.width,
+                                                                          child: Row(
+                                                                              spacing: 10,
+                                                                              children: <Widget>[
+                                                                                  defaultContainer(
+                                                                                      width: 60,
+                                                                                      height: 60,
+                                                                                      child: Image.asset(Assets.iconsMoi, width: 8, height: 8, fit: BoxFit.cover)),
+                                                                                  Column(
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: <
+                                                                                      Widget>[
+                                                                                          Text('برقية سريعة', style: TextTheme.of(context).bodyMedium),
+                                                                                          Text('تاريخ الاستحقاق: 2024-01-15', style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
+                                                                                          Text('متوسط', style: TextTheme.of(context).bodySmall!.copyWith(color: secondColor))
 
-                                                                                    ]
-                                                                                )
-                                                                            ]
+                                                                                      ]
+                                                                                  )
+                                                                              ]
 
-                                                                        )), scrollDirection: Axis.vertical, itemCount: 3, shrinkWrap: true,
-                                                                    separatorBuilder: (context, int index) => SizedBox(height: 10))
+                                                                          )), scrollDirection: Axis.vertical, itemCount: 10, shrinkWrap: true,
+                                                                      separatorBuilder: (context, int index) => SizedBox(height: 10)),
+                                                                )
 
                                                             ]
                                                         ))

@@ -166,7 +166,7 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
 
         _verifiedImage = File(file.path); // حفظ الصورة النهائية
 
-        setState(() => _status = '✔ تم التحقق من الحيوية بنجاح!');
+        setState(() => _status = '✅ تم التحقق من الحيوية بنجاح!');
         await _playFeedback();
     }
 
@@ -239,21 +239,21 @@ class _FaceLivenessPageState extends State<FaceLivenessPage>
                                 if (_livenessPassed)
                                 Positioned(
                                     bottom: 20,
-                                    child: defaultElevationBtn(context: context,  onPressed: ()
-                                    {
-                                      if (_verifiedImage != null)
-                                      {
-                                        var stringImage = image64Trans(
-                                            imagePath: _verifiedImage!.path
-                                        );
+                                    child: defaultElevationBtn(context: context, onPressed: ()
+                                        {
+                                            if (_verifiedImage != null)
+                                            {
+                                                var stringImage = image64Trans(
+                                                    imagePath: _verifiedImage!.path
+                                                );
 
-                                        cubit.postUserFace(
-                                            url: '$baseUrl$faceUrl$hrNum'.toString(),
-                                            data: stringImage,
-                                            context: context
-                                        );
-                                      }
-                                    }, label: 'تابع التسجيل')
+                                                cubit.postUserFace(
+                                                    url: '$baseUrl$faceUrl$hrNum'.toString(),
+                                                    data: stringImage,
+                                                    context: context
+                                                );
+                                            }
+                                        }, label: 'تابع التسجيل')
                                 ),
 
                                 if (_flashOverlay)
@@ -281,15 +281,15 @@ class _OvalPainter extends CustomPainter
     void paint(Canvas canvas, Size size)
     {
         final paintOverlay = Paint()
-          ..shader = LinearGradient(
+            ..shader = LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF0A3D5C), // top blue
-              Color(0xFF1A5577), // mid blue
-              Color(0xFF0F2940), // bottom blue
-            ],
-          ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
+                Color(0xFF0A3D5C), // top blue
+                Color(0xFF1A5577), // mid blue
+                Color(0xFF0F2940) // bottom blue
+            ]
+        ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
             ..style = PaintingStyle.fill;
 
         final fullPath = Path()

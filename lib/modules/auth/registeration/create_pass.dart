@@ -27,6 +27,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen>
     bool _has8to32Chars = false;
     bool _hasNumber = false;
     bool _hasSpecialChar = false;
+    TextDirection _textDirection = TextDirection.ltr;
+
+    bool _isArabic(String text)
+    {
+      final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+      return arabicRegex.hasMatch(text);
+    }
 
     @override
     void initState()
@@ -123,6 +130,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen>
                                                               lable: 'كلمة المرور',
                                                               controller: _passwordController,
                                                               obscureText: !_isPasswordVisible,
+                                                              textDirection: _textDirection,
+                                                              textAlign: TextAlign.center,
+                                                              onChanged: (String val)
+                                                              {
+                                                                setState(()
+                                                                {
+                                                                  _textDirection =
+                                                                  _isArabic(val) ? TextDirection.rtl : TextDirection.ltr;
+                                                                }
+                                                                );
+                                                              },
                                                               onSuffixIconPressed: ()
                                                               {
                                                                   setState(()
@@ -140,6 +158,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen>
                                                                   controller: _confirmPasswordController,
                                                                   obscureText: !_isConfirmPasswordVisible,
                                                                   suffixIcon: _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                                                                  textDirection: _textDirection,
+                                                                  textAlign: TextAlign.center,
+                                                                  onChanged: (String val)
+                                                                  {
+                                                                    setState(()
+                                                                    {
+                                                                      _textDirection =
+                                                                      _isArabic(val) ? TextDirection.rtl : TextDirection.ltr;
+                                                                    }
+                                                                    );
+                                                                  },
 
                                                                   onSuffixIconPressed: ()
                                                                   {
@@ -180,7 +209,26 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen>
                                                               _buildRequirementRow(
                                                                   'رمز خاص واحد مثال: !@#\$%',
                                                                   _hasSpecialChar
-                                                                  , font.bodySmall!)]
+                                                                  , font.bodySmall!)],
+                                                        SizedBox(height: 40,),
+                                                        //=================================================================
+                                                        //next button
+                                                        defaultButton(
+                                                            context: context,
+                                                            onPressed: isPasswordValid && doPasswordsMatch
+                                                                ? ()
+                                                            {
+                                                              cubit.createPass(
+                                                                  url: '$baseUrl$regUrl',
+                                                                  empCode: hrNum.toString(),
+                                                                  password: _passwordController.text.toString(),
+                                                                  context: context
+                                                              );
+                                                            }
+                                                                : null,
+                                                            lable: 'متابعة'
+                                                        )
+
                                                       ]
                                                   )
                                               ]
@@ -190,34 +238,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen>
                               )
                           )
                       ),
-                      bottomNavigationBar: Container(
-                          padding: EdgeInsets.all(20.0),
-
-                          decoration: BoxDecoration(boxShadow: [BoxShadow(blurRadius: 5, color: mainColor,
-                                      offset: Offset(0, 0))],
-
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: backGrColor
-                              )
-                          ),
-                          child: defaultButton(
-                              context: context,
-                              onPressed: isPasswordValid && doPasswordsMatch
-                                  ? ()
-                                  {
-                                      cubit.createPass(
-                                          url: '$baseUrl$regUrl',
-                                          empCode: hrNum.toString(),
-                                          password: _passwordController.text.toString(),
-                                          context: context
-                                      );
-                                  }
-                                  : null,
-                              lable: 'متابعة'
-                          )
-                      )
                   ),
                 );
             }

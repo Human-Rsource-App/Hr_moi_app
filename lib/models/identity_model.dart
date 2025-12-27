@@ -19,11 +19,11 @@ class UserData {
   String? jenNatinalNo;
   String? phoneNo;
   String? unitName;
-  String? unit_1;
-  String? unit_2;
-  String? unit_3;
-  String? unit_4;
-  String? unit_5;
+  String? unit1;
+  String? unit2;
+  String? unit3;
+  String? unit4;
+
   UserData.fromJson(Map<String, dynamic> json) {
     empCode = json['empCode'];
     rkTypeName = json['rkTypeName'];
@@ -34,10 +34,10 @@ class UserData {
     jenNatinalNo = json['jenNatinalNo'];
     phoneNo = json['PhoneNo'];
     unitName = json['unitName'];
-    unit_1 = json['unit_1'];
-    unit_2 = json['unit_2'];
-    unit_3 = json['unit_3'];
-    unit_4 = json['unit_4'];
-    unit_5 = json['unit_5'];
+    unit1 = json['unit1'];
+    unit2 = json['unit2'];
+    unit3 = json['unit3'];
+    unit4 = json['unit4'];
+
   }
 }

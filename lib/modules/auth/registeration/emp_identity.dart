@@ -99,7 +99,7 @@ class _EmpIdentityState extends State<EmpIdentity>
                         ))
                 ),
                 bottomNavigationBar: Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
                             begin: Alignment.topCenter,
@@ -115,30 +115,26 @@ class _EmpIdentityState extends State<EmpIdentity>
                             Text('هل المعلومات صحيحة؟', style: font.bodySmall),
 
                             SizedBox(height: 10.0),
-                            Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Expanded(
-                                    child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                            defaultButton(context: context, onPressed: ()
-                                                {
-                                                  showErrorDialog(context: context);
-                                                }
-                                                , lable: 'كلا', width: 90.0, color: Color(0XFFF44141), fontColor: Colors.white),
-                                            defaultButton(context: context, onPressed: ()
-                                                {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) => FaceLivenessPage()
-                                                      )
-                                                  );
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                    defaultButton(context: context, onPressed: ()
+                                        {
+                                          showErrorDialog(context: context);
+                                        }
+                                        , lable: 'كلا', width: 90.0, color: Color(0XFFF44141), fontColor: Colors.white),
+                                    defaultButton(context: context, onPressed: ()
+                                        {
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder: (context) => FaceLivenessPage()
+                                              )
+                                          );
 
-                                                }
-                                                , lable: 'نعم', width: 90.0, color: Color(0XFF4DB8D8), fontColor: Colors.white)
-                                        ]
-                                    )
-                                )
+                                        }
+                                        , lable: 'نعم', width: 90.0, color: Color(0XFF4DB8D8), fontColor: Colors.white)
+                                ]
                             )
 
                         ]

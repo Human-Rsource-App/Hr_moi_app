@@ -123,6 +123,7 @@ class _ProfileState extends State<Profile> {
 
                             SizedBox(height: 15.0),
                             Column(
+                              spacing: 10,
                               children: <Widget>[
                                 textContainer(
                                   context: context,
@@ -145,7 +146,7 @@ class _ProfileState extends State<Profile> {
                                 textContainer(
                                   context: context,
                                   label: 'جهة الانتساب',
-                                  data: '${userProfile.data!.unit_1}/${userProfile.data!.unit_2}/${userProfile.data!.unit_3}',
+                                  data: '${userProfile.data!.unit1}/${userProfile.data!.unit2}/${userProfile.data!.unit3}',
                                   image: Assets.userProfileWorkName,
                                 ),
                                 textContainer(

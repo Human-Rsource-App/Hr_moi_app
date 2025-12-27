@@ -46,10 +46,6 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                         hrNum = empCode.toString();
                         if (context.mounted)
                         {
-                            // getHrUserData(
-                            //     context: context,
-                            //     url: '$baseUrl$userProfUrl$empCode'
-                            // );
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -120,18 +116,18 @@ class HrMoiCubit extends Cubit<HrMoiStates>
     })
     {
         //temporary code
-        if (currentText == '123456')
-        {
-            if (context.mounted)
-            {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context) => CameraScreen(camera: cameras!.first)
-                    )
-                );
-            }
-            emit(OtpGetSuccState());
-        }
+        // if (currentText == '123456')
+        // {
+        //     if (context.mounted)
+        //     {
+        //         Navigator.of(context).push(
+        //             MaterialPageRoute(
+        //                 builder: (context) => CameraScreen(camera: cameras!.last)
+        //             )
+        //         );
+        //     }
+        //     emit(OtpGetSuccState());
+        // }
         //=========================================================================
         // temp
         DioHelper.getData(path: url)
@@ -443,7 +439,6 @@ class HrMoiCubit extends Cubit<HrMoiStates>
 
                     if (pass.success == true)
                     {
-                        //
                         if (context.mounted)
                         {
                             Navigator.pushReplacement(
@@ -452,17 +447,16 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                             );
                             emit(LoginSuccState());
                         }
-                        else
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(
-                                    message: 'هذا المستخدم غير موجود',
-                                    context: context
-                                );
-                            }
-                            emit(LoginFailState());
-                        }
+                    } else
+                    {
+                      if (context.mounted)
+                      {
+                        showMessage(
+                            message: 'هذا المستخدم غير موجود',
+                            context: context
+                        );
+                      }
+                      emit(LoginFailState());
                     }
                 }
             )
@@ -470,7 +464,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                 {
                     if (context.mounted)
                     {
-                        showMessage(message: 'خطا في الباسورد المدخل', context: context);
+                        showMessage(message: 'تأكد من الرقم الاحصائي والباسورد', context: context);
                     }
                     emit(LoginFailState());
                 }
@@ -751,7 +745,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         DioHelper.getData(path: url)
             .then((val)
                 {
-                  imageProfile = ProfileImage.fromJson(val.data);
+                    imageProfile = ProfileImage.fromJson(val.data);
                     if (val.data != null)
                     {
                         if (imageProfile.success == true)

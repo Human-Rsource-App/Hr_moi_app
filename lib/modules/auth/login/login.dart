@@ -70,9 +70,9 @@ class _LoginState extends State<Login>
                                 child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20.0,
-                                        vertical: 20.0
                                     ),
                                     child: SingleChildScrollView(
+
                                         child: Form(
                                             key: formKey,
                                             child: Column(
@@ -204,7 +204,6 @@ class _LoginState extends State<Login>
                                                                     )
                                                                 ]
                                                             ),
-                                                            const SizedBox(height: 10.0),
                                                             //=================================================
                                                             //u do not have an account
                                                             Row(
