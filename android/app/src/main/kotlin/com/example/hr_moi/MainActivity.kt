@@ -1,5 +1,6 @@
 package com.example.hr_moi
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity : FlutterFragmentActivity() {
+}

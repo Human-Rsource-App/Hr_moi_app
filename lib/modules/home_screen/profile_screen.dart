@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_moi/modules/auth/login/login.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
@@ -9,6 +10,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../generated/assets.dart';
 import '../../shared/components/components.dart';
+import '../auth/login/secure_storage.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -174,6 +176,13 @@ class _ProfileState extends State<Profile> {
                                     size: 120.0,
                                   ),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  child: defaultButton(context: context, onPressed: ()async{
+                                   // await SecureStorage.clearAuth();
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login(),),);
+                                  }, lable: 'نسجيل الخروج'),
+                                )
                               ],
                             ),
                           ],

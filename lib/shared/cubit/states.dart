@@ -72,19 +72,7 @@ class ProfileGetFailState extends HrMoiStates {}
 class GetImageSucState extends HrMoiStates {}
 
 class GetImageFailState extends HrMoiStates {}
-//auth states
-class AuthLoading extends HrMoiStates {}
-class AuthSuccess extends HrMoiStates {}
-class AuthFailure extends HrMoiStates {
-  final String message;
-  AuthFailure(this.message);
-}
-//bio login states
-class BiometricLoading extends HrMoiStates {}
-class BiometricSuccess extends HrMoiStates {}
-class BiometricFailure extends HrMoiStates {
-  final String message;
-  BiometricFailure(this.message);
-}
+
+
 
 

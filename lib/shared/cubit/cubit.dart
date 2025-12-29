@@ -18,8 +18,6 @@ import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import '../../models/profile_image.dart';
 import '../../models/reset_pass/reset_req_model.dart';
-import '../../modules/auth/login/biometric_service.dart';
-import '../../modules/auth/login/secure_storage.dart';
 import '../../modules/auth/registeration/create_pass.dart';
 import '../../modules/auth/registeration/reset_pass/create_newpass.dart';
 import '../../modules/auth/registeration/reset_pass/otp_reset.dart';
@@ -794,33 +792,4 @@ class HrMoiCubit extends Cubit<HrMoiStates>
     }
 
     //============================================================================
-// auth login logic
-  Future<void> login(String username, String password) async {
-    emit(AuthLoading());
-
-    // API login simulation
-
-    await Future.delayed(const Duration(seconds: 1));
-    const token = 'SERVER_TOKEN';
-    await SecureStorage.saveToken(token);
-    emit(AuthSuccess());
-  }
-//==============================================================================
-// bio login logic
-  Future<void> authenticate() async {
-    emit(BiometricLoading());
-
-    final enabled = await SecureStorage.isBiometricEnabled();
-    if (!enabled) {
-      emit(BiometricFailure('Biometric not enabled'));
-      return;
-    }
-
-    final success = await BiometricService.authenticate();
-    if (success) {
-      emit(BiometricSuccess());
-    } else {
-      emit(BiometricFailure('Authentication failed'));
-    }
-  }
 }

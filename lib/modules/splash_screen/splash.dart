@@ -182,7 +182,7 @@ class _MoiViewState extends State<MoiView>
                                         decoration: const BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
-                                                image: AssetImage(Assets.iconsLoginLogo),
+                                                image: AssetImage(Assets.iconsMainLogo),
                                                 fit: BoxFit.cover
                                             )
                                         )

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hr_moi/modules/auth/login/biometric_service.dart';
+import 'package:hr_moi/modules/auth/login/secure_storage.dart';
 import 'package:hr_moi/modules/auth/registeration/hr_number.dart';
 import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
@@ -7,6 +9,7 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import '../../../generated/assets.dart';
+import '../../home_screen/home_screen.dart';
 import '../registeration/reset_pass/reset_pass.dart';
 
 class Login extends StatefulWidget
@@ -38,7 +41,6 @@ class _LoginState extends State<Login>
         super.dispose();
     }
 
-
     @override
     Widget build(BuildContext context)
     {
@@ -48,12 +50,53 @@ class _LoginState extends State<Login>
         return Directionality(
             textDirection: TextDirection.rtl,
             child: BlocConsumer<HrMoiCubit, HrMoiStates>(
-                listener: (context, state)
+                listener: (BuildContext context, HrMoiStates state)async
                 {
+                    if (state is LoginSuccState)
+                    {
+                        // save token here if not already saved
+                        await SecureStorage.saveToken('state.token');
 
+                        final  canBio = await BiometricService.canAuthenticate();
+
+                        if (canBio)
+                        {
+                          if (context.mounted){
+                            final enable = await showDialog<bool>(
+                              context: context,
+                              builder: (dialogContext) => AlertDialog(
+                                title: const Text('تفعيل تسجيل الدخول بالبصمة؟'),
+                                content: const Text('هل ترغب باستخدام Face ID / Fingerprint لاحقاً؟'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(dialogContext).pop(false),
+                                    child: const Text('لا'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.of(dialogContext).pop(true),
+                                    child: const Text('نعم'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+
+                            if (enable == true)
+                            {
+                                await SecureStorage.enableBio();
+                            }
+                        }}
+                    }
                 },
                 builder: (context, state)
                 {
+                    void navigateToHome()
+                    {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const HomeScreen()),
+                            (route) => false,
+                        );
+                    }
                     final cubit = HrMoiCubit.get(context);
                     return Scaffold(
                         body: Container(
@@ -79,7 +122,7 @@ class _LoginState extends State<Login>
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                    Image.asset(Assets.iconsLoginLogo, fit: BoxFit.contain, width: 150.0, height: 150.0),
+                                                    Image.asset(Assets.iconsMainLogo, fit: BoxFit.contain, width: 150.0, height: 150.0),
                                                     Text('مرحباً', style: textTheme.labelLarge),
                                                     Text(
                                                         'أدخل الرقم الإحصائي وكلمة المرور لتسجيل الدخول',
@@ -178,6 +221,26 @@ class _LoginState extends State<Login>
                                                                 style: Theme.of(context).textTheme.bodySmall
                                                             ),
                                                             GestureDetector(
+                                                                onTap: () async
+                                                                {
+                                                                    final token = await SecureStorage.getToken();
+                                                                    final bioEnabled = await SecureStorage.isBioEnabled();
+
+                                                                    if (token == null || !bioEnabled)
+                                                                    {
+                                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                                            const SnackBar(content: Text('لم يتم تفعيل الدخول بالبصمة سجل دخولك اولا ثم فعل البصمة لاحقا')),
+                                                                        );
+                                                                        return;
+                                                                    }
+
+                                                                    final success = await BiometricService.authenticate();
+
+                                                                    if (success)
+                                                                    {
+                                                                      navigateToHome();
+                                                                    }
+                                                                },
                                                                 child: Image.asset(
                                                                     Assets.iconsFaceId,
                                                                     width: 100.0,

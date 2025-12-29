@@ -261,6 +261,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         cubit.changeNavBar(val: value);
 
                                     }
+
                                 )
                             )
                         )

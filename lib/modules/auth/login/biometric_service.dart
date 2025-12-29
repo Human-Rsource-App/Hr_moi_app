@@ -11,9 +11,9 @@ class BiometricService {
 
   static Future<bool> authenticate() async {
     return await _auth.authenticate(
-      localizedReason: 'Authenticate to continue',
+      localizedReason:'التحقق لتسجيل الدخول',
       biometricOnly: true,
-      persistAcrossBackgrounding: true,
+
     );
   }
 }
