@@ -121,7 +121,7 @@ class _EmpIdentityState extends State<EmpIdentity>
                                 children: [
                                     defaultButton(context: context, onPressed: ()
                                         {
-                                          showErrorDialog(context: context);
+                                          showDefaultDialog(context: context);
                                         }
                                         , lable: 'كلا', width: 90.0, color: Color(0XFFF44141), fontColor: Colors.white),
                                     defaultButton(context: context, onPressed: ()

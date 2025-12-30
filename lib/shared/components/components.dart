@@ -66,8 +66,8 @@ Widget defaultTextField({
     void Function(String)? onChanged,
     TextInputType? keyboardType,
     required String lable,
-  TextAlign textAlign = TextAlign.start,
-  TextDirection? textDirection,
+    TextAlign textAlign = TextAlign.start,
+    TextDirection? textDirection,
     required BuildContext context,
     bool obscureText = false,
     IconData? suffixIcon,
@@ -219,7 +219,7 @@ Widget textContainer({
 );
 //==============================================================================
 //dialog window
-void showErrorDialog({required BuildContext context})
+void showDefaultDialog({required BuildContext context})
 {
     showDialog(
         context: context,
@@ -277,15 +277,92 @@ void showErrorDialog({required BuildContext context})
     );
 }
 //==============================================================================
+//default alert dialog
+Future<bool?> showConfirmDialog(BuildContext context) {
+  return showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (dialogContext) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF0A3D5C),
+                Color(0xFF1A5577),
+                Color(0xFF0F2940),
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+               Text(
+                'تفعيل تسجيل الدخول بالبصمة؟',
+                textAlign: TextAlign.center,
+                style: TextTheme.of(context).bodyMedium
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: secondColor,
+                        foregroundColor: const Color(0xFF0A3D5C),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(true); // نعم
+                      },
+                      child:  Text('نعم',style: TextTheme.of(context).bodySmall,),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(false); // لا
+                      },
+                      child:  Text('لا',style: TextTheme.of(context).bodySmall,),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+//==============================================================================
 //default container
 Widget defaultContainer({
     double width = 50,
     double height = 50,
-  int color= 0xffFFFFFF,
-  double opacity=0.2,
-  double radius=10.0,
-  double vertPadding = 1,
-  double horiPadding = 1,
+    int color= 0xffFFFFFF,
+    double opacity=0.2,
+    double radius=10.0,
+    double vertPadding = 1,
+    double horiPadding = 1,
     required Widget child
 }) => Container(
     width: width,
@@ -306,30 +383,30 @@ Widget defaultContainer({
 
 Widget defaultDivider(
 {
-  double width=1,
+    double width=1,
 }
-    )=> Container(
-  width: 1,
-  margin: const EdgeInsets.symmetric(vertical: 10),
-  color: Colors.white.withValues(alpha: 0.35),
+)=> Container(
+    width: 1,
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    color: Colors.white.withValues(alpha: 0.35),
 );
 //==============================================================================
 //items for home tasks
 Widget item(
-    {
-      required BuildContext context,
-      required String title,
-      required String subTitle,
-      Color subColor=Colors.white,
-      Color titleColor=Colors.white,
-      double subTitleSize=20,
-      double titleSize=12,
-    })=>Column(
+{
+    required BuildContext context,
+    required String title,
+    required String subTitle,
+    Color subColor=Colors.white,
+    Color titleColor=Colors.white,
+    double subTitleSize=20,
+    double titleSize=12,
+})=>Column(
     mainAxisSize: MainAxisSize.max,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      Flexible(child: Text(title, style: TextTheme.of(context).bodySmall!.copyWith(fontSize: titleSize,color: titleColor),textAlign: TextAlign.center,)),
-      Flexible(child: Text(subTitle, style:TextTheme.of(context).bodyMedium!.copyWith(color: subColor,fontSize: subTitleSize)))
+        Flexible(child: Text(title, style: TextTheme.of(context).bodySmall!.copyWith(fontSize: titleSize,color: titleColor),textAlign: TextAlign.center,)),
+        Flexible(child: Text(subTitle, style:TextTheme.of(context).bodyMedium!.copyWith(color: subColor,fontSize: subTitleSize)))
     ]
 );
 //===============================================================================

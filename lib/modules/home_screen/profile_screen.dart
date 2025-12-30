@@ -7,11 +7,9 @@ import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
 import '../../generated/assets.dart';
 import '../../shared/components/components.dart';
 import '../auth/login/secure_storage.dart';
-
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -181,7 +179,14 @@ class _ProfileState extends State<Profile> {
                                   child: defaultButton(context: context, onPressed: ()async{
                                    // await SecureStorage.clearAuth();
                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login(),),);
-                                  }, lable: 'نسجيل الخروج'),
+                                  }, lable: 'تسجيل  الخروج'),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 5),
+                                  child: defaultButton(context: context, onPressed: ()async{
+                                     await SecureStorage.clearAuth();
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login(),),);
+                                  }, lable: 'تعطيل البصمة'),
                                 )
                               ],
                             ),

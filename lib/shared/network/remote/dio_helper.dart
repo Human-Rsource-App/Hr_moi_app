@@ -43,4 +43,12 @@ class DioHelper {
   }) async {
     return await dio!.put(path, queryParameters: query, data: data);
   }
+
+  static Future<Response> putData({
+    required String path,
+    Map<String, dynamic>? query,
+    required Object data,
+  }) async {
+    return await dio!.put(path, queryParameters: query, data: data);
+  }
 }

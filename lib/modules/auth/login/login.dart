@@ -62,24 +62,7 @@ class _LoginState extends State<Login>
                         if (canBio)
                         {
                           if (context.mounted){
-                            final enable = await showDialog<bool>(
-                              context: context,
-                              builder: (dialogContext) => AlertDialog(
-                                title: const Text('تفعيل تسجيل الدخول بالبصمة؟'),
-                                content: const Text('هل ترغب باستخدام Face ID / Fingerprint لاحقاً؟'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(dialogContext).pop(false),
-                                    child: const Text('لا'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(dialogContext).pop(true),
-                                    child: const Text('نعم'),
-                                  ),
-                                ],
-                              ),
-                            );
-
+                            final enable = await showConfirmDialog(context);
 
                             if (enable == true)
                             {
@@ -228,10 +211,11 @@ class _LoginState extends State<Login>
 
                                                                     if (token == null || !bioEnabled)
                                                                     {
-                                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                                            const SnackBar(content: Text('لم يتم تفعيل الدخول بالبصمة سجل دخولك اولا ثم فعل البصمة لاحقا')),
-                                                                        );
+                                                                      if(context.mounted){
+                                                                        showMessage(context: context,message: 'لم يتم تفعيل الدخول بالبصمة سجل دخولك اولا ثم فعل البصمة لاحقا',backgroundColor: Colors.deepOrange);
                                                                         return;
+                                                                      }
+
                                                                     }
 
                                                                     final success = await BiometricService.authenticate();
