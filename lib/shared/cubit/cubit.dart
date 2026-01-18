@@ -471,7 +471,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
             );
     }
     //============================================================================
-    //reset screen logic
+    //reset screen req to check if hr no available logic
     void resetPass({required String path, required Map<String, dynamic> data, required BuildContext context})
     {
         DioHelper.postData(path: path, data: data).then((val)

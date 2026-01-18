@@ -10,7 +10,7 @@ import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import '../../../generated/assets.dart';
 import '../../home_screen/home_screen.dart';
-import '../registeration/reset_pass/reset_pass.dart';
+import '../registeration/reset_pass/reset_pass_req.dart';
 
 class Login extends StatefulWidget
 {
@@ -61,14 +61,16 @@ class _LoginState extends State<Login>
 
                         if (canBio)
                         {
-                          if (context.mounted){
-                            final enable = await showConfirmDialog(context);
-
-                            if (enable == true)
+                            if (context.mounted)
                             {
-                                await SecureStorage.enableBio();
+                                final enable = await showConfirmDialog(context);
+
+                                if (enable == true)
+                                {
+                                    await SecureStorage.enableBio();
+                                }
                             }
-                        }}
+                        }
                     }
                 },
                 builder: (context, state)
@@ -211,10 +213,11 @@ class _LoginState extends State<Login>
 
                                                                     if (token == null || !bioEnabled)
                                                                     {
-                                                                      if(context.mounted){
-                                                                        showMessage(context: context,message: 'لم يتم تفعيل الدخول بالبصمة سجل دخولك اولا ثم فعل البصمة لاحقا',backgroundColor: Colors.deepOrange);
-                                                                        return;
-                                                                      }
+                                                                        if(context.mounted)
+                                                                        {
+                                                                            showMessage(context: context,message: 'لم يتم تفعيل الدخول بالبصمة سجل دخولك اولا ثم فعل البصمة لاحقا',backgroundColor: Colors.deepOrange);
+                                                                            return;
+                                                                        }
 
                                                                     }
 
@@ -222,7 +225,7 @@ class _LoginState extends State<Login>
 
                                                                     if (success)
                                                                     {
-                                                                      navigateToHome();
+                                                                        navigateToHome();
                                                                     }
                                                                 },
                                                                 child: Image.asset(
