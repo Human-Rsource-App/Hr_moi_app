@@ -3,7 +3,7 @@ import 'package:hr_moi/generated/assets.dart';
 import 'package:hr_moi/shared/components/components.dart';
 
 import '../../../../shared/style/color.dart';
-import '../../../home_screen/home_screen.dart';
+import '../../login/login.dart';
 
 class ResetPassSucc extends StatelessWidget
 {
@@ -39,13 +39,13 @@ class ResetPassSucc extends StatelessWidget
                               padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: defaultButton(
                                   context: context,
-                                  lable: 'الانتقال إلى لوحة التحكم',
+                                  lable: 'تسجيل الدخول',
                                   onPressed: ()
                                   {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => HomeScreen()
+                                            builder: (context) => Login()
                                         )
                                     );
                                   }

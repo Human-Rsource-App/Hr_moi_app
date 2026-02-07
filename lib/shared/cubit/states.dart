@@ -11,7 +11,7 @@ class HrGetFailState extends HrMoiStates {}
 
 //otp screen
 class OtpGetSuccState extends HrMoiStates {}
-
+class OtpGetLoadingState extends HrMoiStates {}
 class OtpGetFailState extends HrMoiStates {}
 
 //Mrz screen

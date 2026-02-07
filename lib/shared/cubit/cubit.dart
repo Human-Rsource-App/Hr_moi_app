@@ -136,6 +136,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         required BuildContext context
     })
     {
+      emit(OtpGetLoadingState());
         //temporary code
         // if (currentText == '123456')
         // {
@@ -414,6 +415,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         required BuildContext context
     })
     {
+      emit(CreatePassLoadingState());
         DioHelper.postData(
             path: url,
             data: {"empcode": empCode, "password": password}

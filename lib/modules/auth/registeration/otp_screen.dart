@@ -178,7 +178,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen>
                                             const SizedBox(height: 50.0),
                                             defaultButton(
                                                 context: context,
-                                                onPressed: ()
+                                                onPressed:state is OtpGetLoadingState?null: ()
                                                 {
                                                     formKey.currentState!.validate();
                                                     // conditions for validating

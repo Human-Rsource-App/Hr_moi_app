@@ -216,7 +216,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen>
                                                         defaultButton(
                                                             context: context,
                                                             onPressed: isPasswordValid && doPasswordsMatch
-                                                                ? ()
+                                                                ? state is CreatePassLoadingState?null:()
                                                             {
                                                               cubit.createPass(
                                                                   url: '$baseUrl$regUrl',
