@@ -5,9 +5,9 @@ import 'package:hr_moi/shared/components/components.dart';
 import '../../../../shared/style/color.dart';
 import '../../../home_screen/home_screen.dart';
 
-class RegistrationSuccessScreen extends StatelessWidget
+class ResetPassSucc extends StatelessWidget
 {
-  const RegistrationSuccessScreen({super.key});
+  const ResetPassSucc({super.key});
 
   @override
   Widget build(BuildContext context)
@@ -32,13 +32,7 @@ class RegistrationSuccessScreen extends StatelessWidget
                           Image.asset(Assets.iconsDone, width: 150.0, height: 150.0),
                           const SizedBox(height: 20),
                           Text(
-                              '!تم التسجيل بنجاح', style: font.bodyMedium!.copyWith(color: Colors.lightGreen), textAlign: TextAlign.center
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                              'تهانينا، لقد قمت بالتسجيل بنجاح في تطبيق الموارد البشرية',
-                              textAlign: TextAlign.center,
-                              style: font.bodyMedium
+                              '!تم تغير الباسورد بنجاح', style: font.bodyMedium!.copyWith(color: Colors.lightGreen), textAlign: TextAlign.center
                           ),
                           const Spacer(),
                           Padding(

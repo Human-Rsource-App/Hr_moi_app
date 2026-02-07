@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart' hide showDialog;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +52,7 @@ class _EmpIdentityState extends State<EmpIdentity>
                                     },
                                     builder: (context, state)
                                     {
-                                        return ConditionalBuilder(condition: state is ! HrNumGetLoadingState,
+                                        return ConditionalBuilder(condition: state is ! UserProfLoadingState,
                                             builder: (context)=> SingleChildScrollView(
                                               child: Column(
                                                   children: <Widget>[
@@ -61,19 +64,18 @@ class _EmpIdentityState extends State<EmpIdentity>
                                                             gradient: LinearGradient(colors: backGrColor),
                                                             boxShadow: [BoxShadow(color: Color(0xFF5DBBDB), blurRadius: 10, blurStyle: BlurStyle.normal, offset: Offset(0, 0))],
                                                             borderRadius: BorderRadius.circular(20.0)
-                                              
+
                                                         ),
                                                         child: Column(
                                                             spacing: 5.0,
                                                             children: [
-                                                              defaultCircleAvatar(radius: 50.0, child: Image.asset(Assets.iconsPersonalimage), backgroundColor: Colors.transparent),
+                                                              userProfile.data!.imageBase64!=null?buildAvatar(userProfile.data!.imageBase64.toString()): defaultCircleAvatar(radius: 50.0, child: Image.asset(Assets.iconsPersonalimage), backgroundColor: Colors.transparent),
                                                               SizedBox(height: 20.0),
                                                               Text('الهوية الرقمية', style: font.bodySmall!.copyWith(color: Colors.grey)),
                                                               Text('معلومات الهوية الرقمية', style: font.bodySmall)
                                                             ]
                                                         )),
-                                              
-                                                    SizedBox(height: 30.0),
+                                            SizedBox(height: 30.0),
                                                     Column(
                                                         spacing: 10.0,
                                                         children: <Widget>[
@@ -144,4 +146,19 @@ class _EmpIdentityState extends State<EmpIdentity>
             )
         );
     }
+}
+Widget buildAvatar(String image) {
+  Uint8List? imageBytes;
+  if (image.isNotEmpty) {
+    imageBytes = base64Decode(image);
+  }
+  return CircleAvatar(
+    radius: 50,
+    backgroundColor: Colors.transparent,
+    backgroundImage:
+    imageBytes != null ? MemoryImage(imageBytes) : null,
+    child: imageBytes == null
+        ? const Icon(Icons.person, size: 50)
+        : null,
+  );
 }

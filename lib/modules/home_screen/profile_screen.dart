@@ -76,7 +76,7 @@ class _ProfileState extends State<Profile> {
 
 
                     return ConditionalBuilder(
-                      condition: state is! HrNumGetLoadingState,
+                      condition: state is! UserProfLoadingState,
 
                       builder: (context) => SingleChildScrollView(
                         child: Column(

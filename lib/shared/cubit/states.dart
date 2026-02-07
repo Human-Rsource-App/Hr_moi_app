@@ -16,7 +16,7 @@ class OtpGetFailState extends HrMoiStates {}
 
 //Mrz screen
 class MrzGetSuccState extends HrMoiStates {}
-
+class MrzGetLoadingState extends HrMoiStates {}
 class MrzGetFailState extends HrMoiStates {}
 
 //face recognition screen
@@ -25,11 +25,11 @@ class FaceRecGetSuccState extends HrMoiStates {}
 class FaceRecGetFailState extends HrMoiStates {}
 
 //user profile
-class HrNumGetLoadingState extends HrMoiStates {}
+class UserProfLoadingState extends HrMoiStates {}
 
-class HrNumGetSuccState extends HrMoiStates {}
+class UserProfSuccState extends HrMoiStates {}
 
-class HrNumGetFailState extends HrMoiStates {}
+class UserProfFailState extends HrMoiStates {}
 
 //create pass
 class CreatePassLoadingState extends HrMoiStates {}
@@ -46,10 +46,10 @@ class LoginSuccState extends HrMoiStates {}
 
 class LoginFailState extends HrMoiStates {}
 
-//reset pass req states
-class ResetPassSuccState extends HrMoiStates {}
-
-class ResetPassFailState extends HrMoiStates {}
+//reset pass check account states
+class AccountSuccState extends HrMoiStates {}
+class AccountLoadingState extends HrMoiStates {}
+class AccountFailState extends HrMoiStates {}
 //otp reset pass
 class OtpRestPassSuccState extends HrMoiStates {}
 
@@ -57,6 +57,7 @@ class OtpResetPassFailState extends HrMoiStates {}
 
 //create new pass states
 class CreateNewPassSuccState extends HrMoiStates {}
+class CreateNewPassLoadingState extends HrMoiStates {}
 
 class CreateNewPassFailState extends HrMoiStates {}
 //change nav bar states

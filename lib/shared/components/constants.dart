@@ -4,15 +4,14 @@ import 'package:hr_moi/models/identity_model.dart';
 import '../../models/profile_image.dart';
 
 const String baseUrl = 'http://10.21.10.181:3090/api/';
-const String userProfUrl = 'moiApp/user_profile/';
+const String userProfUrl = 'moiApp//user_profile_with_image/';
 const String hrUrl = 'moiApp/search/';
 const String otpUrl = 'otpGet/otp/';
 const String mrzUrl = 'moiApp/National_id_check/';
 const String faceUrl = 'moiApp/ai_reg_img/';
 const String regUrl = 'auth/register';
 const String loginUrl = 'auth/login';
-const String resetPass = 'moiApp/reset_password/request';
-const String createNewPass = 'moiApp/reset_password/confirm';
+const String createNewPass = 'auth/reset-password';
 const String profileImage = 'moiApp/get_image/';
 
 

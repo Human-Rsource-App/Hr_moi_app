@@ -199,6 +199,7 @@ class _CameraScreenState extends State<CameraScreen>
                 },
                 builder: (context, state)
                 {
+                  final bool isLoadin=state is MrzGetLoadingState;
                   final Size size = MediaQuery.of(context).size;
                     var cubit = HrMoiCubit.get(context);
                     return Scaffold(
@@ -277,14 +278,15 @@ class _CameraScreenState extends State<CameraScreen>
                                     Text('يرجى محاذاة البطاقة الوطنية داخل الاطار', style: TextTheme.of(context).bodySmall!.copyWith(color: Colors.grey)),
                                     Padding(
                                         padding: const EdgeInsets.all(20.0),
-                                        child: defaultButton(context: context, onPressed: !autoScanning && result.isNotEmpty ? ()
+                                        child: defaultButton(context: context, onPressed: isLoadin?null:!autoScanning && result.isNotEmpty? ()
                                                 {
                                                     cubit.getNationalId(
                                                         url: '$baseUrl$mrzUrl$nID',
                                                         context: context
                                                     );
                                                 }
-                                                : null, lable: 'متابعة')
+                                                : null, lable: 'متابعة'
+                                        )
                                     )
 
                                 ]

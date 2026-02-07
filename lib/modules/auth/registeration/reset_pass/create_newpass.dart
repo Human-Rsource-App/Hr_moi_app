@@ -19,6 +19,12 @@ class CreateNewpass extends StatefulWidget
 class _CreateNewpass extends State<CreateNewpass>
 {
   final _passwordController = TextEditingController();
+  TextDirection _textDirection = TextDirection.ltr;
+  bool _isArabic(String text)
+  {
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    return arabicRegex.hasMatch(text);
+  }
   final _confirmPasswordController = TextEditingController();
 
   bool _isPasswordVisible = false;
@@ -132,7 +138,17 @@ class _CreateNewpass extends State<CreateNewpass>
                                                       }
                                                       );
                                                     },
-                                                    suffixIcon: _isPasswordVisible ? Icons.visibility_off : Icons.visibility
+                                                    suffixIcon: _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                                                    textDirection: _textDirection,
+                                                    textAlign: TextAlign.center,
+                                                    onChanged: (String val)
+                                                    {
+                                                      setState(()
+                                                      {
+                                                        _textDirection =
+                                                        _isArabic(val) ? TextDirection.rtl : TextDirection.ltr;
+                                                      }
+                                                      );}
                                                 ),
                                                 if (isPasswordValid) ...[
 
@@ -149,8 +165,20 @@ class _CreateNewpass extends State<CreateNewpass>
                                                           _isConfirmPasswordVisible =
                                                           !_isConfirmPasswordVisible;
                                                         }
+
                                                         );
+                                                      },
+                                                    textDirection: _textDirection,
+                                                    textAlign: TextAlign.center,
+                                                    onChanged: (String val)
+                                                    {
+                                                      setState(()
+                                                      {
+                                                        _textDirection =
+                                                        _isArabic(val) ? TextDirection.rtl : TextDirection.ltr;
                                                       }
+                                                      );
+                                                    },
                                                   )
 
                                                 ],
@@ -181,8 +209,24 @@ class _CreateNewpass extends State<CreateNewpass>
                                                   _buildRequirementRow(
                                                       'رمز خاص واحد مثال: !@#\$%',
                                                       _hasSpecialChar
-                                                      , font.bodySmall!)]
-                                              ]
+                                                      , font.bodySmall!)],
+                                                SizedBox(height: 30.0,),
+                                                defaultButton(
+                                                    context: context,
+                                                    onPressed: isPasswordValid && doPasswordsMatch
+                                                        ? state is CreateNewPassLoadingState?null:()
+                                                    {
+                                                      cubit.createNewPass(
+                                                          url: '$baseUrl$createNewPass',
+                                                          empCode: hrNum.toString(),
+                                                          password: _passwordController.text.toString(),
+                                                          context: context
+                                                      );
+                                                    }
+                                                        : null,
+                                                    lable: 'متابعة'
+                                                )
+                                              ],
                                           )
                                         ]
                                     )
@@ -191,35 +235,6 @@ class _CreateNewpass extends State<CreateNewpass>
                         )
                     )
                 ),
-                bottomNavigationBar: Container(
-                    padding: EdgeInsets.all(20.0),
-
-                    decoration: BoxDecoration(boxShadow: [BoxShadow(blurRadius: 5, color: mainColor,
-                        offset: Offset(0, 0))],
-
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: backGrColor
-                        )
-                    ),
-                    child: defaultButton(
-                        context: context,
-                        onPressed: isPasswordValid && doPasswordsMatch
-                            ? ()
-                        {
-                          cubit.createNewPass(
-                              url: '$baseUrl$createNewPass',
-                              otp: '123456',
-                              empCode: hrNum.toString(),
-                              password: _passwordController.text.toString(),
-                              context: context
-                          );
-                        }
-                            : null,
-                        lable: 'متابعة'
-                    )
-                )
             ),
           );
         }

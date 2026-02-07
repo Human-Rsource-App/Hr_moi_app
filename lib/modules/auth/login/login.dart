@@ -10,7 +10,7 @@ import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/style/color.dart';
 import '../../../generated/assets.dart';
 import '../../home_screen/home_screen.dart';
-import '../registeration/reset_pass/reset_pass_req.dart';
+import '../registeration/reset_pass/check_account.dart';
 
 class Login extends StatefulWidget
 {
@@ -175,12 +175,9 @@ class _LoginState extends State<Login>
                                                     ),
                                                     const SizedBox(height: 20.0),
                                                     //login button
-                                                    if (state is LoginLoadingState)
-                                                    const CircularProgressIndicator()
-                                                    else
                                                     defaultButton(
                                                         context: context,
-                                                        onPressed: ()
+                                                        onPressed:state is LoginLoadingState?null: ()
                                                         {
                                                             if (formKey.currentState!.validate())
                                                             {

@@ -23,6 +23,7 @@ class HrNumber extends StatelessWidget
             },
             builder: (BuildContext context, HrMoiStates state)
             {
+              final isLoading = state is HrGetLoadingState;
                 final Size size = MediaQuery.of(context).size;
                 HrMoiCubit cubit = HrMoiCubit.get(context);
                 return Directionality(
@@ -108,7 +109,7 @@ class HrNumber extends StatelessWidget
                                                         ),
                                                         defaultButton(
                                                             context: context,
-                                                            onPressed: ()
+                                                            onPressed: isLoading?null:()
                                                             {
                                                                 if (formKey.currentState!.validate())
                                                                 {

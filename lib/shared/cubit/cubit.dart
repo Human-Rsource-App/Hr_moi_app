@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hr_moi/models/login_model.dart';
-import 'package:hr_moi/models/register_model.dart';
+import 'package:hr_moi/models/create_pass_model.dart';
 import 'package:hr_moi/models/face_model.dart';
 import 'package:hr_moi/models/hr_model.dart';
 import 'package:hr_moi/models/identity_model.dart';
@@ -11,13 +13,13 @@ import 'package:hr_moi/modules/auth/registeration/emp_identity.dart';
 import 'package:hr_moi/modules/auth/registeration/mrz_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/otp_screen.dart';
 import 'package:hr_moi/modules/auth/registeration/registration_success.dart';
+import 'package:hr_moi/modules/auth/registeration/reset_pass/reset_success.dart';
 import 'package:hr_moi/modules/home_screen/home_screen.dart';
 import 'package:hr_moi/shared/components/components.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/states.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
 import '../../models/profile_image.dart';
-import '../../models/reset_pass/reset_req_model.dart';
 import '../../modules/auth/registeration/create_pass.dart';
 import '../../modules/auth/registeration/reset_pass/create_newpass.dart';
 import '../../modules/auth/registeration/reset_pass/otp_reset.dart';
@@ -35,78 +37,97 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         required String empCode
     })
     {
-        DioHelper.getData(path: url)
-            .then((val)
+        emit(HrGetLoadingState());
+
+        DioHelper.getData(path: url).then((val)
+            {
+                final hrModel = HrModel.fromJson(val.data);
+
+                if (hrModel.success == true && hrModel.msg?.actionOpr == 1)
                 {
-                    HrModel hrOtp = HrModel.fromJson(val.data);
+                    hrNum = empCode;
 
-                    if (hrOtp.success == true && hrOtp.data != null)
-                    {
-                        //this because i need it in face recognition so i but it as public
-                        hrNum = empCode.toString();
-                        if (context.mounted)
-                        {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PinCodeVerificationScreen(
-                                        phoneNumber: hrOtp.data!.phoneNo.toString(),
-                                        empCode: empCode
-                                    )
-                                )
-                            );
+                    if (!context.mounted) return;
 
-                            emit(HrGetSuccState());
-                        }
-                    }
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => PinCodeVerificationScreen(
+                                phoneNumber: hrModel.data!.phoneNo.toString(),
+                                empCode: empCode
+                            )
+                        )
+                    );
+
+                    emit(HrGetSuccState());
                 }
-            )
-            .catchError((error)
+                else
                 {
+                    if (!context.mounted) return;
+
+                    showMessage(
+                        message: 'انت تمتلك حساب مسبقاً',
+                        context: context
+                    );
+                    emit(HrGetFailState());
+                }
+
+            }
+        ).catchError((error)
+                {
+
+                    String message = 'خطأ غير معروف';
+
                     if (error is DioException)
                     {
-                        if (error.response!.statusCode == 409)
+
+                        // لا يوجد انترنت
+                        if (error.type == DioExceptionType.connectionError ||
+                            error.type == DioExceptionType.connectionTimeout)
                         {
-                            if (context.mounted)
-                            {
-                                showMessage(message: 'هذا المستخدم مسجل مسبقا', context: context);
-                                emit(HrGetFailState());
-                            }
+                            message = 'تأكد من اتصالك بالإنترنت';
                         }
-                        if (error.response!.statusCode == 404)
+
+                        // رد من السيرفر مع رسالة
+                        else if (error.response?.data != null)
                         {
-                            if (context.mounted)
+                            dynamic data = error.response!.data;
+
+                            if (data is String)
                             {
-                                showMessage(
-                                    message: 'الرقم الاحصائي غير موجود او غير صحيح.',
-                                    context: context
-                                );
-                                emit(HrGetFailState());
+                                try
+                                {
+                                    data = jsonDecode(data);
+                                }
+                                catch (_)
+                                {
+                                }
+                            }
+
+                            if (data is Map)
+                            {
+
+                                if (data['err'] != null && data['err'].toString().isNotEmpty)
+                                {
+                                    message = data['err'];
+                                }
+                                else if (data['msg'] != null)
+                                {
+                                    message = data['msg'];
+                                }
                             }
                         }
                     }
-                    else
-                    {
-                        if (context.mounted)
-                        {
-                            showMessage(
-                                message: 'هنالك مشكله في الخادم',
-                                context: context
-                            );
-                            emit(HrGetFailState());
-                        }
-                    }
-                }
-            ).catchError((error)
-                {
+
                     if (context.mounted)
                     {
-                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        showMessage(message: message, context: context);
                         emit(HrGetFailState());
                     }
                 }
             );
     }
+
     //==============================================================================
     //otp screen logic
     void getOtp({
@@ -185,9 +206,10 @@ class HrMoiCubit extends Cubit<HrMoiStates>
             );
     }
     //===============================================================================
-    //mrz screen
+    //mrz screen for nid identification
     void getNationalId({required String url, required BuildContext context})
     {
+        emit(MrzGetLoadingState());
         DioHelper.getData(path: url)
             .then((val)
                 {
@@ -195,7 +217,6 @@ class HrMoiCubit extends Cubit<HrMoiStates>
 
                     if (nId.success == true)
                     {
-                        //
                         if (context.mounted)
                         {
                             Navigator.pushReplacement(
@@ -209,32 +230,47 @@ class HrMoiCubit extends Cubit<HrMoiStates>
             )
             .catchError((error)
                 {
+                    String message = 'خطأ غير معروف';
                     if (error is DioException)
                     {
-                        if (error.response!.statusCode == 404)
+                        if (error.type == DioExceptionType.connectionError ||
+                            error.type == DioExceptionType.connectionTimeout)
                         {
-                            if (context.mounted)
-                            {
-                                showMessage(message: 'الرقم الوطني غير موجود.حدث معلوماتك في نظام HR', context: context);
-                                emit(MrzGetFailState());
-                            }
+                            message = 'تأكد من اتصالك بالإنترنت';
                         }
-                        else
+                        else if (error.response?.data != null)
                         {
-                            if (context.mounted)
+                            dynamic data = error.response!.data;
+
+                            if (data is String)
                             {
-                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
-                                emit(MrzGetFailState());
+                                try
+                                {
+                                    data = jsonDecode(data);
+                                }
+                                catch (_)
+                                {
+                                }
+                            }
+
+                            if (data is Map)
+                            {
+
+                                if (data['err'] != null && data['err'].toString().isNotEmpty)
+                                {
+                                    message = data['err'];
+                                }
+                                else if (data['msg'] != null)
+                                {
+                                    message = data['msg'];
+                                }
                             }
                         }
                     }
 
-                }
-            ).catchError((error)
-                {
                     if (context.mounted)
                     {
-                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
+                        showMessage(message: message, context: context);
                         emit(MrzGetFailState());
                     }
                 }
@@ -245,52 +281,69 @@ class HrMoiCubit extends Cubit<HrMoiStates>
     //user profile for identity logic
     void getHrUserData({required String url, required BuildContext context})
     {
-        emit(HrNumGetLoadingState());
+        emit(UserProfLoadingState());
         DioHelper.getData(path: url)
             .then((val)
                 {
 
                     userProfile = HrProfileModel.fromJson(val.data);
-                    if (val.data != null)
+                    if (userProfile.success == true && userProfile.data != null)
                     {
-                        if (userProfile.success == true)
-                        {
-                            emit(HrNumGetSuccState());
-                        }
-
+                        emit(UserProfSuccState());
                     }
+                    else 
+                    {
+                        emit(UserProfFailState());
+                    }
+
                 }
             )
             .catchError((error)
                 {
-                    if (error is DioException)
-                    {
-                        if (error.response!.statusCode == 404)
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(message: 'الرقم الوطني غير موجود.حدث معلوماتك في نظام HR', context: context);
-                                emit(MrzGetFailState());
-                            }
-                        }
-                        else
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
-                                emit(MrzGetFailState());
-                            }
-                        }
-                    }
+                  String message = 'خطأ غير معروف';
 
-                }
-            ).catchError((error)
-                {
-                    if (context.mounted)
+                  if (error is DioException)
+                  {
+                    if (error.type == DioExceptionType.connectionError ||
+                        error.type == DioExceptionType.connectionTimeout)
                     {
-                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
-                        emit(MrzGetFailState());
+                      message = 'تأكد من اتصالك بالإنترنت';
                     }
+                    else if (error.response?.data != null)
+                    {
+                      dynamic data = error.response!.data;
+
+                      if (data is String)
+                      {
+                        try
+                        {
+                          data = jsonDecode(data);
+                        }
+                        catch (_)
+                        {
+                        }
+                      }
+
+                      if (data is Map)
+                      {
+
+                        if (data['err'] != null && data['err'].toString().isNotEmpty)
+                        {
+                          message = data['err'];
+                        }
+                        else if (data['msg'] != null)
+                        {
+                          message = data['msg'];
+                        }
+                      }
+                    }
+                  }
+
+                  if (context.mounted)
+                  {
+                    showMessage(message: message, context: context);
+                    emit(UserProfFailState());
+                  }
                 }
             );
     }
@@ -428,6 +481,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
         required BuildContext context
     })
     {
+      emit(LoginLoadingState());
         DioHelper.postData(
             path: url,
             data: {"empcode": empCode, "password": password}
@@ -435,9 +489,9 @@ class HrMoiCubit extends Cubit<HrMoiStates>
             .then((val)
                 {
                     hrNum = empCode;
-                    LoginModel pass = LoginModel.fromJson(val.data);
+                    LoginModel loginModel = LoginModel.fromJson(val.data);
 
-                    if (pass.success == true)
+                    if (loginModel.success == true)
                     {
                         if (context.mounted)
                         {
@@ -447,79 +501,145 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                             );
                             emit(LoginSuccState());
                         }
-                    } else
-                    {
-                      if (context.mounted)
-                      {
-                        showMessage(
-                            message: 'هذا المستخدم غير موجود',
-                            context: context
-                        );
-                      }
-                      emit(LoginFailState());
-                    }
-                }
-            )
-            .catchError((error)
-                {
-                    if (context.mounted)
-                    {
-                        showMessage(message: 'تأكد من الرقم الاحصائي والباسورد', context: context);
-                    }
-                    emit(LoginFailState());
-                }
-            );
-    }
-    //============================================================================
-    //reset screen req to check if hr no available logic
-    void resetPass({required String path, required Map<String, dynamic> data, required BuildContext context})
-    {
-        DioHelper.postData(path: path, data: data).then((val)
-            {
-                ResetReqModel data = ResetReqModel.fromJson(val.data);
-                if (data.success == true)
-                {
-                    if (context.mounted)
-                    {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => OtpReset(empCode: data.data!.empCode!, phoneNumber: data.data!.phone!))
-                        );
-                        emit(ResetPassSuccState());
-                    }
-                }
-            }
-        ).catchError((error)
-                {
-                    if (error is DioException)
-                    {
-                        if (error.response!.statusCode == 404)
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(message: 'هذا المستخدم غير موجود', context: context);
-                                emit(ResetPassFailState());
-                            }
-                        }
-                        else
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(message: 'هنالك مشكلة في الخادم', context: context);
-                                emit(ResetPassFailState());
-                            }
-                        }
                     }
                 }
             ).catchError((error)
+        {
+
+          String message = 'خطأ غير معروف';
+
+          if (error is DioException)
+          {
+            if (error.type == DioExceptionType.connectionError ||
+                error.type == DioExceptionType.connectionTimeout)
+            {
+              message = 'تأكد من اتصالك بالإنترنت';
+            }
+            else if (error.response?.data != null)
+            {
+              dynamic data = error.response!.data;
+
+              if (data is String)
+              {
+                try
                 {
-                    if (context.mounted)
-                    {
-                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
-                        emit(ResetPassFailState());
-                    }
+                  data = jsonDecode(data);
                 }
-            );
+                catch (_)
+                {
+                }
+              }
+
+              if (data is Map)
+              {
+
+                if (data['err'] != null && data['err'].toString().isNotEmpty)
+                {
+                  message = data['err'];
+                }
+                else if (data['msg'] != null)
+                {
+                  message = data['msg'];
+                }
+              }
+            }
+          }
+
+          if (context.mounted)
+          {
+            showMessage(message: message, context: context);
+            emit(LoginFailState());
+          }
+        }
+        );
+    }
+    //============================================================================
+    //reset screen req to check if hr no available logic
+    void checkAccount({required String path, required BuildContext context})
+    {
+      emit(AccountLoadingState());
+
+      DioHelper.getData(path: path).then((val)
+      {
+        final hrModel = HrModel.fromJson(val.data);
+
+        if (hrModel.success == true && hrModel.msg?.actionOpr == 2)
+        {
+          if (!context.mounted) return;
+
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => OtpReset(
+                      phoneNumber: hrModel.data!.phoneNo.toString(),
+                      empCode: hrModel.data!.empCode.toString()
+                  )
+              )
+          );
+
+          emit(AccountSuccState());
+        }
+        else
+        {
+          if (!context.mounted) return;
+          showMessage(
+              message: 'انت لا تمتلك حساب مسبقاً',
+              context: context
+          );
+          emit(AccountFailState());
+        }
+
+      }
+      ).catchError((error)
+      {
+
+        String message = 'خطأ غير معروف';
+
+        if (error is DioException)
+        {
+          if (error.type == DioExceptionType.connectionError ||
+              error.type == DioExceptionType.connectionTimeout)
+          {
+            message = 'تأكد من اتصالك بالإنترنت';
+          }
+          else if (error.response?.data != null)
+          {
+            dynamic data = error.response!.data;
+
+            if (data is String)
+            {
+              try
+              {
+                data = jsonDecode(data);
+              }
+              catch (_)
+              {
+              }
+            }
+
+            if (data is Map)
+            {
+
+              if (data['err'] != null && data['err'].toString().isNotEmpty)
+              {
+                message = data['err'];
+              }
+              else if (data['msg'] != null)
+              {
+                message = data['msg'];
+              }
+            }
+          }
+        }
+
+        if (context.mounted)
+        {
+          showMessage(message: message, context: context);
+          emit(AccountFailState());
+        }
+      }
+      );
+
 
     }
 
@@ -606,14 +726,14 @@ class HrMoiCubit extends Cubit<HrMoiStates>
     void createNewPass({
         required String url,
         required String empCode,
-        required String otp,
         required String password,
         required BuildContext context
     })
     {
-        DioHelper.postData(
+      emit(CreateNewPassLoadingState());
+        DioHelper.putData(
             path: url,
-            data: {"empCode": empCode,"otp":otp, "newPassword": password}
+            data: {"empcode": empCode,"newPassword": password}
         )
             .then((val)
                 {
@@ -621,13 +741,13 @@ class HrMoiCubit extends Cubit<HrMoiStates>
 
                     if (pass.success == true)
                     {
-                        //
+
                         if (context.mounted)
                         {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => RegistrationSuccessScreen()
+                                    builder: (context) => ResetPassSucc()
                                 )
                             );
                             emit(CreateNewPassSuccState());
@@ -635,39 +755,55 @@ class HrMoiCubit extends Cubit<HrMoiStates>
 
                     }
                 }
-            )
-            .catchError((error)
-                {
-                    if (error is DioException)
-                    {
-                        if (error.response!.statusCode == 400)
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(message: 'OTP غير صحيح أو منتهي', context: context);
-                                emit(CreateNewPassFailState());
-                            }
-                        }
-                        else
-                        {
-                            if (context.mounted)
-                            {
-                                showMessage(message: '$errorهنالك مشكلة في الخادم', context: context);
-                                emit(CreateNewPassFailState());
-                            }
-                        }
-                    }
-
-                }
             ).catchError((error)
+        {
+
+          String message = 'خطأ غير معروف';
+
+          if (error is DioException)
+          {
+            if (error.type == DioExceptionType.connectionError ||
+                error.type == DioExceptionType.connectionTimeout)
+            {
+              message = 'تأكد من اتصالك بالإنترنت';
+            }
+            else if (error.response?.data != null)
+            {
+              dynamic data = error.response!.data;
+
+              if (data is String)
+              {
+                try
                 {
-                    if (context.mounted)
-                    {
-                        showMessage(message: 'تأكد من اتصالك بالشبكة', context: context);
-                        emit(CreateNewPassFailState());
-                    }
+                  data = jsonDecode(data);
                 }
-            );
+                catch (_)
+                {
+                }
+              }
+
+              if (data is Map)
+              {
+
+                if (data['err'] != null && data['err'].toString().isNotEmpty)
+                {
+                  message = data['err'];
+                }
+                else if (data['msg'] != null)
+                {
+                  message = data['msg'];
+                }
+              }
+            }
+          }
+
+          if (context.mounted)
+          {
+            showMessage(message: message, context: context);
+            emit(CreateNewPassFailState());
+          }
+        }
+        );
     }
     //home screen logic ===========================================================
     int curentIndex = 1;
@@ -680,7 +816,7 @@ class HrMoiCubit extends Cubit<HrMoiStates>
     //user profile logic
     void getProfileData({required String url, required BuildContext context})
     {
-        emit(HrNumGetLoadingState());
+        emit(UserProfLoadingState());
         DioHelper.getData(path: url)
             .then((val)
                 {

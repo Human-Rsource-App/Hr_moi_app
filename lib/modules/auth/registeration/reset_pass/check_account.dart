@@ -108,14 +108,15 @@ class ResetPass extends StatelessWidget
                                                         ),
                                                         defaultButton(
                                                             context: context,
-                                                            onPressed: ()
+                                                            onPressed:state is AccountLoadingState?null: ()
                                                             {
                                                                 if (formKey.currentState!.validate())
                                                                 {
-                                                                    cubit.resetPass(
-                                                                        path: '$baseUrl$resetPass',
+                                                                    cubit.checkAccount(
+                                                                        path: '$baseUrl$hrUrl${controller
+                                                                            .text
+                                                                            .toString()}',
                                                                         context: context,
-                                                                        data: {"empCode":controller.text.toString()}
                                                                     );
                                                                 }
                                                             },

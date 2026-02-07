@@ -1,19 +1,14 @@
 class NationalIdModel {
   bool? success;
   String? msg;
-  DataModel? data;
+  String? data;
+  String ? err;
   NationalIdModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    msg = json['message'];
-    data = json['data'] != null ? DataModel.fromJson(json['data']) : null;
+    msg = json['msg'];
+    data = json['data'];
+    err=json['err'];
   }
 }
 
-class DataModel {
-  bool? success;
-  String? message;
-  DataModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    message = json['message'];
-  }
-}
+

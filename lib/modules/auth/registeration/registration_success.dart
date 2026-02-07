@@ -32,14 +32,8 @@ class RegistrationSuccessScreen extends StatelessWidget
                                 Image.asset(Assets.iconsDone, width: 150.0, height: 150.0),
                                 const SizedBox(height: 20),
                                 Text(
-                                    'تم تغير كلمة المرور بنجاح!', style: font.bodyMedium!.copyWith(color: Colors.lightGreen), textAlign: TextAlign.center
+                                    'تم انشاء كلمة المرور بنجاح!', style: font.bodyMedium!.copyWith(color: Colors.lightGreen), textAlign: TextAlign.center
                                 ),
-                                const SizedBox(height: 8),
-                                // Text(
-                                //     'تهانينا، لقد قمت بالتسجيل بنجاح في تطبيق الموارد البشرية',
-                                //     textAlign: TextAlign.center,
-                                //     style: font.bodyMedium
-                                // ),
                                 const Spacer(),
                                 Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 20),
