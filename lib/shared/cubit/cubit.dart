@@ -24,6 +24,7 @@ import '../../modules/auth/registeration/create_pass.dart';
 import '../../modules/auth/registeration/reset_pass/create_newpass.dart';
 import '../../modules/auth/registeration/reset_pass/otp_reset.dart';
 import '../../modules/home_screen/profile_screen.dart';
+import '../network/local/cache_helper.dart';
 
 class HrMoiCubit extends Cubit<HrMoiStates>
 {
@@ -290,6 +291,16 @@ class HrMoiCubit extends Cubit<HrMoiStates>
                     userProfile = HrProfileModel.fromJson(val.data);
                     if (userProfile.success == true && userProfile.data != null)
                     {
+                      CacheHelper.saveData(key: 'image', value: userProfile.data!.imageBase64.toString());
+                      CacheHelper.saveData(key: 'empCode', value: userProfile.data!.empCode.toString());
+                      CacheHelper.saveData(key: 'rank', value: userProfile.data!.rankName.toString());
+                      CacheHelper.saveData(key: 'empName', value: userProfile.data!.empName.toString());
+                      CacheHelper.saveData(key: 'unit', value: userProfile.data!.unitName.toString());
+                      CacheHelper.saveData(key: 'phone', value: userProfile.data!.phoneNo.toString());
+                      CacheHelper.saveData(key: 'rankType', value: userProfile.data!.rkTypeName.toString());
+                      CacheHelper.saveData(key: 'unit1', value: userProfile.data!.unit1.toString());
+                      CacheHelper.saveData(key: 'unit2', value: userProfile.data!.unit2.toString());
+                      CacheHelper.saveData(key: 'unit3', value: userProfile.data!.unit3.toString());
                         emit(UserProfSuccState());
                     }
                     else 
