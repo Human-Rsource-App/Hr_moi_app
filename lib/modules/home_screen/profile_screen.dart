@@ -7,6 +7,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../generated/assets.dart';
 import '../../shared/components/components.dart';
 import '../../shared/network/local/cache_helper.dart';
+import '../auth/login/biometric_service.dart';
 import '../auth/login/secure_storage.dart';
 class Profile extends StatefulWidget
 {
@@ -80,7 +81,7 @@ class _ProfileState extends State<Profile>
                                             ),
                                             child: Column(
                                                 children: [
-                                                    CacheHelper.getData(key: 'image') == null ? buildAvatar(CacheHelper.getData(key: 'image')) : defaultCircleAvatar(
+                                                    CacheHelper.getData(key: 'image') != null ? buildAvatar(CacheHelper.getData(key: 'image')) : defaultCircleAvatar(
                                                             radius: 50.0,
                                                             child: Image.asset(
                                                                 Assets.iconsPersonalimage
@@ -173,7 +174,30 @@ class _ProfileState extends State<Profile>
                                                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
                                                             }
                                                         }, lable: 'تعطيل البصمة')
-                                                )
+                                                ),
+                                              Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                                                  child: defaultButton(context: context, onPressed: ()async
+                                                  {
+                                                    final canBio = await BiometricService.canAuthenticate();
+
+                                                    if (context.mounted)
+                                                    {
+                                                      if (canBio) {
+                                                        if (context.mounted) {
+                                                          final enable = await showConfirmDialog(context);
+
+                                                          if (enable == true) {
+                                                            await SecureStorage.enableBio();
+                                                          }
+
+                                                          // مهم جداً: نعلّم أنه تم السؤال
+                                                          await SecureStorage.setBioAsked();
+                                                        }
+                                                      }
+                                                    }
+                                                  }, lable: 'تمكين البصمة')
+                                              )
                                             ]
                                         )
                                     ]

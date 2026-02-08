@@ -25,4 +25,15 @@ class SecureStorage {
     await _storage.delete(key: _tokenKey);
     await _storage.delete(key: _bioKey);
   }
+
+  static const _bioAskedKey = 'bio_asked';
+
+  static Future<void> setBioAsked() async {
+    await _storage.write(key: _bioAskedKey, value: 'true');
+  }
+
+  static Future<bool> isBioAsked() async {
+    final v = await _storage.read(key: _bioAskedKey);
+    return v == 'true';
+  }
 }

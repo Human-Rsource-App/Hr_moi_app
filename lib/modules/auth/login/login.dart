@@ -52,26 +52,23 @@ class _LoginState extends State<Login>
             child: BlocConsumer<HrMoiCubit, HrMoiStates>(
                 listener: (BuildContext context, HrMoiStates state)async
                 {
-                    if (state is LoginSuccState)
-                    {
-                        // save token here if not already saved
-                        await SecureStorage.saveToken('state.token');
+                  await SecureStorage.saveToken('state.token');
 
-                        final  canBio = await BiometricService.canAuthenticate();
+                  final canBio = await BiometricService.canAuthenticate();
+                  final bioAsked = await SecureStorage.isBioAsked();
 
-                        if (canBio)
-                        {
-                            if (context.mounted)
-                            {
-                                final enable = await showConfirmDialog(context);
+                  if (canBio && !bioAsked) {
+                    if (context.mounted) {
+                      final enable = await showConfirmDialog(context);
 
-                                if (enable == true)
-                                {
-                                    await SecureStorage.enableBio();
-                                }
-                            }
-                        }
+                      if (enable == true) {
+                        await SecureStorage.enableBio();
+                      }
+
+                      // مهم جداً: نعلّم أنه تم السؤال
+                      await SecureStorage.setBioAsked();
                     }
+                  }
                 },
                 builder: (context, state)
                 {
