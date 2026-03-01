@@ -22,3 +22,4 @@ late String nID;
 String hrNum='881790088';
 late HrProfileModel userProfile;
 late ProfileImage imageProfile;
+late String ?token;

@@ -1,17 +1,26 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hr_moi/modules/splash_screen/splash.dart';
+//import 'package:hr_moi/modules/splash_screen/splash.dart';
 import 'package:hr_moi/shared/components/constants.dart';
 import 'package:hr_moi/shared/cubit/cubit.dart';
 import 'package:hr_moi/shared/network/local/cache_helper.dart';
 import 'package:hr_moi/shared/network/remote/dio_helper.dart';
+import 'package:hr_moi/shared/service/local_notifications_service.dart';
+import 'package:hr_moi/shared/service/notifucation_service.dart';
 import 'package:hr_moi/shared/style/styles.dart';
+
+import 'modules/notification/push_notification.dart';
+import 'shared/network/remote/firebase_options.dart';
 
 
 void main() async
 {
     WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await NotificationService.init();
+    await LocalNotificationService.init();
     DioHelper.init();
     CacheHelper.init();
     cameras = await availableCameras();
@@ -34,7 +43,7 @@ class MyApp extends StatelessWidget
                 title: 'HR MOI APP',
                 themeMode: ThemeMode.dark,
                 theme: lightTheme,
-                home: MoiView() // MoiView(),
+                home: PushNotification()// MoiView()
             )
         );
     }
